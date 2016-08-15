@@ -46,8 +46,7 @@ public class OAuth2ServerConfiguration {
 //        	TokenStore ts = new JwtTokenStore(jwtAccessTokenConverter);
         	customLogoutSuccessHandler = new CustomLogoutSuccessHandler(tokenStore);
             // @formatter:off
-            resources
-                    .resourceId(RESOURCE_ID).tokenStore(tokenStore);
+            resources.resourceId(RESOURCE_ID).tokenStore(tokenStore);
             // @formatter:on
         }
 

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -51,61 +50,12 @@ public class CustomUserDetailsService implements UserDetailsService {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getCode()));
         }
 
-        User userDetails = new User(account.getUsername(),
-                account.getPassword(), account.isEnabled(),
-                !account.isExpired(), !account.isCredentialsexpired(),
-                !account.isLocked(), grantedAuthorities);
+//        User userDetails = new User(account.getUsername(),
+//                account.getPassword(), account.isEnabled(),
+//                !account.isExpired(), !account.isCredentialsexpired(),
+//                !account.isLocked(), grantedAuthorities);
+        CustomUserDetails userDetails = new CustomUserDetails(account,grantedAuthorities);
 
-        return userDetails;
-    }
-
-    private final static class UserRepositoryUserDetails extends Account implements UserDetails {
-
-        private static final long serialVersionUID = 1L;
-
-
-
-        private UserRepositoryUserDetails(Account user) {
-            super(user);
-        }
-
-        @Override
-        public Collection<? extends GrantedAuthority> getAuthorities() {
-            Collection<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-            for (Role role : getRoles()) {
-                grantedAuthorities.add(new SimpleGrantedAuthority(role.getCode()));
-            }
-            return grantedAuthorities;
-        }
-
-        @Override
-        public String getUsername() {
-            return getUsername();
-        }
-
-        @Override
-        public boolean isAccountNonExpired() {
-            return !isExpired();
-        }
-
-        @Override
-        public boolean isAccountNonLocked() {
-            return !isLocked();
-        }
-
-        @Override
-        public boolean isCredentialsNonExpired() {
-            return !isCredentialsexpired();
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return isEnabled();
-        }
-
-        @Override
-        public Set<Role> getRoles() {
-            return getRoles();
-        }
+        return (User)userDetails;
     }
 }
