@@ -19,5 +19,6 @@
         <mapping package="com.royasoftware.model" />
         <mapping class="com.royasoftware.model.Account" />
         <mapping class="com.royasoftware.model.Role" />
+        <mapping class="com.royasoftware.model.Todo" />
     </session-factory>
 </hibernate-configuration>
