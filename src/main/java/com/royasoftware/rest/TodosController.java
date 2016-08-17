@@ -27,12 +27,12 @@ import com.royasoftware.model.Todo;
 import com.royasoftware.service.AccountService;
 import com.royasoftware.service.TodoService;
 import com.royasoftware.settings.security.CustomUserDetails;
-
+import java.util.Random;
 
 
 @RestController
 @RequestMapping("/api/**")
-public class TodosController {
+public class TodosController extends BaseController {
 	@Autowired
 	private TodoService todoService;
 
@@ -41,6 +41,16 @@ public class TodosController {
 	@RequestMapping(method=RequestMethod.POST,produces={MediaType.APPLICATION_JSON_VALUE},value="/todo/save")
 	public ResponseEntity<Todo> saveTodo(@RequestParam("task") String task, @AuthenticationPrincipal CustomUserDetails user){
 		logger.info("Calling Post rest controller save todo " );
+		try {
+			Random rand = new Random();
+			int random = rand.nextInt(100);
+			Thread.sleep(50*random);
+			if( random > 30 )
+				return new ResponseEntity("Shit", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Todo todo = new Todo();
 		todo.setTask(task);
 		todo = todoService.saveTodo(todo, user.getId());
