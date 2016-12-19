@@ -54,6 +54,12 @@
 			<artifactId>hsqldb</artifactId>
 			<!--<scope>runtime</scope> -->
 		</dependency>
+		<dependency>
+		    <groupId>org.projectlombok</groupId>
+		    <artifactId>lombok</artifactId>
+		    <version>1.16.10</version>
+			 <scope>provided</scope> <!--this prevents this libto be included in build file-->
+		</dependency>
 
 		<!-- Dependencies for Guava Cache Management Support -->
 		<dependency>

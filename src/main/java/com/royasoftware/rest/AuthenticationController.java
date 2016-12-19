@@ -5,6 +5,8 @@ import com.royasoftware.service.AccountService;
 import com.royasoftware.service.RoleService;
 import com.royasoftware.settings.email.SmtpMailSender;
 import com.royasoftware.settings.errors.InvalidRequestException;
+import com.royasoftware.tools.EmailValidator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -78,7 +80,7 @@ public class AuthenticationController extends BaseController {
 	
 	@RequestMapping(value = "/register", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Account> register(@RequestParam("username") String username,
-			@RequestParam("password") String password, @RequestParam("email") String email) {
+			@RequestParam("password") String password, @RequestParam("email") String email) throws Exception{
 
 		// System.out.println("errors = "+errors);
 		// Check if account is unique
@@ -90,15 +92,25 @@ public class AuthenticationController extends BaseController {
 //		account.setRegisterId(new Integer(rand));
 //		account.setRegisterDate(new Date());
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        if( !new EmailValidator().validate(email) )
+        	throw new Exception("Email is not valid");
+        if (password.length() < 8){
+            throw new Exception("Password should be greater than 8 characters");
+        }
+
+		Account existingAccount = accountService.findByUsername(username);
+		if( existingAccount != null)
+			throw new Exception("This Account (User name) exists already");
 		Account account = new Account();
 		account.setUsername(username);
 		account.setPassword(password);
 		Account createdAccount = accountService.createNewAccount(account);
+		
 		createdAccount.setPassword("");
 		return new ResponseEntity<Account>(createdAccount, HttpStatus.CREATED);
 		// }catch(Exception e){
@@ -143,24 +155,24 @@ public class AuthenticationController extends BaseController {
 		return new ResponseEntity<String>("ok", HttpStatus.OK);
 	}
 	
-	@ExceptionHandler(DataIntegrityViolationException.class)
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public @ResponseBody ExceptionJSONInfo handleDataIntegrityException(HttpServletRequest request, Exception ex) {
-		System.out.println("Ok. Here is the DataIntegrityViolationException handler."+ex.getClass().getName()+". message="+ex.getMessage());
-		ExceptionJSONInfo response = new ExceptionJSONInfo();
-		response.setUrl(request.getRequestURL().toString());
-		response.setMessage("User exists already");
-		return response;
-	}
-	
-	@ExceptionHandler(RuntimeException.class)
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public @ResponseBody ExceptionJSONInfo handleGeneralException(HttpServletRequest request, Exception ex) {
-		System.out.println("Ok. Here is the general exception handler."+ex.getClass().getName()+". message="+ex.getMessage());
-		ExceptionJSONInfo response = new ExceptionJSONInfo();
-		response.setUrl(request.getRequestURL().toString());
-		response.setMessage(ex.getMessage());
-		return response;
-	}
+//	@ExceptionHandler(DataIntegrityViolationException.class)
+//	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//	public @ResponseBody ExceptionJSONInfo handleDataIntegrityException(HttpServletRequest request, Exception ex) {
+//		System.out.println("Ok. Here is the DataIntegrityViolationException handler."+ex.getClass().getName()+". message="+ex.getMessage());
+//		ExceptionJSONInfo response = new ExceptionJSONInfo();
+//		response.setUrl(request.getRequestURL().toString());
+//		response.setMessage("User exists already");
+//		return response;
+//	}
+//	
+//	@ExceptionHandler(RuntimeException.class)
+//	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//	public @ResponseBody ExceptionJSONInfo handleGeneralException(HttpServletRequest request, Exception ex) {
+//		System.out.println("Ok. Here is the general exception handler."+ex.getClass().getName()+". message="+ex.getMessage());
+//		ExceptionJSONInfo response = new ExceptionJSONInfo();
+//		response.setUrl(request.getRequestURL().toString());
+//		response.setMessage(ex.getMessage());
+//		return response;
+//	}
 
 }

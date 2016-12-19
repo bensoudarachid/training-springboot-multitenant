@@ -46,6 +46,10 @@ public class Account {
     @NotNull
     private boolean locked = false;
 
+    @Version
+    @Column(name = "VERSION")
+    private Integer version;
+    
     private Integer registrationId;
     private Date registrationDate;
     

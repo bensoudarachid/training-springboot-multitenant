@@ -56,7 +56,7 @@ public class OAuth2ServerConfiguration {
             http
                     .csrf().disable()
                     .authorizeRequests()
-                    .antMatchers("/api/**").authenticated()
+                    .antMatchers("/api/**").authenticated()//.hasAnyRole("ROLE_USER")//
 //            		.antMatchers("/**").authenticated()
                     .and()
                     .formLogin()

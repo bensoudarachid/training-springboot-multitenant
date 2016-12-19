@@ -14,19 +14,17 @@ import javax.validation.constraints.NotNull;
 @lombok.NoArgsConstructor
 
 @Entity
-public class Todo {
+public class TenantProfile {
     @Id
     @GeneratedValue
     private Long id;
     @NotNull
-    private String task;
+    private String description;
 	@NotNull
-	private Long userId;
+	private String logopath;
 
 	@Version
     @Column(name = "VERSION")
     private Integer version;
 	
-	private boolean isCompleted = false;
-
 }

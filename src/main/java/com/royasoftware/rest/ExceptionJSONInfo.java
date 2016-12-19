@@ -2,7 +2,8 @@ package com.royasoftware.rest;
 
 public class ExceptionJSONInfo {
 	private String url;
-	private String message;
+	private String error;
+	private String errorDescription;
 
 	public ExceptionJSONInfo() {
 	}
@@ -15,11 +16,19 @@ public class ExceptionJSONInfo {
 		this.url = url;
 	}
 
-	public String getMessage() {
-		return message;
+	public String getError() {
+		return error;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setError(String error) {
+		this.error = error;
+	}
+
+	public String getErrorDescription() {
+		return errorDescription;
+	}
+
+	public void setErrorDescription(String message) {
+		this.errorDescription = message;
 	}
 }

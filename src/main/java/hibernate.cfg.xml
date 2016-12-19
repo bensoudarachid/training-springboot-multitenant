@@ -20,5 +20,6 @@
         <mapping class="com.royasoftware.model.Account" />
         <mapping class="com.royasoftware.model.Role" />
         <mapping class="com.royasoftware.model.Todo" />
+        <mapping class="com.royasoftware.model.TenantProfile" />
     </session-factory>
 </hibernate-configuration>

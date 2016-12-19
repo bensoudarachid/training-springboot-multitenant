@@ -16,4 +16,8 @@ public interface TodoService {
     
     Todo saveTodo(Todo todo, Long userId);
 
+	Todo updateTodo(Todo todo, Long id);
+
+	void deleteTodo(Todo todoParam, Long id);
+
 }

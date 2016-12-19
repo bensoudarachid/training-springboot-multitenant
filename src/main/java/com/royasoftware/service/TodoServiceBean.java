@@ -54,5 +54,13 @@ public class TodoServiceBean implements TodoService {
 		todo.setUserId(userId);
 		return todoRepository.save(todo);
 	}
-
+	
+	public Todo updateTodo(Todo todo, Long userId){
+		todo.setUserId(userId);
+		return todoRepository.save(todo);
+	}
+	public void deleteTodo(Todo todoParam, Long userId){
+		todoRepository.delete(todoParam);
+	}
+	
 }
