@@ -46,8 +46,8 @@ public class AppControllerInterceptor extends HandlerInterceptorAdapter {
         if(subdomain.contains("."))
         	throw new Exception("Sub with point is not allowed");
         
-//		TenantContext.setCurrentTenant(subdomain);
-		TenantContext.setCurrentTenant("abbaslearning");
+		TenantContext.setCurrentTenant(subdomain);
+//		TenantContext.setCurrentTenant("abbaslearning");
     	logger.info("AppControllerInterceptor. Set tenant context subdomain: "+subdomain);
         // set few parameters to handle ajax request from different host
         return super.preHandle(request, response, handler);

@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
+import org.apache.tomcat.util.http.fileupload.FileUploadBase.SizeLimitExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,42 +135,38 @@ public class TodosController extends BaseController {
 				+ activeUser.getId() + ", role = " + activeUser.getAuthorities().toString());
 		logger.info(
 				"File loaded as bound parameter: orig name = " + file.getOriginalFilename() + ", " + file.getName());
-//		if (file.getOriginalFilename().contains(".")) {
-//			extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-//			logger.info("File extension = " + extension);
-//		} else {
-//			throw new Exception("Unknown Extension");
-//		}
-		try {
-			InputStream is = new BufferedInputStream(new ByteArrayInputStream(file.getBytes()));
-			ImageInputStream iis = ImageIO.createImageInputStream(is); 
-			Iterator<ImageReader> imageReaders = ImageIO.getImageReaders(iis);
-			if (!imageReaders.hasNext()) {
-			    System.out.printf("++++++++++++++++++Abort the shit now: ");
-//				throw new Exception("Uploaded File is not an image!");
-				return new ResponseEntity<>("Uploaded File is not an image!", HttpStatus.BAD_REQUEST);
-			}			
-			ImageReader reader = imageReaders.next();
-			String extension = reader.getFormatName();
-		    System.out.printf("++++++++++++++++++formatName: %s%n", extension);
-		    if(extension == null )
-		    	return new ResponseEntity<>("Uploaded File is not an image!", HttpStatus.BAD_REQUEST);
-		    String uploadPath = TenantContext.getCurrentTenantStoragePath() + "user/" + activeUser.getId() + "/todos/";
-			File uploadFilePath = new File(uploadPath);
-			File uploadFile = new File(uploadPath + todoId +"."+ extension);
-			logger.info("storing in " + uploadFile.getPath());
-			// logger.info("file upload here: Size=" + file.getBytes()+",
-			// path="+abbas.getAbsolutePath());
-			uploadFilePath.mkdirs();
-
-			
-			FileOutputStream fos = new FileOutputStream(uploadFile);
-
-			fos.write(file.getBytes());
-			fos.close();
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		// if (file.getOriginalFilename().contains(".")) {
+		// extension =
+		// file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+		// logger.info("File extension = " + extension);
+		// } else {
+		// throw new Exception("Unknown Extension");
+		// }
+		InputStream is = new BufferedInputStream(new ByteArrayInputStream(file.getBytes()));
+		ImageInputStream iis = ImageIO.createImageInputStream(is);
+		Iterator<ImageReader> imageReaders = ImageIO.getImageReaders(iis);
+		if (!imageReaders.hasNext()) {
+			throw new Exception("Uploaded File is not an image!");
+//			return new ResponseEntity<>("Uploaded File is not an image!", HttpStatus.BAD_REQUEST);
 		}
+		ImageReader reader = imageReaders.next();
+		String extension = reader.getFormatName();
+		System.out.printf("++++++++++++++++++formatName: %s%n", extension);
+		if (extension == null)
+			return new ResponseEntity<>("Uploaded File is not an image!", HttpStatus.BAD_REQUEST);
+		String uploadPath = TenantContext.getCurrentTenantStoragePath() + "user/" + activeUser.getId() + "/todos/";
+		File uploadFilePath = new File(uploadPath);
+		File uploadFile = new File(uploadPath + todoId + "." + extension);
+		logger.info("storing in " + uploadFile.getPath());
+		// logger.info("file upload here: Size=" + file.getBytes()+",
+		// path="+abbas.getAbsolutePath());
+		uploadFilePath.mkdirs();
+
+		FileOutputStream fos = new FileOutputStream(uploadFile);
+
+		fos.write(file.getBytes());
+		fos.close();
+
 		rdmTimeRdmSuccess();
 		// Todo todo = new Todo();
 		// todo.setId(todoParam.getId());
@@ -177,7 +174,7 @@ public class TodosController extends BaseController {
 		// todo.setCompleted(todoParam.isCompleted());
 		// todo = todoService.updateTodo(todo, user.getId());
 		// Todo todo = todoService.updateTodo(todoParam, user.getId());
-//		return new ResponseEntity(null,HttpStatus.OK);
+		// return new ResponseEntity(null,HttpStatus.OK);
 		return ResponseEntity.status(HttpStatus.OK).body(null);
 	}
 
@@ -252,15 +249,16 @@ public class TodosController extends BaseController {
 		return new ResponseEntity<Object>(ret, HttpStatus.NOT_FOUND);
 	}
 
-//	@RequestMapping(value = "/todo/uploadfile", method = RequestMethod.POST)
-//	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
-//		try {
-//			logger.info("file upload here: " + file.getOriginalFilename());
-//		} catch (Exception e) {
-//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//		}
-//		return new ResponseEntity<>(HttpStatus.OK);
-//	}
+	// @RequestMapping(value = "/todo/uploadfile", method = RequestMethod.POST)
+	// public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile
+	// file) {
+	// try {
+	// logger.info("file upload here: " + file.getOriginalFilename());
+	// } catch (Exception e) {
+	// return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	// }
+	// return new ResponseEntity<>(HttpStatus.OK);
+	// }
 
 	private void rdmTimeRdmSuccess() throws Exception {
 		boolean RDM_TIME = true;

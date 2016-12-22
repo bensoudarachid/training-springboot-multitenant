@@ -1,5 +1,6 @@
 package com.royasoftware;
 
+import org.apache.log4j.xml.DOMConfigurator;
 import org.flywaydb.core.Flyway;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -23,6 +24,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class MyBootSpring {
 
 	public static void main(String[] args) {
+		DOMConfigurator.configure("log4j.xml");
 		// System.out.println("Hi");
 
 		// Flyway flyway = new Flyway();

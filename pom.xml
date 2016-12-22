@@ -55,10 +55,10 @@
 			<!--<scope>runtime</scope> -->
 		</dependency>
 		<dependency>
-		    <groupId>org.projectlombok</groupId>
-		    <artifactId>lombok</artifactId>
-		    <version>1.16.10</version>
-			 <scope>provided</scope> <!--this prevents this libto be included in build file-->
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.10</version>
+			<scope>provided</scope> <!--this prevents this libto be included in build file -->
 		</dependency>
 
 		<!-- Dependencies for Guava Cache Management Support -->
@@ -136,6 +136,12 @@
 			<artifactId>spring-security-jwt</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>sshtools</groupId>
+			<artifactId>j2ssh-core</artifactId>
+			<version>0.2.9</version>
+		</dependency>
+
 
 	</dependencies>
 
@@ -161,41 +167,17 @@
 
 
 			<!-- mvn hibernate3:hbm2ddl -->
-			
-<!--		<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>hibernate3-maven-plugin</artifactId>
-				<version>3.0</version>
-				<configuration>
-					<namingStrategy>org.hibernate.cfg.ImprovedNamingStrategy</namingStrategy>
-					<hibernatetool>
 
-						<hbm2ddl update="true" export="false" outputfilename="update-ddl.sql"
-							format="true" console="true">
-							<configuration configurationfile="hibernate.cfg.xml" />
-						</hbm2ddl>
-					</hibernatetool>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.hibernate</groupId>
-						<artifactId>hibernate-entitymanager</artifactId>
-						<version>3.6.10.Final</version>
-						<exclusions>
-							<exclusion>
-								<groupId>javassist</groupId>
-								<artifactId>javassist</artifactId>
-							</exclusion>
-						</exclusions>
-					</dependency>
-					<dependency>
-						<groupId>org.javassist</groupId>
-						<artifactId>javassist</artifactId>
-						<version>3.18.1-GA</version>
-					</dependency>
-				</dependencies>
-			</plugin>
- -->
+			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>hibernate3-maven-plugin</artifactId> 
+				<version>3.0</version> <configuration> <namingStrategy>org.hibernate.cfg.ImprovedNamingStrategy</namingStrategy> 
+				<hibernatetool> <hbm2ddl update="true" export="false" outputfilename="update-ddl.sql" 
+				format="true" console="true"> <configuration configurationfile="hibernate.cfg.xml" 
+				/> </hbm2ddl> </hibernatetool> </configuration> <dependencies> <dependency> 
+				<groupId>org.hibernate</groupId> <artifactId>hibernate-entitymanager</artifactId> 
+				<version>3.6.10.Final</version> <exclusions> <exclusion> <groupId>javassist</groupId> 
+				<artifactId>javassist</artifactId> </exclusion> </exclusions> </dependency> 
+				<dependency> <groupId>org.javassist</groupId> <artifactId>javassist</artifactId> 
+				<version>3.18.1-GA</version> </dependency> </dependencies> </plugin> -->
 		</plugins>
 	</build>
 
