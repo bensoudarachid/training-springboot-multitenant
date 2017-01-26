@@ -73,6 +73,13 @@ public class MultitenantDbConfiguration {
 		// logger.info("Found tenant files number: "+files.length);
 		Map<Object, Object> resolvedDataSources = new HashMap<>();
 
+		//Repair default db
+		flyway = new Flyway();
+		flyway.setDataSource(properties.getUrl(),properties.getUsername(),properties.getPassword());
+		flyway.setLocations("db.migration");
+		flyway.repair();
+//		flyway.migrate();
+
 		for (File propertyFile : fileVector) {
 			Properties tenantProperties = new Properties();
 			DataSourceBuilder dataSourceBuilder = new DataSourceBuilder(this.getClass().getClassLoader());
@@ -81,16 +88,28 @@ public class MultitenantDbConfiguration {
 				String tenantId = tenantProperties.getProperty("name");
 				logger.info("tenantId: " + tenantId);
 				flyway = new Flyway();
-				flyway.setDataSource(tenantProperties.getProperty("datasource.url"), tenantProperties.getProperty("datasource.username"), tenantProperties.getProperty("datasource.password"));
+//				flyway.setValidateOnMigrate(false);
+				if (tenantProperties.getProperty("datasource.url") != null)
+					flyway.setDataSource(tenantProperties.getProperty("datasource.url"),
+							tenantProperties.getProperty("datasource.username"),
+							tenantProperties.getProperty("datasource.password"));
+				else
+					flyway.setDataSource("jdbc:mysql://localhost:3306/" + tenantId + "?autoReconnect=true&useSSL=false",
+							"root", "1qay2wsx");
 				flyway.setLocations(tenantProperties.getProperty("flyway.locations"));
+				flyway.repair();
 				flyway.migrate();
 
-				// Assumption: The tenant database uses the same driver class
-				// as the default database that you configure.
-				dataSourceBuilder.driverClassName(properties.getDriverClassName())
-						.url(tenantProperties.getProperty("datasource.url"))
-						.username(tenantProperties.getProperty("datasource.username"))
-						.password(tenantProperties.getProperty("datasource.password"));
+				if (tenantProperties.getProperty("datasource.url") != null)
+					dataSourceBuilder.driverClassName(properties.getDriverClassName())
+							.url(tenantProperties.getProperty("datasource.url"))
+							.username(tenantProperties.getProperty("datasource.username"))
+							.password(tenantProperties.getProperty("datasource.password"));
+				else
+					dataSourceBuilder.driverClassName(properties.getDriverClassName())
+							.url("jdbc:mysql://localhost:3306/" + tenantId + "?autoReconnect=true&useSSL=false")
+							.username("root").password("1qay2wsx");
+
 				if (properties.getType() != null) {
 					dataSourceBuilder.type(properties.getType());
 				}

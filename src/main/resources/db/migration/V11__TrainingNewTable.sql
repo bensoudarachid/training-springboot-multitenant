@@ -1,0 +1,1 @@
+create table training (id bigint not null auto_increment, long_description varchar(255) not null, short_description varchar(255) not null, title varchar(255) not null, version integer, primary key (id));

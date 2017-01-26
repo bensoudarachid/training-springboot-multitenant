@@ -5,6 +5,7 @@ import org.flywaydb.core.Flyway;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.guava.GuavaCacheManager;
@@ -18,7 +19,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 //import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 
 //EnableZuulProxy
-@SpringBootApplication
+@SpringBootApplication 
 //SpringBootApplication replaces: @Configuration @ComponentScan @EnableAutoConfiguration
 @EnableScheduling
 public class MyBootSpring {

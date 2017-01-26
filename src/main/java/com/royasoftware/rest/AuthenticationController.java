@@ -77,10 +77,51 @@ public class AuthenticationController extends BaseController {
 	 * @return created account as json
 	 * 
 	 */
-	
+
+	@RequestMapping(value = "/registerold", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Account register(@RequestParam("username") String username, @RequestParam("password") String password,
+			@RequestParam("email") String email) throws Exception {
+
+		System.out.println("register ");
+		// Check if account is unique
+		// if(errors.hasErrors()){
+		// throw new InvalidRequestException("Username already exists", errors);
+		// }
+		// try{
+
+		// account.setRegisterId(new Integer(rand));
+		// account.setRegisterDate(new Date());
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (!new EmailValidator().validate(email))
+			throw new Exception("Email is not valid");
+		if (password.length() < 8) {
+			throw new Exception("Password should be greater than 8 characters");
+		}
+
+		Account existingAccount = accountService.findByUsername(username);
+		if (existingAccount != null)
+			throw new Exception("This Account (User name) exists already");
+		Account account = new Account();
+		account.setUsername(username);
+		account.setPassword(password);
+		Account createdAccount = accountService.createNewAccount(account);
+
+		createdAccount.setPassword("");
+		// return new ResponseEntity<Account>(createdAccount,
+		// HttpStatus.CREATED);
+		return createdAccount;
+	}
+
 	@RequestMapping(value = "/register", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Account> register(@RequestParam("username") String username,
-			@RequestParam("password") String password, @RequestParam("email") String email) throws Exception{
+	@ResponseBody // ResponseEntity<Map<String, Object>>  works too
+	public Map<String, Object> registernew(@RequestParam("username") String username,
+			@RequestParam("password") String password, @RequestParam("email") String email) throws Exception {
 
 		// System.out.println("errors = "+errors);
 		// Check if account is unique
@@ -88,31 +129,57 @@ public class AuthenticationController extends BaseController {
 		// throw new InvalidRequestException("Username already exists", errors);
 		// }
 		// try{
+		HashMap<String, Object> errorMap = new HashMap();
+		System.out.println("register hna ");
 
-//		account.setRegisterId(new Integer(rand));
-//		account.setRegisterDate(new Date());
+		// account.setRegisterId(new Integer(rand));
+		// account.setRegisterDate(new Date());
+		HashMap<String, Object> registerResponse = new HashMap();
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        if( !new EmailValidator().validate(email) )
-        	throw new Exception("Email is not valid");
-        if (password.length() < 8){
-            throw new Exception("Password should be greater than 8 characters");
-        }
-
-		Account existingAccount = accountService.findByUsername(username);
-		if( existingAccount != null)
-			throw new Exception("This Account (User name) exists already");
-		Account account = new Account();
-		account.setUsername(username);
-		account.setPassword(password);
-		Account createdAccount = accountService.createNewAccount(account);
-		
-		createdAccount.setPassword("");
-		return new ResponseEntity<Account>(createdAccount, HttpStatus.CREATED);
+		if (username == null || username.length() == 0) {
+			errorMap.put("username", "required");
+		}else if(username.length() > 25){
+			errorMap.put("username", "too long (25 chars max)");
+		}
+		if (password == null || password.length() == 0) {
+			errorMap.put("password", "required");
+		} else if (password.length() < 8) {
+			// throw new Exception("Password should be greater than 8
+			// characters");
+			errorMap.put("password", "should be greater than 8 characters");
+			// registerResponse.put("error", "Password should be greater than 8
+			// characters");
+			// return registerResponse;
+		}
+		if (email == null || email.length() == 0) {
+			errorMap.put("email", "required");
+		} else if (!new EmailValidator().validate(email)) {
+			// throw new Exception("Email is not valid");
+			errorMap.put("email", "not valid");
+		}
+		if (!errorMap.containsKey("username")) {
+			Account existingAccount = accountService.findByUsername(username);
+			if (existingAccount != null)
+				errorMap.put("username", "account (User name) exists already");
+		}
+		// throw new Exception("This Account (User name) exists already");
+		if (errorMap.isEmpty()) {
+			Account account = new Account();
+			account.setUsername(username);
+			account.setPassword(password);
+			Account createdAccount = accountService.createNewAccount(account);
+			createdAccount.setPassword("");
+			registerResponse.put("account", createdAccount);
+		}
+		else
+			registerResponse.put("error", errorMap);
+//		return new ResponseEntity<Map<String, Object>>(registerResponse, HttpStatus.OK);
+		return registerResponse;
 		// }catch(Exception e){
 		// System.out.println("Ok. Here is the exc handler.
 		// "+e.getClass().getName()+". message="+e.getMessage());
@@ -134,45 +201,50 @@ public class AuthenticationController extends BaseController {
 	 * @return created account as json
 	 * 
 	 */
-	
+
 	@RequestMapping(value = "/regmailconfirm", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> registermailconfirm(@RequestParam("id") Long userid,
 			@RequestParam("regid") Integer regid) throws MessagingException {
 		Account account = accountService.findByUserid(userid);
-		
-		if(account == null)
+
+		if (account == null)
 			return new ResponseEntity<String>("User not found", HttpStatus.BAD_REQUEST);
-		System.out.println("account.getRegistrationId()="+account.getRegistrationId());
-		System.out.println("param regid="+regid);
-		if( !account.getRegistrationId().equals(regid) )
-//			return new ResponseEntity<String>("Bad request!", HttpStatus.BAD_REQUEST);
+		System.out.println("account.getRegistrationId()=" + account.getRegistrationId());
+		System.out.println("param regid=" + regid);
+		if (!account.getRegistrationId().equals(regid))
+			// return new ResponseEntity<String>("Bad request!",
+			// HttpStatus.BAD_REQUEST);
 			throw new MessagingException("Bad request!!");
-		if( account.isEnabled() )
+		if (account.isEnabled())
 			return new ResponseEntity<String>("This account is already active", HttpStatus.OK);
 		account.setEnabled(true);
 		account.setRegistrationId(null);
 		account = accountService.saveAccount(account);
 		return new ResponseEntity<String>("ok", HttpStatus.OK);
 	}
-	
-//	@ExceptionHandler(DataIntegrityViolationException.class)
-//	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//	public @ResponseBody ExceptionJSONInfo handleDataIntegrityException(HttpServletRequest request, Exception ex) {
-//		System.out.println("Ok. Here is the DataIntegrityViolationException handler."+ex.getClass().getName()+". message="+ex.getMessage());
-//		ExceptionJSONInfo response = new ExceptionJSONInfo();
-//		response.setUrl(request.getRequestURL().toString());
-//		response.setMessage("User exists already");
-//		return response;
-//	}
-//	
-//	@ExceptionHandler(RuntimeException.class)
-//	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//	public @ResponseBody ExceptionJSONInfo handleGeneralException(HttpServletRequest request, Exception ex) {
-//		System.out.println("Ok. Here is the general exception handler."+ex.getClass().getName()+". message="+ex.getMessage());
-//		ExceptionJSONInfo response = new ExceptionJSONInfo();
-//		response.setUrl(request.getRequestURL().toString());
-//		response.setMessage(ex.getMessage());
-//		return response;
-//	}
+
+	// @ExceptionHandler(DataIntegrityViolationException.class)
+	// @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	// public @ResponseBody ExceptionJSONInfo
+	// handleDataIntegrityException(HttpServletRequest request, Exception ex) {
+	// System.out.println("Ok. Here is the DataIntegrityViolationException
+	// handler."+ex.getClass().getName()+". message="+ex.getMessage());
+	// ExceptionJSONInfo response = new ExceptionJSONInfo();
+	// response.setUrl(request.getRequestURL().toString());
+	// response.setMessage("User exists already");
+	// return response;
+	// }
+	//
+	// @ExceptionHandler(RuntimeException.class)
+	// @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	// public @ResponseBody ExceptionJSONInfo
+	// handleGeneralException(HttpServletRequest request, Exception ex) {
+	// System.out.println("Ok. Here is the general exception
+	// handler."+ex.getClass().getName()+". message="+ex.getMessage());
+	// ExceptionJSONInfo response = new ExceptionJSONInfo();
+	// response.setUrl(request.getRequestURL().toString());
+	// response.setMessage(ex.getMessage());
+	// return response;
+	// }
 
 }

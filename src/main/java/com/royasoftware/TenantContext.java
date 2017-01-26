@@ -21,6 +21,7 @@ public class TenantContext {
         }
     };
     public static void setCurrentTenant(String tenant) throws Exception{
+    	logger.info("set current tenant "+tenant);
     	if( !isTenantValid(tenant))
     		throw new Exception("Subdomain not valid");
         myContextThreadLocal.get().put("tenant",tenant);
@@ -32,7 +33,19 @@ public class TenantContext {
     	return new StringBuffer(userUploadStorage).append(myContextThreadLocal.get().get("tenant")).append("/").toString();
 //        return userUploadStorage+(String)myContextThreadLocal.get().get("tenant")+"/";
     }
-    private static String getCurrentTenantStoragePath(String tenant) {
+    public static String getCurrentTenantStoragePath(String subfolder) {
+    	return new StringBuffer(userUploadStorage).append(myContextThreadLocal.get().get("tenant")).append("/").append(subfolder).append("/").toString();
+    }
+    public static String getCurrentUserStoragePath(String name) {
+    	CustomUserDetails user = getCurrentUser();
+    	if( user == null )
+    		return null;
+//    	logger.info("myContextThreadLocal.get().get(tenant)="+myContextThreadLocal.get().get("tenant"));
+//    	return getCurrentTenantStoragePath();
+    	return new StringBuffer(userUploadStorage).append(myContextThreadLocal.get().get("tenant")).append("/user/").append(user.getId()).append("/").append(name).append("/").toString();
+//        return userUploadStorage+(String)myContextThreadLocal.get().get("tenant")+"/";
+    }
+    private static String getTenantStoragePath(String tenant) {
     	return new StringBuffer(userUploadStorage).append(tenant).append("/").toString();
 //        return userUploadStorage+(String)myContextThreadLocal.get().get("tenant")+"/";
     }
@@ -52,7 +65,7 @@ public class TenantContext {
     public static void addValidTenant(String tenant){
     	logger.info("add valid tenant :"+tenant);
     	validTenantSet.add(tenant);
-    	new File(getCurrentTenantStoragePath(tenant)).mkdirs();    	
+    	new File(getTenantStoragePath(tenant)).mkdirs();    	
     }
     private static boolean isTenantValid(String tenant){
     	return validTenantSet.contains(tenant);

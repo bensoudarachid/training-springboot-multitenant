@@ -1,26 +1,21 @@
 package com.royasoftware.rest;
 
-import com.google.common.net.InternetDomainName;
-import com.royasoftware.TenantContext;
-import com.royasoftware.settings.exceptions.DefaultExceptionAttributes;
-import com.royasoftware.settings.exceptions.ExceptionAttributes;
+import javax.persistence.NoResultException;
+import javax.servlet.http.HttpServletRequest;
 
-import org.apache.tomcat.util.http.fileupload.FileUploadBase.SizeLimitExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 //import org.springframework.web.multipart.MultipartException;
 
-import javax.persistence.NoResultException;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
+import com.google.common.net.InternetDomainName;
+import com.royasoftware.TenantContext;
 
 /**
  * Base of all controllers
@@ -146,6 +141,11 @@ public class BaseController {
 			return "A child object reference does not exist in database";
 		else if (e1 instanceof NullPointerException)
 			return "System error. Null pointer exception";
+		else if (e1.getMessage() != null && e1.getMessage()
+				.startsWith("Required MultipartFile parameter") && e1.getMessage()
+				.endsWith("is not present") )
+			return "No file parameter provided";
+
 		else
 			return e1.getMessage();
 	}
@@ -167,15 +167,15 @@ public class BaseController {
 		}
 		return e1;
 	}
-	protected String getSubdomain() throws Exception{
-		String site = request.getServerName();
-        String domain = InternetDomainName.from(request.getServerName()).topPrivateDomain().toString();
-        String subdomain = site.replaceAll(domain, "");
-        subdomain = subdomain.substring(0, subdomain.length() - 1);
-        logger.info("Base controller. Subdomain = " + subdomain);
-        if(subdomain.contains("."))
-        	throw new Exception("Mammaaaaa! Sub with point is not allowed");
-		TenantContext.setCurrentTenant(subdomain);
-      return subdomain;
-	}
+//	protected String getSubdomain() throws Exception{
+//		String site = request.getServerName();
+//        String domain = InternetDomainName.from(request.getServerName()).topPrivateDomain().toString();
+//        String subdomain = site.replaceAll(domain, "");
+//        subdomain = subdomain.substring(0, subdomain.length() - 1);
+//        logger.info("Base controller. Subdomain = " + subdomain);
+//        if(subdomain.contains("."))
+//        	throw new Exception("Mammaaaaa! Sub with point is not allowed");
+//		TenantContext.setCurrentTenant(subdomain);
+//      return subdomain;
+//	}
 }

@@ -2,6 +2,7 @@ package com.royasoftware.service;
 
 import com.royasoftware.model.Role;
 import com.royasoftware.model.Todo;
+import com.royasoftware.model.Training;
 
 import java.util.Collection;
 
@@ -10,20 +11,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.royasoftware.repository.TodoRepository;
+import com.royasoftware.repository.TrainingRepository;
 
 /**
  * Manage the data from database from Role table user
  */
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class TodoServiceBean implements TodoService {
+public class TrainingServiceBean implements TrainingService {
 
 	/**
 	 * The Spring Data repository for Account entities.
 	 */
 	@Autowired
-	private TodoRepository todoRepository;
+	private TrainingRepository trainingRepository;
+
 	/**
 	 * Get by id
 	 * 
@@ -31,9 +33,9 @@ public class TodoServiceBean implements TodoService {
 	 * @return
 	 */
 	@Override
-	public Todo findById(Long id) {
-		Todo todo = todoRepository.findByTodoId(id);
-		return todo;
+	public Training findById(Long id) {
+		Training training = trainingRepository.findById(id);
+		return training;
 	}
 
 	/**
@@ -44,22 +46,21 @@ public class TodoServiceBean implements TodoService {
 	 * @return Role object
 	 */
 	@Override
-	public Collection<Todo> findByUserId(Long userId) {
-		return todoRepository.findByUserid(userId);
+	public Collection<Training> findAll() {
+		return trainingRepository.findAll();
 	}
 
 	@Override
-	public Todo saveTodo(Todo todo, Long userId) {
-		todo.setUserId(userId);
-		return todoRepository.save(todo);
+	public Training saveTraining(Training training) {
+		return trainingRepository.save(training);
 	}
 
-	public Todo updateTodo(Todo todo, Long userId){
-		todo.setUserId(userId);
-		return todoRepository.save(todo);
+	public Training updateTraining(Training training){
+		return trainingRepository.save(training);
 	}
 
-	public void deleteTodo(Todo todoParam, Long userId){
-		todoRepository.delete(todoParam);
+	public void deleteTraining(Training trainingParam){
+		trainingRepository.delete(trainingParam);
 	}
+
 }

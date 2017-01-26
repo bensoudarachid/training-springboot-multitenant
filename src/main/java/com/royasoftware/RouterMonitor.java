@@ -1,11 +1,9 @@
 package com.royasoftware;
 
-import java.io.BufferedReader;
-import com.royasoftware.tools.SSHClient;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
+import java.awt.*;
+import java.io.*;
+
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -13,11 +11,19 @@ import java.net.Socket;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-import javax.sound.sampled.*;
-import javax.xml.parsers.FactoryConfigurationError;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -26,7 +32,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.royasoftware.model.Todo;
+import com.royasoftware.tools.SSHClient;
 
 @lombok.Getter
 @lombok.Setter
@@ -35,14 +41,15 @@ import com.royasoftware.model.Todo;
 public class RouterMonitor {
 	final private static short STATUS_CONNECTION_OK = 0;
 	final private static short STATUS_CONNECTION_LOST = 1;
-	final private static short WAIT_FOR_PING_MAX_ITERATIONS = 14;
-	final private static String SOUND_DOWN = "E:\\Samples\\FreeSound\\FX\\Powerdown.wav";
+	final private static short WAIT_FOR_PING_MAX_ITERATIONS = 12;
+//	final private static String SOUND_DOWN = "E:\\Samples\\FreeSound\\FX\\Powerdown2.wav";
+	final private static String SOUND_DOWN = "E:\\Samples\\SONY LOOPS & SAMPLES LIBRARIES SCRATCH TACTICS by DJ PUZZLE\\BPM Tactics\\100 BPM\\100 BPM Tactic 093.wav";	
 	final private static String SOUND_HEROKU_PING = "E:\\Samples\\Hip Hop 3\\Scratches\\hit me b.wav";
 
 	// private short status = STATUS_CONNECTION_OK;
 	private short waitBeforeRebootLoop = 0;
 	private short watingForConnectionLoop = 0;
-
+	private boolean updateDomainToIpMapppingOk;
 	// private String lastIP = null;
 
 	private static final Logger logger = Logger.getLogger(RouterMonitor.class);
@@ -55,16 +62,18 @@ public class RouterMonitor {
 
 	SSHClient sshClient = null;
 
+	public RouterMonitor(){}
 	@Autowired
 	public RouterMonitor(@Value("${app.router.host}") String host, @Value("${app.router.login}") String login,
 			@Value("${app.router.passwd}") String passwd) throws Exception {
 		setHost(host);
 		sshClient = new SSHClient(host, login, passwd);
 		logger.info("calling updateDomainToIpMappping one tine on router monitor init");
-		updateDomainToIpMappping();
+		setUpdateDomainToIpMapppingOk(updateDomainToIpMappping());
 	}
 
 	public void reconnect() {
+		logger.info("reconnect()");
 		try {
 			// wanSetIspLogin();
 			// Thread.sleep(5000);
@@ -83,7 +92,7 @@ public class RouterMonitor {
 
 			Process process = Runtime.getRuntime()
 					.exec("C:\\Programme\\AutoIt3\\AutoIt3.exe C:\\MyAutoItMacros\\router\\reboot.au3");
-
+			logger.info("reconnect() done");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -98,6 +107,7 @@ public class RouterMonitor {
 	}
 
 	private String getPublicIp() {
+		logger.info("getPublicIp()");
 		String ip = null;
 		try {
 			for (int i = 0; i < 30; i++) {
@@ -122,6 +132,7 @@ public class RouterMonitor {
 	}
 
 	private static boolean pingHost(String host, int timeout) {
+		// logger.info("pingHost()");
 		try (Socket socket = new Socket()) {
 			socket.connect(new InetSocketAddress(host, 80), timeout);
 			return true;
@@ -131,6 +142,7 @@ public class RouterMonitor {
 	}
 
 	private String getActualIp() throws Exception {
+		logger.info("getActualIp()");
 		String address = null;
 		try {
 			// InetAddress inetAddress =
@@ -138,7 +150,7 @@ public class RouterMonitor {
 			// address = inetAddress.getHostAddress();
 			// logger.info("address=" + address);
 
-			for (int i = 0; i < 30; i++) {
+			for (int i = 0; i < 20; i++) {
 				try {
 					InetAddress inetAddress = java.net.InetAddress.getByName("mama.royasoftware.com");
 					address = inetAddress.getHostAddress();
@@ -172,34 +184,54 @@ public class RouterMonitor {
 	}
 
 	private String connectUrl(String url) throws Exception {
-		String USER_AGENT = "Mozilla/5.0";
+		logger.info("connectUrl "+url);
 
-		URL obj = new URL(url);
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		@SuppressWarnings("unchecked")
+		Future<String> future = executor.submit(new Callable() {
 
-		// optional default is GET
-		con.setRequestMethod("GET");
+			public String call() throws Exception {
+				String USER_AGENT = "Mozilla/5.0";
 
-		// add request header
-		con.setRequestProperty("User-Agent", USER_AGENT);
+				URL obj = new URL(url);
+				HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-		int responseCode = con.getResponseCode();
-		if (responseCode != 200)
-			throw new Exception("Could not connect to url: " + url);
-		// log.info("\nSending 'GET' request to URL : " + url);
-		logger.info("Calling " + url + ". Response Code : " + responseCode);
+				// optional default is GET
+				con.setRequestMethod("GET");
 
-		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
+				// add request header
+				con.setRequestProperty("User-Agent", USER_AGENT);
 
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
+				int responseCode = con.getResponseCode();
+				if( responseCode == 401 )
+					return "unauthorized";
+				if (responseCode != 200)
+					throw new Exception("Could not connect to url: " + url);
+				logger.info("Calling " + url + ". Response Code : " + responseCode);
+
+				BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+				String inputLine;
+				StringBuffer response = new StringBuffer();
+
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+				in.close();
+				logger.info("connectUrl() finished");
+				// print result
+				return response.toString();
+			}
+		});
+		try {
+			// System.out.println(future.get(10, TimeUnit.SECONDS));
+			String returned = future.get(10, TimeUnit.SECONDS);
+			logger.info("returned="+returned); 
+			return returned;
+		} catch (Exception e) {
+			System.err.println("connectUrl Exception");
 		}
-		in.close();
-
-		// print result
-		return response.toString();
+		executor.shutdownNow();
+		return null;
 	}
 
 	private String sendJokerDomainMappingUpdate() throws Exception {
@@ -228,32 +260,44 @@ public class RouterMonitor {
 		}
 	}
 
-	private void updateDomainToIpMappping() throws Exception {
-		String ip = getPublicIp();
-		logger.info("public ip = " + ip);
-		String actualIP = getActualIp();
-		if (ip == null || actualIP == null) {
-			logger.info("one of the ips is null. no update");
-			return;
+	private boolean updateDomainToIpMappping() {
+		try {
+			String ip = getPublicIp();
+			logger.info("public ip = " + ip);
+			String actualIP = null;
+			if( ip != null )
+				actualIP = getActualIp();
+			if (ip == null || actualIP == null) {
+				logger.info("one of the ips is null. no update");
+				return false;
+			}
+			if (!actualIP.equals(ip)) {
+				logger.info("Different ips, actual ip = " + actualIP + ". Call domain mapping update");
+				logger.info("Joker response " + sendJokerDomainMappingUpdate());
+				return true;
+			} else if (actualIP.equals(ip)) {
+				logger.info("Same ips, no domain mapping update");
+				return true;
+			}
+		} catch (Exception e) {
+			logger.info("No domain mapping update becase of exception:  " + e.getMessage());
+			return false;
 		}
-		if (ip != null && actualIP != null && !actualIP.equals(ip)) {
-			logger.info("Different ips, actual ip = " + actualIP + ". Call domain mapping update");
-			logger.info("Joker response " + sendJokerDomainMappingUpdate());
-		} else if (ip != null && actualIP != null && actualIP.equals(ip)) {
-			logger.info("Same ips, no domain mapping update");
-		}
-
+		return false;
 	}
 
 	@Scheduled(fixedDelay = 15000)
 	public void checkAndFixRouterConnection() {
 		try {
 			boolean jokerUpdated = true;
+			short pingRouter = 0;
 			boolean pingOk = pingHost("google.com", 6000);
 			short status = STATUS_CONNECTION_OK;
 			// if( !pingOk )
 			// Thread.sleep(3000);
 			System.out.print(".");
+			if (pingOk && !isUpdateDomainToIpMapppingOk())
+				setUpdateDomainToIpMapppingOk(updateDomainToIpMappping());
 			while (!pingOk || !jokerUpdated) {
 				Thread.sleep(3000);
 				switch (status) {
@@ -262,33 +306,39 @@ public class RouterMonitor {
 						pingOk = pingHost("google.com", 6000);
 						if (pingOk) {
 							logger.info("Ping is back. Connection still valid");
-							updateDomainToIpMappping();
+							setUpdateDomainToIpMapppingOk(updateDomainToIpMappping());
+							jokerUpdated = true;
 							break;
 						}
+						logger.info("Iterations until reboot " + (WAIT_FOR_PING_MAX_ITERATIONS - i));
 						soundClipTest(SOUND_DOWN);
 						Thread.sleep(3000);
 					}
 					if (!pingOk) {
 						status = STATUS_CONNECTION_LOST;
 						jokerUpdated = false;
+//						logger.info("Reboot now deactivated!");
 						reconnect();
 					}
 					break;
 				case STATUS_CONNECTION_LOST:
+					System.out.print("-");
 					pingOk = pingHost("google.com", 6000);
-					if (pingOk) {
+					pingRouter +=  pingHost("192.168.1.1", 6000)?1:0;
+
+					logger.info("pingRouter="+pingRouter); 
+
+					if ( pingRouter > 25){
 						status = STATUS_CONNECTION_OK;
+						pingRouter = 0;
+						break;
+					}
+					if (pingOk ) {
+						status = STATUS_CONNECTION_OK;
+						logger.info("Before call http://abbaslearning.royasoftware.com ");
 						connectUrl("http://abbaslearning.royasoftware.com");
-						updateDomainToIpMappping();
-						// String ip = getPublicIp();
-						// String actualIP = getActualIp();
-						// if (actualIP != null && !actualIP.equals(ip)) {
-						// logger.info("Different ips, send domain mapping");
-						// logger.info("Joker response " +
-						// sendJokerDomainMappingUpdate());
-						// } else if (actualIP != null && actualIP.equals(ip)) {
-						// logger.info("Same ips, no domain mapping update");
-						// }
+						logger.info("After call http://abbaslearning.royasoftware.com ");
+						setUpdateDomainToIpMapppingOk(updateDomainToIpMappping());
 						jokerUpdated = true;
 						break;
 					}
@@ -312,94 +362,8 @@ public class RouterMonitor {
 		}
 	}
 
-	// @Scheduled(fixedDelay = 15000)
-	// public void checkAndFixRouterConnectionOld() {
-	// System.out.print(".");
-	// boolean pingOk = pingHost("google.com", 6000);
-	// try {
-	// switch (status) {
-	// case STATUS_CONNECTION_OK:
-	// if (!pingOk) {
-	// logger.info(dateFormat.format(new Date()) + ": Connection is ok. No
-	// Ping!");
-	// boolean pingAgain;
-	// for (int i = 0; i < 3; i++) {
-	// logger.info("Please test connection before i reboot router. "
-	// + (((WAIT_FOR_PING_MAX_ITERATIONS - getWaitBeforeRebootLoop()) * 12) - i
-	// * 3)
-	// + " seconds until launch.");
-	// soundClipTest(SOUND_DOWN);
-	// pingAgain = pingHost("google.com", 3000);
-	// Thread.sleep(3000);
-	// if (pingAgain) {
-	// logger.info("Connection is back!");
-	// setWaitBeforeRebootLoop((short) 0);
-	// return;
-	// }
-	// }
-	// incrementWaitBeforeRebootLoop();
-	// if (getWaitBeforeRebootLoop() > WAIT_FOR_PING_MAX_ITERATIONS) {
-	// logger.info("Reboot now!");
-	// setStatus(STATUS_CONNECTION_LOST);
-	// setWaitBeforeRebootLoop((short) 0);
-	// setWatingForConnectionLoop((short) 0);
-	// reconnect();
-	// return;
-	// // Runtime.getRuntime()
-	// // .exec("C:\\Programme\\AutoIt3\\AutoIt3.exe
-	// // C:\\MyAutoItMacros\\router\\reboot.au3");
-	// }
-	//
-	// }
-	//
-	// break;
-	// case STATUS_CONNECTION_LOST:
-	// if (pingOk) {
-	// logger.info(dateFormat.format(new Date()) + ": Connection is out. Ping
-	// ok!");
-	// setStatus(STATUS_CONNECTION_OK);
-	// // This is something we do to get the node server going as
-	// // it seems he needs this to get connected from the net. Not
-	// // sure though!
-	// connectUrl("http://abbaslearning.royasoftware.com");
-	// String ip = getPublicIp();
-	// String actualIP = getActualIp();
-	// if (actualIP != null && !actualIP.equals(ip)) {
-	// logger.info("Different ips, send domain mapping");
-	// logger.info("Joker response " + sendJokerDomainMappingUpdate());
-	// } else if (actualIP != null && actualIP.equals(ip)) {
-	// logger.info("Same ips, no domain mapping update");
-	// }
-	// // setLastIP(ip);
-	// } else {
-	// incrementWatingForConnectionLoop();
-	// }
-	// if (getWatingForConnectionLoop() > 15)
-	// setWatingForConnectionLoop((short) 0);
-	// setWaitBeforeRebootLoop((short) 0);
-	// setStatus(STATUS_CONNECTION_OK);
-	// break;
-	// }
-	//
-	// // String reboot = rm.reboot();
-	// // logger.info("reboot = "+reboot);
-	// // String ps = rm.ps();
-	// // logger.info("ps = "+ps);
-	// // rm.readUrlIntoFile("http://admin:royaZoft@192.168.1.1/rebootinfo.cgi",
-	// // "logout.html", false);
-	// // ps = rm.ps();
-	// // logger.info("ps = "+ps);
-	//
-	// // Process process =
-	// // Runtime.getRuntime().exec("C:\\Programme\\AutoIt3\\AutoIt3.exe
-	// // C:\\MyAutoItMacros\\router\\reboot.au3");
-	//
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
 
-	@Scheduled(fixedDelay = 1400000, initialDelay = 60000)
+	@Scheduled(fixedDelay = 1400000, initialDelay = 1200000)
 	public void pingHerokuConnection() {
 		soundClipTest(SOUND_HEROKU_PING);
 		Calendar rightNow = Calendar.getInstance();
@@ -443,7 +407,12 @@ public class RouterMonitor {
 	public static void main(String[] args) {
 		try {
 			DOMConfigurator.configure("log4j.xml");
-			RouterMonitor rm = new RouterMonitor("192.168.1.1", "admin", "royaZoft");
+//			RouterMonitor rm = new RouterMonitor("192.168.1.1", "admin", "royaZoft");
+			RouterMonitor rm = new RouterMonitor();
+//			rm.reconnect();
+			rm.updateDomainToIpMappping();
+//			logger.info("connect router "+rm.pingHost("192.168.1.1", 6000)); 
+			
 			// rm.reconnect();
 			// rm.pppDisconnect();
 			// Thread.sleep(40000);
@@ -482,6 +451,7 @@ public class RouterMonitor {
 
 			// rm.updateDomainToIpMappping();
 			// logger.info("rm.getActualIp()="+rm.getActualIp());
+			System.exit(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -489,3 +459,4 @@ public class RouterMonitor {
 	}
 
 }
+

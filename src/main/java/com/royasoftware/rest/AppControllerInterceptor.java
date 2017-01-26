@@ -23,10 +23,10 @@ public class AppControllerInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request,
             HttpServletResponse response, Object handler) throws Exception {
-    	
+    	logger.info("AppControllerInterceptor. Call ");
     	Authentication authentication =
     			SecurityContextHolder.getContext().getAuthentication();
-    	if(authentication.getPrincipal() instanceof String && authentication.getPrincipal().equals("anonymousUser"))
+    	if(authentication != null && authentication.getPrincipal() instanceof String && authentication.getPrincipal().equals("anonymousUser"))
     		TenantContext.setCurrentUser(null);
     	else{
 	    	CustomUserDetails activeUser = (CustomUserDetails) (authentication == null ? null : authentication.getPrincipal());
@@ -34,21 +34,21 @@ public class AppControllerInterceptor extends HandlerInterceptorAdapter {
 	//				+ activeUser.getId() + ", role = " + activeUser.getAuthorities().toString());
 	    	TenantContext.setCurrentUser(activeUser);
     	}
-		String site = request.getServerName();
-		String domain = null;
-		if( !site.endsWith(".localhost"))
-//			domain = InternetDomainName.from(request.getServerName()).topPrivateDomain().toString();
-			domain = site.substring(site.lastIndexOf('.', site.lastIndexOf('.')-1) + 1);
-		else
-			domain="localhost";
-        String subdomain = site.replaceAll(domain, "");
-        subdomain = subdomain.substring(0, subdomain.length() - 1);
-        if(subdomain.contains("."))
-        	throw new Exception("Sub with point is not allowed");
-        
-		TenantContext.setCurrentTenant(subdomain);
-//		TenantContext.setCurrentTenant("abbaslearning");
-    	logger.info("AppControllerInterceptor. Set tenant context subdomain: "+subdomain);
+//		String site = request.getServerName();
+//		String domain = null;
+//		if( !site.endsWith(".localhost"))
+////			domain = InternetDomainName.from(request.getServerName()).topPrivateDomain().toString();
+//			domain = site.substring(site.lastIndexOf('.', site.lastIndexOf('.')-1) + 1);
+//		else
+//			domain="localhost";
+//        String subdomain = site.replaceAll(domain, "");
+//        subdomain = subdomain.substring(0, subdomain.length() - 1);
+//        if(subdomain.contains("."))
+//        	throw new Exception("Sub with point is not allowed");
+//        
+//		TenantContext.setCurrentTenant(subdomain);
+////		TenantContext.setCurrentTenant("abbaslearning");
+//    	logger.info("AppControllerInterceptor. Set tenant context subdomain: "+subdomain);
         // set few parameters to handle ajax request from different host
         return super.preHandle(request, response, handler);
     }

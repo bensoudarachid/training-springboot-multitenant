@@ -141,7 +141,13 @@
 			<artifactId>j2ssh-core</artifactId>
 			<version>0.2.9</version>
 		</dependency>
-
+<!-- 
+		<dependency>
+		    <groupId>jmagick</groupId>
+		    <artifactId>jmagick</artifactId>
+		    <version>6.3.9</version>
+		</dependency>
+ -->
 
 	</dependencies>
 
