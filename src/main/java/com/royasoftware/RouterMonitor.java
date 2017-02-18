@@ -25,14 +25,16 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
+//import org.apache.log4j.Logger;
+//import org.apache.log4j.xml.DOMConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.royasoftware.tools.SSHClient;
+//import com.royasoftware.tools.SSHClient;
 
 @lombok.Getter
 @lombok.Setter
@@ -41,33 +43,32 @@ import com.royasoftware.tools.SSHClient;
 public class RouterMonitor {
 	final private static short STATUS_CONNECTION_OK = 0;
 	final private static short STATUS_CONNECTION_LOST = 1;
-	final private static short WAIT_FOR_PING_MAX_ITERATIONS = 12;
+	final private static short WAIT_FOR_PING_MAX_ITERATIONS = 16;
 //	final private static String SOUND_DOWN = "E:\\Samples\\FreeSound\\FX\\Powerdown2.wav";
 	final private static String SOUND_DOWN = "E:\\Samples\\SONY LOOPS & SAMPLES LIBRARIES SCRATCH TACTICS by DJ PUZZLE\\BPM Tactics\\100 BPM\\100 BPM Tactic 093.wav";	
-	final private static String SOUND_HEROKU_PING = "E:\\Samples\\Hip Hop 3\\Scratches\\hit me b.wav";
+	final private static String SOUND_HEROKU_PING = "E:\\Samples\\Hip Hop 3\\Scratches\\hit me b2.wav";
 
 	// private short status = STATUS_CONNECTION_OK;
 	private short waitBeforeRebootLoop = 0;
 	private short watingForConnectionLoop = 0;
 	private boolean updateDomainToIpMapppingOk;
 	// private String lastIP = null;
-
-	private static final Logger logger = Logger.getLogger(RouterMonitor.class);
-
+//	private static final Logger logger = Logger.getLogger(RouterMonitor.class);
+	private static final Logger logger = LoggerFactory.getLogger(RouterMonitor.class);
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
 	String host;
 
 	// String version = null;
 
-	SSHClient sshClient = null;
+//	SSHClient sshClient = null;
 
 	public RouterMonitor(){}
 	@Autowired
 	public RouterMonitor(@Value("${app.router.host}") String host, @Value("${app.router.login}") String login,
 			@Value("${app.router.passwd}") String passwd) throws Exception {
 		setHost(host);
-		sshClient = new SSHClient(host, login, passwd);
+//		sshClient = new SSHClient(host, login, passwd);
 		logger.info("calling updateDomainToIpMappping one tine on router monitor init");
 		setUpdateDomainToIpMapppingOk(updateDomainToIpMappping());
 	}
@@ -141,6 +142,7 @@ public class RouterMonitor {
 		}
 	}
 
+
 	private String getActualIp() throws Exception {
 		logger.info("getActualIp()");
 		String address = null;
@@ -171,17 +173,17 @@ public class RouterMonitor {
 		return address;
 	}
 
-	public String pppConnect() throws Exception {
-		return sshClient.execCmd("ppp config 0.8.35 1 up\n");
-	}
-
-	public String pppDisconnect() throws Exception {
-		return sshClient.execCmd("ppp config 0.8.35 1 down\n");
-	}
-
-	public String wanSetIspLogin() throws Exception {
-		return sshClient.execCmd("wan config 0.8.35 1 --username f_chahid --password f_chahid\n");
-	}
+//	public String pppConnect() throws Exception {
+//		return sshClient.execCmd("ppp config 0.8.35 1 up\n");
+//	}
+//
+//	public String pppDisconnect() throws Exception {
+//		return sshClient.execCmd("ppp config 0.8.35 1 down\n");
+//	}
+//
+//	public String wanSetIspLogin() throws Exception {
+//		return sshClient.execCmd("wan config 0.8.35 1 --username f_chahid --password f_chahid\n");
+//	}
 
 	private String connectUrl(String url) throws Exception {
 		logger.info("connectUrl "+url);
@@ -286,7 +288,23 @@ public class RouterMonitor {
 		return false;
 	}
 
-	@Scheduled(fixedDelay = 15000)
+//	private static  String c = "caca";
+//	private static  String l = "lala";
+
+//	private static boolean test() {
+//		// logger.info("pingHost()");
+//		String v = "hahuu";
+//		try{
+////			logger.info("just a tester assi c. "+c);
+//			logger.info("just a tester assi h. "+v);
+////			logger.info("just a test assi. ");
+//			return true;
+//		} catch (Exception e) {
+//			return false; // Either timeout or unreachable or failed DNS lookup.
+//		}
+//	}
+
+	@Scheduled(fixedDelay = 18000)
 	public void checkAndFixRouterConnection() {
 		try {
 			boolean jokerUpdated = true;
@@ -295,7 +313,10 @@ public class RouterMonitor {
 			short status = STATUS_CONNECTION_OK;
 			// if( !pingOk )
 			// Thread.sleep(3000);
+			
 			System.out.print(".");
+//			test();
+			
 			if (pingOk && !isUpdateDomainToIpMapppingOk())
 				setUpdateDomainToIpMapppingOk(updateDomainToIpMappping());
 			while (!pingOk || !jokerUpdated) {
@@ -326,7 +347,7 @@ public class RouterMonitor {
 					pingOk = pingHost("google.com", 6000);
 					pingRouter +=  pingHost("192.168.1.1", 6000)?1:0;
 
-					logger.info("pingRouter="+pingRouter); 
+					logger.info("pingRouter="+pingRouter);
 
 					if ( pingRouter > 25){
 						status = STATUS_CONNECTION_OK;
@@ -404,9 +425,11 @@ public class RouterMonitor {
 		logger.info("Heroku scheduler: i m out");
 	}
 
+	
 	public static void main(String[] args) {
 		try {
-			DOMConfigurator.configure("log4j.xml");
+//			DOMConfigurator.configure("log4j.xml");
+			
 //			RouterMonitor rm = new RouterMonitor("192.168.1.1", "admin", "royaZoft");
 			RouterMonitor rm = new RouterMonitor();
 //			rm.reconnect();

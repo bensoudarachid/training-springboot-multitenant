@@ -132,7 +132,9 @@ public class BaseController {
 		Throwable e1 = null;
 		e1 = getCause(ex);
 
-		if (e1 instanceof javax.validation.ConstraintViolationException) {
+		if (e1 instanceof org.springframework.security.access.AccessDeniedException) {
+			return "Access denied";
+		} else if (e1 instanceof javax.validation.ConstraintViolationException) {
 			return "System error. Database constraint violation";
 		} else if (e1 instanceof org.hibernate.StaleStateException || e1 instanceof ObjectOptimisticLockingFailureException)
 			return "Object was either modified or deleted";

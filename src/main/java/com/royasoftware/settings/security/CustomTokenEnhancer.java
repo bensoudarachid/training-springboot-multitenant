@@ -18,15 +18,13 @@ public class CustomTokenEnhancer implements TokenEnhancer {
 
 //        additionalInfo.put("customInfo", "some_stuff_here");
         try {
-			additionalInfo.put("authority", user.getAuthorities().iterator().next().getAuthority());
+			additionalInfo.put("authority", user.getAuthorities().iterator().next().getAuthority().toLowerCase().replace("role_", ""));
 		} catch (Exception e) {
 			additionalInfo.put("authority", null);
 			e.printStackTrace();
 		}
 
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
-
         return accessToken;
     }
-
 }

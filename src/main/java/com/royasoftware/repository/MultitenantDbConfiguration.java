@@ -73,12 +73,11 @@ public class MultitenantDbConfiguration {
 		// logger.info("Found tenant files number: "+files.length);
 		Map<Object, Object> resolvedDataSources = new HashMap<>();
 
-		//Repair default db
-		flyway = new Flyway();
-		flyway.setDataSource(properties.getUrl(),properties.getUsername(),properties.getPassword());
-		flyway.setLocations("db.migration");
-		flyway.repair();
-//		flyway.migrate();
+		//Important! Repair default db. 
+//		flyway = new Flyway();
+//		flyway.setDataSource(properties.getUrl(),properties.getUsername(),properties.getPassword());
+//		flyway.setLocations("db.migration");
+//		flyway.repair();
 
 		for (File propertyFile : fileVector) {
 			Properties tenantProperties = new Properties();
@@ -97,7 +96,8 @@ public class MultitenantDbConfiguration {
 					flyway.setDataSource("jdbc:mysql://localhost:3306/" + tenantId + "?autoReconnect=true&useSSL=false",
 							"root", "1qay2wsx");
 				flyway.setLocations(tenantProperties.getProperty("flyway.locations"));
-				flyway.repair();
+				//Important! Repair dbs.
+//				flyway.repair();
 				flyway.migrate();
 
 				if (tenantProperties.getProperty("datasource.url") != null)

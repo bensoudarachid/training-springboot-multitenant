@@ -1,19 +1,44 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- Log message format %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n -->
+    <encoder>
+      <pattern>%d{HH:mm:ss} %-5level (%-5F:%L\) - %msg%n 
+      </pattern>
+    </encoder>
+  </appender>
+  	<logger name="org.springframework" level="error"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+  	<logger name="org.hibernate" level="error"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+  	<logger name="org.flywaydb" level="error"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+  	<logger name="org.apache" level="error"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+  	<logger name="*.MultitenantDataSource" level="error"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+  <!-- Setting the root level of logging to INFO -->
+  <root level="info">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
 
 <!-- 
-<param name="ConversionPattern" value="-%C.(%F:%M:%L)%n%-20C{1}-| %m |-%n" />
-<param name="ConversionPattern" value="%-30C{1} %m %C.(%F:%M:%L)%n" />
-<param name="ConversionPattern" value="%-3L:%-25C{1} %m %n" />
--->
-
-
 
 <appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
 <param name="Target" value="System.out" />
 <layout class="org.apache.log4j.PatternLayout">
-<param name="ConversionPattern" value="%d{MM-dd HH:mm} %-80m (%F:%M:%L)%n" />
+<param name="ConversionPattern" value="-%C.(%F:%M:%L)%n%-20C{1}-| %m |-%n" />
 </layout> 
 <filter class="org.apache.log4j.varia.LevelRangeFilter">
 <param name="LevelMin" value="INFO"/>
@@ -32,26 +57,12 @@
 <param name="LevelMax" value="ERROR"/>
 </filter>
 </appender>
-<!-- 
-<appender name="FILE" class="org.apache.log4j.RollingFileAppender">
-<param name="File" value="${application.path}/myatc.log" />
-<param name="maxFileSize" value="500KB" />
-<param name="maxBackupIndex" value="5" />
-<param name="threshold" value="debug"/>
-<layout class="org.apache.log4j.PatternLayout">
-<param name="ConversionPattern" value="%-50m (%F:%M:%L)%n" />
-</layout>
-</appender>
- -->
-<!-- -RB- Limit hibernate to FATAL -->
    <category name="org.hibernate">
       <priority value="FATAL"/>
    </category>
-<!-- -RB- Limit j2ssh to ERROR -->
    <category name="com.sshtools.j2ssh">
       <priority value="ERROR"/>
    </category>
-<!-- -->
    <category name="org.springframework.transaction">
       <priority value="FATAL"/>
    </category>
@@ -60,13 +71,10 @@
       <priority value="FATAL"/>
    </category>
 
-<!-- --> <!-- setup log4j's root logger --> <!-- -->
 <root>
 <level value="INFO" />
 <appender-ref ref="STDOUT"/>
 <appender-ref ref="STDERR"/>
+ </root>
+ -->
  
-</root>
-</log4j:configuration>
-
-

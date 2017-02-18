@@ -25,7 +25,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class MyBootSpring {
 
 	public static void main(String[] args) {
-		DOMConfigurator.configure("log4j.xml");
+//		System.out.println("this.getClass().getResource(log4j.xml)="+MyBootSpring.class.getResourceAsStream("/db/datasource/tenants/school1.properties")); 
+//		System.out.println("this.getClass().getResource(log4j.xml)="+MyBootSpring.class.getResource("/log4j.xml")); 
+//		DOMConfigurator.configure("/log4j.xml");
+//		DOMConfigurator.configure("file:/D:/RP/Tests/SpringBoot_Part_1/target/classes/log4j.xml");
 		// System.out.println("Hi");
 
 		// Flyway flyway = new Flyway();

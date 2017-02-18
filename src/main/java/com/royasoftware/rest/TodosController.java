@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +54,7 @@ public class TodosController extends BaseController {
 	@Autowired
 	private TodoService todoService;
 
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/todo/savetodo")
 	public ResponseEntity<Todo> saveTodoObject(@RequestBody Todo todoParam) throws Exception {
@@ -70,6 +72,7 @@ public class TodosController extends BaseController {
 		// return "Hello mama: "+_param;
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/todo/deletetodo")
 	public ResponseEntity<Boolean> deleteTodo(@RequestBody Todo todoParam) throws Exception {
@@ -107,6 +110,7 @@ public class TodosController extends BaseController {
 	}
 
 	// @AuthenticationPrincipal CustomUserDetails user
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/todo/updatetodo")
 	public ResponseEntity<Todo> updateTodoObject(@RequestBody Todo todoParam) throws Exception {
@@ -130,6 +134,7 @@ public class TodosController extends BaseController {
 		return new ResponseEntity<Todo>(todo, HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE }, value = "/todo/save")
 	public ResponseEntity<Todo> saveTodo(@RequestPart("task") String task) throws Exception {
 		CustomUserDetails user = TenantContext.getCurrentUser();
@@ -143,6 +148,7 @@ public class TodosController extends BaseController {
 		// return "Hello mama: "+_param;
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/todo/{todoId}/fileupload")
 	public ResponseEntity<Object> fileUpload(@PathVariable String todoId,
@@ -214,6 +220,7 @@ public class TodosController extends BaseController {
 	}
 
 	// @AuthenticationPrincipal CustomUserDetails activeUser
+	
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/todos/{_param}")
 	public ResponseEntity<Object> getTodosPost(@PathVariable String _param) throws Exception {
@@ -224,6 +231,7 @@ public class TodosController extends BaseController {
 	}
 
 	// @AuthenticationPrincipal CustomUserDetails activeUser
+	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/todos/{_param}")
 	public ResponseEntity<Object> getTodosGet(@PathVariable String _param) throws Exception {
