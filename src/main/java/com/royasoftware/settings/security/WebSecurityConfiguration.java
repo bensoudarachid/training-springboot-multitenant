@@ -3,6 +3,7 @@ package com.royasoftware.settings.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -53,5 +54,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers("/api/training/img/**");
 		web.ignoring().antMatchers("/api/trainings/**");
 		web.ignoring().antMatchers("/register");
-	}
+		web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
+	} 
 }

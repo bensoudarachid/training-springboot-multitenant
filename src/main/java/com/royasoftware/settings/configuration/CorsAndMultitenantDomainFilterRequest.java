@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -34,22 +35,15 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE, HEAD");
         response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
-        response.setHeader("Access-Control-Allow-Headers", "x-requested-with, Authorization, Content-Type");
+//        response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
+//        response.setHeader("Access-Control-Allow-Headers", "x-requested-with, Authorization, Content-Type");
+        response.setHeader("Access-Control-Allow-Headers", "x-requested-with, cache-control, authentication, authorization, Content-Type, Origin, X-Auth-Token, client-security-token");
         response.setHeader("Access-Control-Max-Age", "3600");
         
-        
-//    	Authentication authentication =
-//    			SecurityContextHolder.getContext().getAuthentication();
-//    	if(authentication != null && authentication.getPrincipal() instanceof String && authentication.getPrincipal().equals("anonymousUser"))
-//    		TenantContext.setCurrentUser(null);
-//    	else{
-//	    	CustomUserDetails activeUser = (CustomUserDetails) (authentication == null ? null : authentication.getPrincipal());
-//	//    	logger.info("AppControllerInterceptor. User name = " + activeUser.getUsername() + ", id = "
-//	//				+ activeUser.getId() + ", role = " + activeUser.getAuthorities().toString());
-//	    	TenantContext.setCurrentUser(activeUser);
-//    	}
+
         
 		String site = request.getServerName();
 		String domain = null;
@@ -74,7 +68,9 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
 
         
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-            response.setStatus(HttpServletResponse.SC_OK);
+//        	logger.warn("+++++++++++Preflight OPTIONS responding"+HttpServletResponse.SC_OK);
+            response.setStatus(HttpServletResponse.SC_OK);             
+//            response.setStatus(HttpStatus.OK.value());
         } else {
             chain.doFilter(req, res);
         }

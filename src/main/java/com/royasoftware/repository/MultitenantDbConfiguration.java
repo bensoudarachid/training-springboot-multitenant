@@ -3,21 +3,19 @@ package com.royasoftware.repository;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.Vector;
 
 import javax.sql.DataSource;
 
+//import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -42,8 +40,27 @@ public class MultitenantDbConfiguration {
 	 * @return
 	 */
 	@Bean
-	@ConfigurationProperties(prefix = "db.datasource")
-	public DataSource dataSource() throws Exception {
+	// @ Configuration Properties(prefixx = "db.datasource")
+	@ConfigurationProperties("spring.datasource")
+	public MultitenantDataSource dataSource() throws Exception {
+//		PoolProperties p = new PoolProperties();
+//        p.setJmxEnabled(true);
+//        p.setTestWhileIdle(false);
+//        p.setTestOnBorrow(true);
+//        p.setValidationQuery("SELECT 1");
+//        p.setTestOnReturn(false);
+//        p.setValidationInterval(30000);
+//        p.setTimeBetweenEvictionRunsMillis(30000);
+//        p.setMaxActive(100);
+//        p.setInitialSize(10);
+//        p.setMaxWait(10000);
+//        p.setRemoveAbandonedTimeout(60);
+//        p.setMinEvictableIdleTimeMillis(30000);
+//        p.setMinIdle(10);
+//        p.setLogAbandoned(true);
+//        p.setRemoveAbandoned(true);
+
+		
 		String pathString = "db/datasource/tenants";
 		logger.info("Search tenant files in path: " + pathString);
 		logger.info("Search tenant files . Resource: " + this.getClass().getResource(pathString));
@@ -78,7 +95,7 @@ public class MultitenantDbConfiguration {
 //		flyway.setDataSource(properties.getUrl(),properties.getUsername(),properties.getPassword());
 //		flyway.setLocations("db.migration");
 //		flyway.repair();
-
+		DataSource ds = null;
 		for (File propertyFile : fileVector) {
 			Properties tenantProperties = new Properties();
 			DataSourceBuilder dataSourceBuilder = new DataSourceBuilder(this.getClass().getClassLoader());
@@ -107,13 +124,22 @@ public class MultitenantDbConfiguration {
 							.password(tenantProperties.getProperty("datasource.password"));
 				else
 					dataSourceBuilder.driverClassName(properties.getDriverClassName())
-							.url("jdbc:mysql://localhost:3306/" + tenantId + "?autoReconnect=true&useSSL=false")
+							.url("jdbc:mysql://localhost:3306/" + tenantId + "?autoReconnect=true&useSSL=false") //autoReconnect=true&
 							.username("root").password("1qay2wsx");
 
+				logger.info("------->properties.getType()="+properties.getType());
 				if (properties.getType() != null) {
 					dataSourceBuilder.type(properties.getType());
 				}
-				resolvedDataSources.put(tenantId, dataSourceBuilder.build());
+				ds = dataSourceBuilder.build();
+				setDataSourcePoolProps(ds);
+//				((org.apache.tomcat.jdbc.pool.DataSource)ds).setTestOnBorrow(true);
+//				((org.apache.tomcat.jdbc.pool.DataSource)ds).setTestWhileIdle(true);     
+////				((org.apache.tomcat.jdbc.pool.DataSource)ds).setTimeBetweenEvictionRunsMillis(5000);
+//				((org.apache.tomcat.jdbc.pool.DataSource)ds).setValidationQuery("SELECT 1");
+//				((org.apache.tomcat.jdbc.pool.DataSource)ds).setMinIdle(2);
+//				((org.apache.tomcat.jdbc.pool.DataSource)ds).setMaxIdle(8);
+				resolvedDataSources.put(tenantId, ds);
 			} catch (IOException e) {
 				// Ooops, tenant could not be loaded. This is bad.
 				// Stop the application!
@@ -133,6 +159,7 @@ public class MultitenantDbConfiguration {
 		dataSource.setTargetDataSources(resolvedDataSources);
 		// Call this to finalize the initialization of the data source.
 		dataSource.afterPropertiesSet();
+		
 		return dataSource;
 	}
 
@@ -145,9 +172,24 @@ public class MultitenantDbConfiguration {
 		DataSourceBuilder dataSourceBuilder = new DataSourceBuilder(this.getClass().getClassLoader())
 				.driverClassName(properties.getDriverClassName()).url(properties.getUrl())
 				.username(properties.getUsername()).password(properties.getPassword());
+		logger.info("------->properties.getType() default="+properties.getType());
 		if (properties.getType() != null) {
 			dataSourceBuilder.type(properties.getType());
 		}
-		return dataSourceBuilder.build();
+		DataSource ds = dataSourceBuilder.build();
+		setDataSourcePoolProps(ds);
+		return ds;
 	}
+	
+	private void setDataSourcePoolProps(DataSource ds) {
+//		((org.apache.tomcat.jdbc.pool.DataSource)ds).setSuspectTimeout(2000);
+		((org.apache.tomcat.jdbc.pool.DataSource)ds).setValidationInterval(20000);
+		((org.apache.tomcat.jdbc.pool.DataSource)ds).setTestOnBorrow(true);
+		((org.apache.tomcat.jdbc.pool.DataSource)ds).setTestWhileIdle(true);     
+//		((org.apache.tomcat.jdbc.pool.DataSource)ds).setTimeBetweenEvictionRunsMillis(2000);
+		((org.apache.tomcat.jdbc.pool.DataSource)ds).setValidationQuery("SELECT 1");
+//		((org.apache.tomcat.jdbc.pool.DataSource)ds).setMinIdle(2);
+//		((org.apache.tomcat.jdbc.pool.DataSource)ds).setMaxIdle(8);
+	}
+	
 }

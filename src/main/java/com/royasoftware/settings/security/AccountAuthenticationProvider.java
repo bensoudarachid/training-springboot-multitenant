@@ -57,8 +57,8 @@ public class AccountAuthenticationProvider extends AbstractUserDetailsAuthentica
         if (token.getCredentials() == null || userDetails.getPassword() == null) {
             throw new BadCredentialsException("Credentials may not be null.");
         }
-		logger.info("token.getCredentials()="+token.getCredentials()); 
-		logger.info("userDetails.getPassword()="+userDetails.getPassword()); 
+//		logger.info("token.getCredentials()="+token.getCredentials()); 
+//		logger.info("userDetails.getPassword()="+userDetails.getPassword()); 
 
         if (!passwordEncoder.matches((String) token.getCredentials(), userDetails.getPassword())) {
             throw new BadCredentialsException("Invalid credentials.");

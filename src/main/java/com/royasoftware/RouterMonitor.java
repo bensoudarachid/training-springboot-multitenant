@@ -34,6 +34,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.royasoftware.script.ScriptHelper;
+
 //import com.royasoftware.tools.SSHClient;
 
 @lombok.Getter
@@ -71,6 +73,8 @@ public class RouterMonitor {
 //		sshClient = new SSHClient(host, login, passwd);
 		logger.info("calling updateDomainToIpMappping one tine on router monitor init");
 		setUpdateDomainToIpMapppingOk(updateDomainToIpMappping());
+//    	logger.info("--------> RUN AUTOIT F10");
+    	ScriptHelper.run(ScriptHelper.RUN_WEB_APP);
 	}
 
 	public void reconnect() {
@@ -227,7 +231,7 @@ public class RouterMonitor {
 		try {
 			// System.out.println(future.get(10, TimeUnit.SECONDS));
 			String returned = future.get(10, TimeUnit.SECONDS);
-			logger.info("returned="+returned); 
+//			logger.info("returned="+returned); 
 			return returned;
 		} catch (Exception e) {
 			System.err.println("connectUrl Exception");

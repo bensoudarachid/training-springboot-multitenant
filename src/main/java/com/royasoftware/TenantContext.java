@@ -7,6 +7,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.royasoftware.script.ScriptHelper;
 import com.royasoftware.settings.security.CustomUserDetails;
 
 public class TenantContext {
@@ -57,6 +58,8 @@ public class TenantContext {
     }
     public static void setValidTenants(Set validTenants){
 //    	validTenantSet =  (Collection<String>)(Collection<?>)validTenants;
+//    	logger.info("--------> RUN AUTOIT F10");
+//    	ScriptHelper.run(ScriptHelper.RUN_WEB_APP);
     	Set<String> validTenantSet = new HashSet<>();
         for (Object tenant : validTenants) {
         	addValidTenant((String) tenant);
