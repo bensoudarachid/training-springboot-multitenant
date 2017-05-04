@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -68,7 +69,7 @@ public class BaseController {
 
 //		logger.error("Base controller Exception handler > handleException");
 		logger.error("Exception handler. ", getMessage(exception));
-
+		exception.printStackTrace();
 //		ExceptionAttributes exceptionAttributes = new DefaultExceptionAttributes();
 //
 //		Map<String, Object> responseBody = exceptionAttributes.getExceptionAttributes(exception, request,
@@ -112,6 +113,20 @@ public class BaseController {
 		ExceptionJSONInfo response = new ExceptionJSONInfo();
 		response.setUrl(request.getRequestURL().toString());
 		response.setErrorDescription("Data Integrity Violation");
+		return response;
+	}
+	
+	@ExceptionHandler(AccessDeniedException.class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	public @ResponseBody ExceptionJSONInfo handleAccessDeniedException(HttpServletRequest request, Exception ex) {
+		System.out.println("AccessDeniedException handler. Here is the general exception handler." + ex.getClass().getName() + ". message="
+				+ getMessage(ex));
+		logger.info("AccessDeniedException. request.getRequestURL()="+request.getRequestURL()); 
+		ex.printStackTrace();
+		ExceptionJSONInfo response = new ExceptionJSONInfo();
+		response.setUrl(request.getRequestURL().toString());
+		response.setErrorDescription(getMessage(ex));
+		response.setError(ex.getClass().getName());
 		return response;
 	}
 

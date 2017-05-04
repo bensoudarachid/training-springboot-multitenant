@@ -2,21 +2,19 @@ package com.royasoftware;
 
 
 import java.io.File;
-import java.io.FileWriter;
 import java.net.URL;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.boot.registry.internal.StandardServiceRegistryImpl;
+import org.hibernate.boot.spi.MetadataImplementor;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.ImprovedNamingStrategy;
-import org.hibernate.dialect.Dialect;
-import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.service.ServiceRegistryBuilder;
-import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
+import org.hibernate.internal.SessionImpl;
+import org.hibernate.service.ServiceRegistry;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 
@@ -26,11 +24,11 @@ import org.hibernate.tool.hbm2ddl.SchemaUpdate;
  */
 public class SchemaGenerator
 {
-  private AnnotationConfiguration cfg;
+  private Configuration cfg;
  
   public SchemaGenerator(String packageName) throws Exception
   {
-    cfg = new AnnotationConfiguration();
+    cfg = new Configuration();
     cfg.setProperty("hibernate.hbm2ddl.auto","none");
   
     for(Class<Object> clazz : getClasses(packageName))
@@ -54,31 +52,61 @@ public class SchemaGenerator
 //    export.execute(false, false);
     
     try {
-        Configuration configuration = new Configuration();
-        configuration.configure("hibernate.cfg.xml");
-        configuration.setNamingStrategy(ImprovedNamingStrategy.INSTANCE);
-        Dialect dialect = Dialect.getDialect(configuration.getProperties()); 
-        ServiceRegistryBuilder serviceRegistryBuilder = new ServiceRegistryBuilder().applySettings(configuration
-            .getProperties());
-        SessionFactoryImplementor sessionFactory = (SessionFactoryImplementor)configuration
-            .buildSessionFactory(serviceRegistryBuilder.buildServiceRegistry());
-        Connection connection = sessionFactory.getConnectionProvider().getConnection();
-//        Connection connection = dataSource.getConnection();
-        DatabaseMetadata meta = new DatabaseMetadata(connection, dialect);
-        String[] createSQL = configuration.generateSchemaUpdateScript(dialect, meta);
-        
-        FileWriter fw = new FileWriter("V__upd.sql");
+    	
+    	ServiceRegistry serviceRegistry = (StandardServiceRegistryImpl) new StandardServiceRegistryBuilder()
+        .configure("hibernate.cfg.xml")
+        .build();
+    	
+//        Configuration configuration = new Configuration().configure();
+//        configuration.configure("hibernate.cfg.xml");
+//        configuration.setNamingStrategy(ImprovedNamingStrategy.INSTANCE);
+//        Dialect dialect = Dialect.getDialect(configuration.getProperties());
 
-        System.out.println("write to file");
-        for (int i = 0; i < createSQL.length; i++) {
-          fw.write(createSQL[i] + ";\n");
-        }
-        fw.close();
+//        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().
+//        		 applySettings(configuration.getProperties()).build(); 
+
+        		 // Create session factory instance
+//        SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+
+        
+//        Connection connection = ((SessionImpl)sessionFactory.openSession()).connection();
+//        Connection connection = dataSource.getConnection();
+//        DatabaseMetadata meta = new DatabaseMetadata(connection, dialect);
+//        MetadataSources meta = new MetadataSources(serviceRegistry);
+
+    	 MetadataImplementor metadata = (MetadataImplementor) new MetadataSources(serviceRegistry).buildMetadata();
+//         SchemaExport schemaExport = new SchemaExport(metadata);
+         SchemaUpdate schemaExport = new SchemaUpdate(metadata);
+         
+//        SchemaExport export = new SchemaExport(
+//                (MetadataImplementor) meta.buildMetadata()
+//        );
+        
+
+        schemaExport.setDelimiter(";");
+        schemaExport.setOutputFile("V__upd.sql");
+        
+//        schemaExport.setFormat(true);
+//        schemaExport.execute(true, false, false, false);
+        schemaExport.execute(true, false);
+//        schemaExport.create(true, true);
+        
+        ( (StandardServiceRegistryImpl) serviceRegistry ).destroy();
+//        String[] createSQL = configuration.generateSchemaUpdateScript(dialect, meta);
+//        
+//        FileWriter fw = new FileWriter("V__upd.sql");
+//
+//        System.out.println("write to file");
+//        for (int i = 0; i < createSQL.length; i++) {
+//          fw.write(createSQL[i] + ";\n");
+//        }
+//        fw.close();
         System.out.println("Finished");
-        System.exit(0);
     } catch (Exception e) {
         System.out.println("Database unreachable.");
         e.printStackTrace();
+    }finally{
+        System.exit(0);
     }
     
   }

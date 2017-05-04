@@ -19,7 +19,7 @@
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
 INSERT INTO `account` VALUES (1,'\0','','\0','\0','$2a$10$ppZEmet3dNz0RPNrlohR0OyN6ww.6jq027Zff0LlikHtIOdZaLCsO','admin',NULL,NULL,NULL);
-INSERT INTO `account` VALUES (1,'\0','','\0','\0','$2a$10$5SONOLPejS.ASXM2oZgzUO3fshVwySCwxXZ8HpWL0N4Mm5MbzdeXu','user',NULL,NULL,NULL);
+INSERT INTO `account` VALUES (2,'\0','','\0','\0','$2a$10$5SONOLPejS.ASXM2oZgzUO3fshVwySCwxXZ8HpWL0N4Mm5MbzdeXu','user',NULL,NULL,NULL);
 
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;

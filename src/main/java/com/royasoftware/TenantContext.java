@@ -22,12 +22,19 @@ public class TenantContext {
         }
     };
     public static void setCurrentTenant(String tenant) throws Exception{
-    	logger.info("set current tenant "+tenant);
-    	if( !isTenantValid(tenant))
-    		throw new Exception("Subdomain not valid");
+//    	logger.info("set current tenant "+tenant);
+    	if( tenant==null)
+    		myContextThreadLocal.get().put("tenant",tenant);
+//    	logger.info("set valid current tenant "+tenant);
+    	if( !isTenantValid(tenant)){
+    		myContextThreadLocal.get().put("tenant",null);
+    		throw new Exception("Subdomain "+tenant+" not valid");
+    	}
+//    	logger.info("set valid current tenant "+tenant);
         myContextThreadLocal.get().put("tenant",tenant);
     }
     public static String getCurrentTenant() {
+//    	logger.info("get current tenant "+myContextThreadLocal.get().get("tenant"));
         return (String)myContextThreadLocal.get().get("tenant");
     }
     public static String getCurrentTenantStoragePath() {
@@ -51,6 +58,7 @@ public class TenantContext {
 //        return userUploadStorage+(String)myContextThreadLocal.get().get("tenant")+"/";
     }
     public static void setCurrentUser(CustomUserDetails user) {
+//    	logger.info("setCurrentUser user="+user.getUsername()); 
         myContextThreadLocal.get().put("activeuser",user);
     }
     public static CustomUserDetails getCurrentUser() {

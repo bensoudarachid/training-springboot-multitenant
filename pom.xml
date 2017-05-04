@@ -7,12 +7,13 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<!-- -->
 
+	<packaging>war</packaging>
 	<!-- <properties> <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
-		<java.version>1.8</java.version> </properties> -->
+		<java.version>1.8</java.version> </properties> 1.3.1.RELEASE -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.3.1.RELEASE</version>
+		<version>1.5.1.RELEASE</version>
 	</parent>
 	<properties>
 	    <!-- The main class to start by executing java -jar -->
@@ -26,7 +27,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -144,6 +149,41 @@
 			<artifactId>j2ssh-core</artifactId>
 			<version>0.2.9</version>
 		</dependency>
+<!-- letsencrypt java lib -->		
+		<dependency>
+		  <groupId>org.shredzone.acme4j</groupId>
+		  <artifactId>acme4j-client</artifactId>
+		  <version>0.9</version>
+		</dependency>	
+		<dependency>
+		  <groupId>org.shredzone.acme4j</groupId>
+		  <artifactId>acme4j-utils</artifactId>
+		  <version>0.9</version>
+		</dependency>
+<!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-transcoder -->
+		<dependency>
+		    <groupId>org.apache.xmlgraphics</groupId>
+		    <artifactId>batik-transcoder</artifactId>
+		    <version>1.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>batik-codec</artifactId>
+			<version>1.7</version>
+		</dependency>
+<!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/xmlgraphics-commons -->
+		<dependency>
+		    <groupId>org.apache.xmlgraphics</groupId>
+		    <artifactId>xmlgraphics-commons</artifactId>
+		    <version>1.5</version>
+		</dependency>		
+<!-- https://mvnrepository.com/artifact/javax.xml.parsers/jaxp-api -->
+		<dependency>
+		    <groupId>javax.xml.parsers</groupId>
+		    <artifactId>jaxp-api</artifactId>
+		    <version>1.4.5</version>
+		</dependency>
+
 <!-- 
 	    <dependency>
 	        <groupId>org.springframework.boot</groupId>
@@ -169,6 +209,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -179,9 +220,18 @@
 				</configuration>
 			</plugin>
 
-
 			<!-- mvn hibernate3:hbm2ddl -->
-
+			<!-- 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			-->
 			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>hibernate3-maven-plugin</artifactId> 
 				<version>3.0</version> <configuration> <namingStrategy>org.hibernate.cfg.ImprovedNamingStrategy</namingStrategy> 
 				<hibernatetool> <hbm2ddl update="true" export="false" outputfilename="update-ddl.sql" 
@@ -195,5 +245,11 @@
 		</plugins>
 	</build>
 
+  <!-- Add Spring repositories -->
+    <!-- (you don't need this if you are using a .RELEASE version) -->
+    
+   <!-- Remove above repositories if using RELEASE version-->
+    <!-- (you don't need this if you are using a .RELEASE version) -->
+    
 </project>
 <!-- Package: mvn package Run: mvn spring-boot:run -->

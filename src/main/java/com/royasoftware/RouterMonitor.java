@@ -1,9 +1,10 @@
 package com.royasoftware;
 
 
-import java.awt.*;
-import java.io.*;
-
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -17,8 +18,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -45,15 +48,16 @@ import com.royasoftware.script.ScriptHelper;
 public class RouterMonitor {
 	final private static short STATUS_CONNECTION_OK = 0;
 	final private static short STATUS_CONNECTION_LOST = 1;
-	final private static short WAIT_FOR_PING_MAX_ITERATIONS = 16;
+	final private static short WAIT_FOR_PING_MAX_ITERATIONS = 14;
 //	final private static String SOUND_DOWN = "E:\\Samples\\FreeSound\\FX\\Powerdown2.wav";
-	final private static String SOUND_DOWN = "E:\\Samples\\SONY LOOPS & SAMPLES LIBRARIES SCRATCH TACTICS by DJ PUZZLE\\BPM Tactics\\100 BPM\\100 BPM Tactic 093.wav";	
+	final private static String SOUND_DOWN = "E:\\Samples\\SONY LOOPS & SAMPLES LIBRARIES SCRATCH TACTICS by DJ PUZZLE\\BPM Tactics\\100 BPM\\100 BPM Tactic 093_2.wav";	
 	final private static String SOUND_HEROKU_PING = "E:\\Samples\\Hip Hop 3\\Scratches\\hit me b2.wav";
 
 	// private short status = STATUS_CONNECTION_OK;
 	private short waitBeforeRebootLoop = 0;
 	private short watingForConnectionLoop = 0;
 	private boolean updateDomainToIpMapppingOk;
+	private int connectionCheckLoop = 0;
 	// private String lastIP = null;
 //	private static final Logger logger = Logger.getLogger(RouterMonitor.class);
 	private static final Logger logger = LoggerFactory.getLogger(RouterMonitor.class);
@@ -112,7 +116,7 @@ public class RouterMonitor {
 	}
 
 	private String getPublicIp() {
-		logger.info("getPublicIp()");
+		logger.debug("getPublicIp()");
 		String ip = null;
 		try {
 			for (int i = 0; i < 30; i++) {
@@ -121,7 +125,7 @@ public class RouterMonitor {
 					// log.info("Ip = "+ip);
 					return ip;
 				} catch (Exception e) {
-					logger.info("Could not connect to get public ip! number of tries: " + i);
+					logger.error("Could not connect to get public ip! number of tries: " + i);
 					// e.printStackTrace();
 				}
 				if (ip != null) {
@@ -148,7 +152,7 @@ public class RouterMonitor {
 
 
 	private String getActualIp() throws Exception {
-		logger.info("getActualIp()");
+		logger.debug("calling getActualIp()");
 		String address = null;
 		try {
 			// InetAddress inetAddress =
@@ -190,7 +194,7 @@ public class RouterMonitor {
 //	}
 
 	private String connectUrl(String url) throws Exception {
-		logger.info("connectUrl "+url);
+		logger.debug("connectUrl "+url);
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		@SuppressWarnings("unchecked")
@@ -213,7 +217,7 @@ public class RouterMonitor {
 					return "unauthorized";
 				if (responseCode != 200)
 					throw new Exception("Could not connect to url: " + url);
-				logger.info("Calling " + url + ". Response Code : " + responseCode);
+				logger.debug("Calling " + url + ". Response Code : " + responseCode);
 
 				BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 				String inputLine;
@@ -223,7 +227,7 @@ public class RouterMonitor {
 					response.append(inputLine);
 				}
 				in.close();
-				logger.info("connectUrl() finished");
+				logger.debug("connectUrl() finished");
 				// print result
 				return response.toString();
 			}
@@ -239,10 +243,69 @@ public class RouterMonitor {
 		executor.shutdownNow();
 		return null;
 	}
+	private String connectHttpsUrl(String url) throws Exception {
+		logger.debug("connectUrl "+url);
+
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		@SuppressWarnings("unchecked")
+		Future<String> future = executor.submit(new Callable() {
+
+			public String call() throws Exception {
+				String USER_AGENT = "Mozilla/5.0";
+
+				URL obj = new URL(url);
+				HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+//				con.setHostnameVerifier(new HostnameVerifier() {
+//				    public boolean verify(String hostname, SSLSession session) {
+//				      return true;
+//				    }
+//				});
+				
+				// optional default is GET
+				con.setRequestMethod("GET");
+
+				// add request header
+				con.setRequestProperty("User-Agent", USER_AGENT);
+
+				int responseCode = con.getResponseCode();
+				if( responseCode == 401 )
+					return "unauthorized";
+				if (responseCode != 200)
+					throw new Exception("Could not connect to url: " + url);
+				logger.debug("Calling " + url + ". Response Code : " + responseCode);
+
+				BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+				String inputLine;
+				StringBuffer response = new StringBuffer();
+
+				while ((inputLine = in.readLine()) != null) {
+					response.append(inputLine);
+				}
+				in.close();
+				logger.debug("connectUrl() finished");
+				// print result
+				return response.toString();
+			}
+		});
+		try {
+			// System.out.println(future.get(10, TimeUnit.SECONDS));
+			String returned = future.get(10, TimeUnit.SECONDS);
+//			logger.info("returned="+returned); 
+			return returned;
+		} catch (Exception e) {
+			logger.error("connectUrl Exception");
+			e.printStackTrace();
+		}
+		executor.shutdownNow();
+		return null;
+	}
 
 	private String sendJokerDomainMappingUpdate() throws Exception {
-		String out = connectUrl(
-				"http://svc.joker.com/nic/update?username=8508eb847ea580bc&password=b592711a66266d6f&hostname=*.royasoftware.com");
+		String out = connectHttpsUrl(
+		"https://svc.joker.com/nic/update?username=8508eb847ea580bc&password=b592711a66266d6f&hostname=*.royasoftware.com");
+		Thread.sleep(9000);
+		connectHttpsUrl(
+		"https://svc.joker.com/nic/update?username=8508eb847ea580bc&password=b592711a66266d6f&hostname=royasoftware.com");
 		// log.info("Joker returned: " + out);
 		return out;
 	}
@@ -257,19 +320,15 @@ public class RouterMonitor {
 			// Open audio clip and load samples from the audio input stream.
 			clip.open(audioIn);
 			clip.start();
-		} catch (UnsupportedAudioFileException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (LineUnavailableException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.info("error playing sound:"+e.getMessage());
 		}
 	}
 
 	private boolean updateDomainToIpMappping() {
 		try {
 			String ip = getPublicIp();
-			logger.info("public ip = " + ip);
+			logger.debug("public ip = " + ip);
 			String actualIP = null;
 			if( ip != null )
 				actualIP = getActualIp();
@@ -279,7 +338,7 @@ public class RouterMonitor {
 			}
 			if (!actualIP.equals(ip)) {
 				logger.info("Different ips, actual ip = " + actualIP + ". Call domain mapping update");
-				logger.info("Joker response " + sendJokerDomainMappingUpdate());
+				logger.debug("Joker response " + sendJokerDomainMappingUpdate());
 				return true;
 			} else if (actualIP.equals(ip)) {
 				logger.info("Same ips, no domain mapping update");
@@ -318,32 +377,40 @@ public class RouterMonitor {
 			// if( !pingOk )
 			// Thread.sleep(3000);
 			
-			System.out.print(".");
+//			System.out.print(".");
+//			logger.info("getConnectionCheckLoop()="+getConnectionCheckLoop());
+			if(getConnectionCheckLoop() > 20){
+				setConnectionCheckLoop(0);
+				jokerUpdated = false;		
+			}else
+				setConnectionCheckLoop(getConnectionCheckLoop()+1);
 //			test();
 			
 			if (pingOk && !isUpdateDomainToIpMapppingOk())
 				setUpdateDomainToIpMapppingOk(updateDomainToIpMappping());
 			while (!pingOk || !jokerUpdated) {
 				Thread.sleep(3000);
+				setConnectionCheckLoop(0);
 				switch (status) {
 				case STATUS_CONNECTION_OK:
+						
 					for (int i = 0; i < WAIT_FOR_PING_MAX_ITERATIONS; i++) {
 						pingOk = pingHost("google.com", 6000);
 						if (pingOk) {
-							logger.info("Ping is back. Connection still valid");
+							logger.debug("Ping is ok.");
 							setUpdateDomainToIpMapppingOk(updateDomainToIpMappping());
 							jokerUpdated = true;
 							break;
 						}
-						logger.info("Iterations until reboot " + (WAIT_FOR_PING_MAX_ITERATIONS - i));
+//						logger.info("Iterations until reboot " + (WAIT_FOR_PING_MAX_ITERATIONS - i));
 						soundClipTest(SOUND_DOWN);
 						Thread.sleep(3000);
 					}
 					if (!pingOk) {
 						status = STATUS_CONNECTION_LOST;
 						jokerUpdated = false;
-//						logger.info("Reboot now deactivated!");
-						reconnect();
+						logger.info("Reboot now deactivated!");
+//						reconnect();
 					}
 					break;
 				case STATUS_CONNECTION_LOST:
@@ -351,7 +418,7 @@ public class RouterMonitor {
 					pingOk = pingHost("google.com", 6000);
 					pingRouter +=  pingHost("192.168.1.1", 6000)?1:0;
 
-					logger.info("pingRouter="+pingRouter);
+//					logger.info("pingRouter="+pingRouter);
 
 					if ( pingRouter > 25){
 						status = STATUS_CONNECTION_OK;
@@ -406,7 +473,7 @@ public class RouterMonitor {
 				Thread.sleep(3000);
 				if (!pingOk)
 					continue;
-				int rdm = new Random().nextInt(60);
+				int rdm = new Random().nextInt(180);
 				logger.info("Sleeping random seconds before heroku call: " + rdm);
 				Thread.sleep(rdm * 1000);
 				logger.info("Ping heroku server." + (i + 1) + " iteration");

@@ -31,7 +31,7 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-    	logger.info("CorsAndMultitenantDomainFilterRequest. Call ");
+//    	logger.info("CorsAndMultitenantDomainFilterRequest. Call ");
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
@@ -43,24 +43,42 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
         response.setHeader("Access-Control-Allow-Headers", "x-requested-with, cache-control, authentication, authorization, Content-Type, Origin, X-Auth-Token, client-security-token");
         response.setHeader("Access-Control-Max-Age", "3600");
         
-
         
 		String site = request.getServerName();
+//		logger.info("filter site="+site); 
+//		if( site.equals("127.0.0.1"))
+//			site = "abbaslearn.royasoftware.com";
 		String domain = null;
-		if( !site.endsWith(".localhost"))
-//			domain = InternetDomainName.from(request.getServerName()).topPrivateDomain().toString();
-			domain = site.substring(site.lastIndexOf('.', site.lastIndexOf('.')-1) + 1);
-		else
-			domain="localhost";
-        try {
-			String subdomain = site.replaceAll(domain, "");
-			subdomain = subdomain.substring(0, subdomain.length() - 1);
-			if(subdomain.contains("."))
-				throw new Exception("Sub with point is not allowed");
+//		if( !site.endsWith(".localhost"))
+//		domain = site.substring(site.lastIndexOf('.', site.lastIndexOf('.')-1) + 1);
+		try {
+			String[] parts = site.split("\\.");
+//			for( String part : parts)
+//				logger.info("next part "+part); 
+			if( parts==null||parts.length!=4||!parts[3].equals("com")||!parts[2].equals("royasoftware")||!parts[1].equals("school") ){
+				TenantContext.setCurrentTenant(null);
+				throw new Exception("Malformed URL");
+			}else
+				TenantContext.setCurrentTenant(parts[0]);
+		
+		
+//		domain = site.substring(site.lastIndexOf('.', site.lastIndexOf('.')-1) + 1);
+//		// else
+//		// domain="localhost";
+//        try {
+//			String subdomain = site.replaceAll(domain, "");
+//			subdomain = subdomain.substring(0, subdomain.length() - 1);
+//			
+//			if(subdomain.contains(".")){
+//				logger.info("AccessDeniedException. request.getRequestURL()="+request.getRequestURL());
+//				TenantContext.setCurrentTenant(null);
+//				throw new Exception("Sub with point is not allowed");
+//			}else
+//				TenantContext.setCurrentTenant(subdomain);
 			
-			TenantContext.setCurrentTenant(subdomain);
+						
 //		TenantContext.setCurrentTenant("abbaslearning");
-			logger.info("CorsAndMultitenantDomainFilterRequest. Set tenant context subdomain: "+subdomain);
+//			logger.info("CorsAndMultitenantDomainFilterRequest. Set tenant context subdomain: "+subdomain);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -240,31 +240,12 @@ public class TodosController extends BaseController {
 		// + subdomain);
 		// TenantContext.setCurrentTenant(subdomain);
 		CustomUserDetails activeUser = TenantContext.getCurrentUser();
-		logger.info("User connected as bound parameter: name = " + activeUser.getUsername() + ", id = "
-				+ activeUser.getId() + ", role = " + activeUser.getAuthorities().toString());
+//		logger.info("User connected as bound parameter: name = " + activeUser.getUsername() + ", id = "
+//				+ activeUser.getId() + ", role = " + activeUser.getAuthorities().toString());
 		logger.info("Calling Get rest controller get todos " + _param);
 		rdmTimeRdmSuccess();
-		// logger.info("Get Todos for user "+activeUser.getId()+". Size:
-		// "+todoService.findByUserId(activeUser.getId()).size());
-
-		// return "forward:/test2?param1=foo&param2=bar";
-		// return "{todos: [{task: 'make it now 7bayby',isCompleted: false,id:
-		// 24},{task: 'ya do it 7bayby',isCompleted: false,id: 25}]}";
 		return new ResponseEntity<Object>(todoService.findByUserId(activeUser.getId()), HttpStatus.OK);
-		// return "{"+
-		// "\"todos\": ["+
-		// "{"+
-		// "\"task\": \"make it now 7bayby\","+
-		// "\"isCompleted\": false,"+
-		// "\"id\": 4"+
-		// "},"+
-		// "{"+
-		// "\"task\": \"ya do it 7bayby\","+
-		// "\"isCompleted\": true,"+
-		// "\"id\": 5"+
-		// "}"+
-		// "]"+
-		// "}";
+//		return new ResponseEntity<Object>(todoService.findByUserId(1l), HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.IMAGE_PNG_VALUE }, value = "/todo/img/{_param}")
@@ -292,7 +273,7 @@ public class TodosController extends BaseController {
 			}
 		});
 		File file = null;
-		if (files.length == 0)
+		if (files== null || files.length == 0)
 			return new ResponseEntity<Object>(null, HttpStatus.NOT_FOUND);
 		file = files[0];
 		for (int i = 1; i < files.length; i++)
@@ -334,7 +315,7 @@ public class TodosController extends BaseController {
 		} else {
 			ret = null;
 		}
-		return new ResponseEntity<Object>(ret, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Object>(ret, HttpStatus.OK);
 	}
 
 	// @RequestMapping(value = "/todo/uploadfile", method = RequestMethod.POST)

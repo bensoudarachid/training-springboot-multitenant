@@ -23,10 +23,18 @@ public class Training {
     private String title;
 
     @NotNull
+    private String secondaryTitle;
+
+    @NotNull
+    @Column(columnDefinition="varchar(511)")
     private String shortDescription;
 
     @NotNull
+    @Column(columnDefinition="TEXT")
     private String longDescription;
+
+    @NotNull
+    private Integer duration;
 
 	@Version
     @Column(name = "VERSION")

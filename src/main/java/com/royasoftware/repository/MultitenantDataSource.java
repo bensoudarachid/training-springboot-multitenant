@@ -7,7 +7,7 @@ import com.royasoftware.TenantContext;
 public class MultitenantDataSource extends AbstractRoutingDataSource {
     @Override
     protected Object determineCurrentLookupKey() {
-    	logger.info("MultitenantDataSource current tenant: "+TenantContext.getCurrentTenant());
+//    	logger.info("MultitenantDataSource current tenant: "+TenantContext.getCurrentTenant());
         return TenantContext.getCurrentTenant();
     }
 }

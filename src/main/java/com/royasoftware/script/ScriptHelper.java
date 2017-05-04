@@ -201,8 +201,8 @@ public abstract class ScriptHelper {
 						"C:\\Programme\\AutoIt3\\AutoIt3.exe C:\\MyAutoItMacros\\WinTracker\\Closer.au3 " + param);
 				break;
 			case RUN_WEB_APP:
-				process = Runtime.getRuntime().exec(
-						"C:\\Programme\\AutoIt3\\AutoIt3.exe D:\\RP\\Tests\\SpringBoot_Part_1\\relaunchwebapp.au3");
+//				process = Runtime.getRuntime().exec(
+//						"C:\\Programme\\AutoIt3\\AutoIt3.exe D:\\RP\\Tests\\SpringBoot_Training\\relaunchwebapp.au3");
 				break;
 
 			default:

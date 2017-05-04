@@ -19,6 +19,7 @@ public class Todo {
     @GeneratedValue
     private Long id;
     @NotNull
+    
     private String task;
 	@NotNull
 	private Long userId;

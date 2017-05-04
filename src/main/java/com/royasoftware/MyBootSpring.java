@@ -1,17 +1,9 @@
 package com.royasoftware;
 
-import org.apache.log4j.xml.DOMConfigurator;
-import org.flywaydb.core.Flyway;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.guava.GuavaCacheManager;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 //import com.royasoftware.filter.SimpleFilter;
@@ -22,7 +14,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication 
 //SpringBootApplication replaces: @Configuration @ComponentScan @EnableAutoConfiguration
 @EnableScheduling
-public class MyBootSpring {
+public class MyBootSpring extends SpringBootServletInitializer{
+
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+		return builder.sources(MyBootSpring.class);
+	}
 
 	public static void main(String[] args) {
 //		System.out.println("this.getClass().getResource(log4j.xml)="+MyBootSpring.class.getResourceAsStream("/db/datasource/tenants/school1.properties")); 
@@ -63,4 +60,19 @@ public class MyBootSpring {
 	// return cacheManager;
 	// }
 
+//	@Bean
+//	public EmbeddedServletContainerFactory servletContainer() {
+//
+//	    TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
+//
+//	    Connector ajpConnector = new Connector("AJP/1.3");
+//	    ajpConnector.setProtocol("AJP/1.3");
+//	    ajpConnector.setPort(9090);
+//	    ajpConnector.setSecure(false);
+//	    ajpConnector.setAllowTrace(false);
+//	    ajpConnector.setScheme("http");
+//	    tomcat.addAdditionalTomcatConnectors(ajpConnector);
+//
+//	    return tomcat;
+//	}
 }

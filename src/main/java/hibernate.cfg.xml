@@ -10,6 +10,7 @@
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">1qay2wsx</property>
         <property name="hibernate.connection.pool_size">1</property>
+        <property name="hibernate.physical_naming_strategy">com.royasoftware.PhysicalNamingStrategyImpl</property>
 <!--
 		<property name="hibernate.ejb.namingstrategy">org.hibernate.cfg.ImprovedNamingStrategy</property>
 		<property name="hibernate.ejb.naming_strategy">net.sf.hibernate.cfg.ImprovedNamingStrategy</property>

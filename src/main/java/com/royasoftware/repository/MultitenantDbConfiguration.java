@@ -68,11 +68,11 @@ public class MultitenantDbConfiguration {
 		ClassLoader cl = this.getClass().getClassLoader();
 		ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(cl);
 		Resource[] resources = resolver.getResources("classpath*:" + pathString + "/*.properties");
-		HashSet<File> fileVector = new HashSet<File>();
-		for (Resource resource : resources) {
-			fileVector.add(resource.getFile());
-			logger.info("Add tenant name " + resource.getFilename());
-		}
+//		HashSet<File> fileVector = new HashSet<File>();
+//		for (Resource resource : resources) {
+//			fileVector.add(resource.getFile());
+//			logger.info("Add tenant name " + resource.getFilename());
+//		}
 		Flyway flyway;
 		// flyway.setDataSource("jdbc:mysql://localhost:3306/ryspringoaut1",
 		// "root", "1qay2wsx");
@@ -90,19 +90,19 @@ public class MultitenantDbConfiguration {
 		// logger.info("Found tenant files number: "+files.length);
 		Map<Object, Object> resolvedDataSources = new HashMap<>();
 
-		//Important! Repair default db. 
+		//!!!!IMPORTANT!!!!! Repair default db. 
 //		flyway = new Flyway();
 //		flyway.setDataSource(properties.getUrl(),properties.getUsername(),properties.getPassword());
 //		flyway.setLocations("db.migration");
 //		flyway.repair();
 		DataSource ds = null;
-		for (File propertyFile : fileVector) {
+		for (Resource propertyFile : resources) {
 			Properties tenantProperties = new Properties();
 			DataSourceBuilder dataSourceBuilder = new DataSourceBuilder(this.getClass().getClassLoader());
 			try {
-				tenantProperties.load(new FileInputStream(propertyFile));
+				tenantProperties.load(propertyFile.getInputStream()); 
 				String tenantId = tenantProperties.getProperty("name");
-				logger.info("tenantId: " + tenantId);
+				logger.info("tenantId: " + tenantId +" propertyFile"+ propertyFile.getFilename());
 				flyway = new Flyway();
 //				flyway.setValidateOnMigrate(false);
 				if (tenantProperties.getProperty("datasource.url") != null)
@@ -113,7 +113,7 @@ public class MultitenantDbConfiguration {
 					flyway.setDataSource("jdbc:mysql://localhost:3306/" + tenantId + "?autoReconnect=true&useSSL=false",
 							"root", "1qay2wsx");
 				flyway.setLocations(tenantProperties.getProperty("flyway.locations"));
-				//Important! Repair dbs.
+				//!!!!IMPORTANT!!!!! Repair dbs.
 //				flyway.repair();
 				flyway.migrate();
 
