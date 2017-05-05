@@ -324,7 +324,7 @@ public class TrainingController extends BaseController {
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
 	public ResponseEntity<Object> getTrainingsPost(@PathVariable String _param) throws Exception {
-		logger.info("Hanalik! Calling Post rest controller get trainings " + _param);
+//		logger.info("Hanalik! Calling Post rest controller get trainings " + _param);
 		// return "forward:/test2?param1=foo&param2=bar";
 		return getTrainingsGet(_param);
 		// return "Hello mama: "+_param;
@@ -335,10 +335,7 @@ public class TrainingController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
 	public ResponseEntity<Object> getTrainingsGet(@PathVariable String _param) throws Exception {
-		// String subdomain = getSubdomain();
-		// logger.info("Calling Post rest controller upload training. subdomain
-		// = "
-		// + subdomain);
+		logger.info("Freak! Calling Post rest controller get trainings " + _param);
 		// TenantContext.setCurrentTenant(subdomain);
 		CustomUserDetails activeUser = TenantContext.getCurrentUser();
 		// logger.info("User connected as bound parameter: name = " +
