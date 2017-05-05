@@ -335,7 +335,7 @@ public class TrainingController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
 	public ResponseEntity<Object> getTrainingsGet(@PathVariable String _param) throws Exception {
-		logger.info("Freak! Calling Post rest controller get trainings " + _param);
+		logger.info("Freaky! Calling Post rest controller get trainings " + _param);
 		// TenantContext.setCurrentTenant(subdomain);
 		CustomUserDetails activeUser = TenantContext.getCurrentUser();
 		// logger.info("User connected as bound parameter: name = " +
