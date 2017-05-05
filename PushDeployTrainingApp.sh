@@ -3,7 +3,7 @@ git add .
 git commit -m "$*"
 git push httpsorigin master
 cd /d/RP/Tests/ReactToDoExp2
-npm run build
+npm run buildserver
 git add .
 git commit -m "$*"
 git push httpsorigin master
