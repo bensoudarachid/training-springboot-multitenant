@@ -335,7 +335,7 @@ public class TrainingController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
 	public ResponseEntity<Object> getTrainingsGet(@PathVariable String _param) throws Exception {
-		logger.info("Freaky! Calling Post rest controller get trainings " + _param);
+		logger.info("Calling Post rest controller get trainings " + _param);
 		// TenantContext.setCurrentTenant(subdomain);
 		CustomUserDetails activeUser = TenantContext.getCurrentUser();
 		// logger.info("User connected as bound parameter: name = " +
@@ -357,7 +357,7 @@ public class TrainingController extends BaseController {
 		// false,id:
 		// 24},{task: 'ya do it 7bayby',isCompleted: false,id: 25}]}";
 		Collection<Training> trainingList = trainingService.findAll();
-		logger.info("trainingList size =" + trainingList.size());
+		logger.info("Freaky! trainingList size =" + trainingList.size());
 		return new ResponseEntity<Object>(trainingList, HttpStatus.OK);
 		// return "{"+
 		// "\"trainings\": ["+
