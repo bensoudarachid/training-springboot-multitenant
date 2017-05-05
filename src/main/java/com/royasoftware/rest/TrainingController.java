@@ -324,7 +324,7 @@ public class TrainingController extends BaseController {
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
 	public ResponseEntity<Object> getTrainingsPost(@PathVariable String _param) throws Exception {
-		logger.info("Calling Post rest controller get trainings " + _param);
+		logger.info("Amor! Calling Post rest controller get trainings " + _param);
 		// return "forward:/test2?param1=foo&param2=bar";
 		return getTrainingsGet(_param);
 		// return "Hello mama: "+_param;
