@@ -21,6 +21,9 @@ public class TenantContext {
             return new HashMap<>();
         }
     };
+    public static void resetThreadLocal(){
+    	myContextThreadLocal.remove();
+    }
     public static void setCurrentTenant(String tenant) throws Exception{
 //    	logger.info("set current tenant "+tenant);
     	if( tenant==null)

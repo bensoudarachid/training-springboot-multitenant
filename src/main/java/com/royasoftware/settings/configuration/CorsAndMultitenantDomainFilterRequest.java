@@ -79,19 +79,21 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
 						
 //		TenantContext.setCurrentTenant("abbaslearning");
 //			logger.info("CorsAndMultitenantDomainFilterRequest. Set tenant context subdomain: "+subdomain);
+
+	        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+	            response.setStatus(HttpServletResponse.SC_OK);             
+	        } else {
+	            chain.doFilter(req, res);
+	        }
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			TenantContext.resetThreadLocal();
 		}
 
         
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-//        	logger.warn("+++++++++++Preflight OPTIONS responding"+HttpServletResponse.SC_OK);
-            response.setStatus(HttpServletResponse.SC_OK);             
-//            response.setStatus(HttpStatus.OK.value());
-        } else {
-            chain.doFilter(req, res);
-        }
     }
 
     @Override
