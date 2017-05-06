@@ -357,7 +357,7 @@ public class TrainingController extends BaseController {
 		// false,id:
 		// 24},{task: 'ya do it 7bayby',isCompleted: false,id: 25}]}";
 		Collection<Training> trainingList = trainingService.findAll();
-		logger.info("Tshash! trainingList size =" + trainingList.size());
+		logger.info("Thread! trainingList size =" + trainingList.size());
 		return new ResponseEntity<Object>(trainingList, HttpStatus.OK);
 		// return "{"+
 		// "\"trainings\": ["+
