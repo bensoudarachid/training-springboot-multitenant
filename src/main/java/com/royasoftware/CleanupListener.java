@@ -16,7 +16,7 @@ public class CleanupListener implements ServletContextListener{
     private ApplicationContext appContext;
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
-		logger.info("!!!!!----going down baby-1----!!!!!");
+		logger.info("!!!!!----going down baby-----!!!!!");
 //		forceThreadStop(CleanerThread.currentThread());
 		initiateShutdown(0);
 	}
@@ -38,7 +38,7 @@ public class CleanupListener implements ServletContextListener{
 		  } catch (InterruptedException e) {
 		    // join failed
 		  }
-		  logger.info("!!!!!----going down now! baby-2----!!!!!");
+		  logger.info("!!!!!----going down now! baby-----!!!!!");
 		  thread.interrupt(); // Make Thread stop waiting in sleep(), wait() or join()
 		  try {
 			    thread.join(10000); // Give the Thread 2 seconds to finish executing

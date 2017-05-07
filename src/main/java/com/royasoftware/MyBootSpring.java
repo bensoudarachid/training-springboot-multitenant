@@ -1,5 +1,8 @@
 package com.royasoftware;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
@@ -9,7 +12,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.SchedulingConfigurer;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.web.context.WebApplicationContext;
 
 //import com.royasoftware.filter.SimpleFilter;
@@ -20,7 +27,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootApplication 
 //SpringBootApplication replaces: @Configuration @ComponentScan @EnableAutoConfiguration
 @EnableScheduling
-public class MyBootSpring extends SpringBootServletInitializer{
+public class MyBootSpring extends SpringBootServletInitializer implements SchedulingConfigurer{
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Override
@@ -82,6 +89,17 @@ public class MyBootSpring extends SpringBootServletInitializer{
 //
 //	    return tomcat;
 //	}
+	
+    @Override
+    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+        taskRegistrar.setScheduler(taskExecutor());
+    }
+ 
+    @Bean(destroyMethod="shutdown")
+    public Executor taskExecutor() {
+        return Executors.newScheduledThreadPool(10);
+    }
+    
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         WebApplicationContext rootAppContext = createRootApplicationContext(servletContext);
