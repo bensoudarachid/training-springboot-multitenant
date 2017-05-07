@@ -12,7 +12,7 @@ public class CleanupListener implements ServletContextListener{
 	private static Logger logger = LoggerFactory.getLogger(CleanupListener.class);
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
-		logger.info("!!!!!----going down now baby-1----!!!!!");
+		logger.info("!!!!!----going down baby-1----!!!!!");
 		forceThreadStop(CleanerThread.currentThread());
 	}
 
@@ -23,14 +23,14 @@ public class CleanupListener implements ServletContextListener{
 	}
 
 	public static void forceThreadStop(Thread thread) {
-		  logger.info("!!!!!----going down now baby-2----!!!!!");
-		  thread.interrupt(); // Make Thread stop waiting in sleep(), wait() or join()
 
 		  try {
 		    thread.join(30000); // Give the Thread 2 seconds to finish executing
 		  } catch (InterruptedException e) {
 		    // join failed
 		  }
+		  logger.info("!!!!!----going down now! baby-2----!!!!!");
+		  thread.interrupt(); // Make Thread stop waiting in sleep(), wait() or join()
 
 		  // If still not done, kill it
 		  if (thread.isAlive())
