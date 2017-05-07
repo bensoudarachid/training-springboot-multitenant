@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class ContextClosedHandler implements ApplicationListener<ContextClosedEvent> {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
-	@Autowired ThreadPoolTaskExecutor executor;
-    @Autowired ThreadPoolTaskScheduler scheduler;
+//	@Autowired ThreadPoolTaskExecutor executor;
+//    @Autowired RouterMonitor scheduler;
 
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {
     	logger.info("onApplicationEvent close event"); 
-        scheduler.shutdown();
-        executor.shutdown();
+//        scheduler.shutdown();
+//        executor.shutdown();
     }       
 }
