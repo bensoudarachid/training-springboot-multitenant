@@ -3,6 +3,8 @@ package com.royasoftware;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -19,6 +21,7 @@ import org.springframework.web.context.WebApplicationContext;
 //SpringBootApplication replaces: @Configuration @ComponentScan @EnableAutoConfiguration
 @EnableScheduling
 public class MyBootSpring extends SpringBootServletInitializer{
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
