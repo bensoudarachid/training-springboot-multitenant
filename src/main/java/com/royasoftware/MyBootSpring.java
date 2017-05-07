@@ -83,7 +83,8 @@ public class MyBootSpring extends SpringBootServletInitializer{
     public void onStartup(ServletContext servletContext) throws ServletException {
         WebApplicationContext rootAppContext = createRootApplicationContext(servletContext);
         if (rootAppContext != null) {
-            servletContext.addListener(new CleanupListener());
+//            servletContext.addListener(new CleanupListener());
+        	logger.info("you could add your servlet listeners here!");
         }
         else {
             this.logger.debug("No ContextLoaderListener registered, as "
