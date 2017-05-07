@@ -31,6 +31,11 @@ public class CleanupListener implements ServletContextListener{
 		  }
 		  logger.info("!!!!!----going down now! baby-2----!!!!!");
 		  thread.interrupt(); // Make Thread stop waiting in sleep(), wait() or join()
+		  try {
+			    thread.join(10000); // Give the Thread 2 seconds to finish executing
+			  } catch (InterruptedException e) {
+			    // join failed
+			  }
 
 		  // If still not done, kill it
 		  if (thread.isAlive())
