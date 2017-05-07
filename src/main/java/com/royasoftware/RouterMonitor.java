@@ -341,7 +341,7 @@ public class RouterMonitor {
 				logger.debug("Joker response " + sendJokerDomainMappingUpdate());
 				return true;
 			} else if (actualIP.equals(ip)) {
-				logger.info("it is Same ips, no domain mapping update");
+				logger.info("n 3 Same ips, no domain mapping update");
 				return true;
 			}
 		} catch (Exception e) {
