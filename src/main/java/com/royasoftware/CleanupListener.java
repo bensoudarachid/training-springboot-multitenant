@@ -1,19 +1,24 @@
 package com.royasoftware;
-import java.lang.reflect.Field;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.apache.batik.util.CleanerThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
 
 public class CleanupListener implements ServletContextListener{
 	private static Logger logger = LoggerFactory.getLogger(CleanupListener.class);
+
+	@Autowired
+    private ApplicationContext appContext;
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		logger.info("!!!!!----going down baby-1----!!!!!");
-		forceThreadStop(CleanerThread.currentThread());
+//		forceThreadStop(CleanerThread.currentThread());
+		initiateShutdown(0);
 	}
 
 	@Override
@@ -22,6 +27,10 @@ public class CleanupListener implements ServletContextListener{
 		
 	}
 
+    public void initiateShutdown(int returnCode){
+        SpringApplication.exit(appContext, () -> returnCode);
+    }
+    
 	public static void forceThreadStop(Thread thread) {
 
 		  try {
