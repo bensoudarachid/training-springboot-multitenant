@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" elementFormDefault="qualified" attributeFormDefault="unqualified" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+<!-- edited with XML Spy v4.0.1 U (http://www.xmlspy.com) by Chris Lilley (W3C Staff) -->
+<!DOCTYPE schema SYSTEM "XMLSchema.dtd" [
+  <!ENTITY % p ''>
+  <!ENTITY % s ''>
+  <!ATTLIST schema
+  xmlns:svg CDATA #FIXED "http://www.w3.org/2000/svg"
+    xmlns:xlink CDATA #FIXED "http://www.w3.org/1999/xlink"
+    xmlns:xml CDATA #FIXED "http://www.w3.org/XML/1998/namespace"
+>
+]>
+<schema targetNamespace="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" elementFormDefault="unqualified" attributeFormDefault="unqualified" xml:lang="en" xmlns:xml="http://www.w3.org/XML/1998/namespace">
   <!-- don't declare the XML namespace; it is predeclared and redeclaring it upsets some software -->
   <import namespace="http://www.w3.org/1999/xlink" schemaLocation="xlink.xsd"/>
   <import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
@@ -253,7 +263,7 @@
       <documentation>'preserveAspectRatio' attribute specification</documentation>
     </annotation>
     <restriction base="string">
-      <pattern value="(\s*(none|x(Min|Mid|Max)Y(Min|Mid|Max))(\s(meet|slice))?\s*)"/>
+      <pattern value="(\s*(&quot;none&quot;|x(&quot;Min&quot;|&quot;Mid&quot;|&quot;Max&quot;)y(&quot;Min&quot;|&quot;Mid&quot;|&quot;Max&quot;))\s+(&quot;meet&quot;|&quot;slice&quot;)?\s*)"/>
     </restriction>
   </simpleType>
   <simpleType name="ScriptType">
@@ -331,7 +341,7 @@
       <documentation>All elements have an ID</documentation>
     </annotation>
     <attribute name="id" type="ID" use="optional"/>
-    <attribute ref="xml:base"/>
+    <attribute ref="xml:base" type="anyURI" use="optional"/>
   </attributeGroup>
   <attributeGroup name="langSpaceAttrs">
     <annotation>
@@ -832,7 +842,7 @@
   </attributeGroup>
   <attributeGroup name="animElementAttrs">
     <attributeGroup ref="svg:xlinkRefAttrs"/>
-    <attribute ref="xlink:href" use="optional"/>
+    <attribute ref="xlink:href" type="anyURI" use="optional"/>
   </attributeGroup>
   <attributeGroup name="animAttributeAttrs">
     <attribute name="attributeName" type="string" use="required"/>
@@ -905,57 +915,56 @@
       </simpleType>
     </attribute>
   </attributeGroup>
-  <!-- 
   <group name="descTitleMetadata">
     <annotation>
       <documentation>A bit simpler than the DTD, but see commented-out alternative</documentation>
     </annotation>
-    <sequence>
+    <all>
       <element name="desc" type="svg:descType" minOccurs="0"/>
       <element name="title" type="svg:titleType" minOccurs="0"/>
       <element name="metadata" type="svg:metadataType" minOccurs="0"/>
-    </sequence>
+    </all>
   </group>
- -->
+  <!--
 	<group name="descTitleMetadata">
-		<annotation>
+	<annotation>
 			<documentation>Captures the ordering restrictions of the DTD, but suffers from over complexity. No easy way to express this without a wrapper element.</documentation>
 		</annotation>
-		<choice>
-			<sequence minOccurs="0" maxOccurs="1">
+		<choice minOccurs="0" maxOccurs="1">
+			<sequence>
 				<element name="desc" type="svg:descType"/>
-				<choice>
-					<sequence minOccurs="0" maxOccurs="1">
+				<choice minOccurs="0" maxOccurs="1">
+					<sequence>
 						<element name="title" type="svg:titleType"/>
 						<element name="metadata" type="svg:metadataType" minOccurs="0" maxOccurs="1"/>
 					</sequence>
-					<sequence minOccurs="0" maxOccurs="1">
+					<sequence>
 						<element name="metadata" type="svg:metadataType"/>
 						<element name="title" type="svg:titleType" minOccurs="0" maxOccurs="1"/>
 					</sequence>
 				</choice>
 			</sequence>
-			<sequence minOccurs="0" maxOccurs="1">
+			<sequence>
 				<element name="title" type="svg:titleType"/>
-				<choice>
-					<sequence minOccurs="0" maxOccurs="1">
+				<choice minOccurs="0" maxOccurs="1">
+					<sequence>
 						<element name="desc" type="svg:descType"/>
 						<element name="metadata" type="svg:metadataType" minOccurs="0" maxOccurs="1"/>
 					</sequence>
-					<sequence minOccurs="0" maxOccurs="1">
+					<sequence>
 						<element name="metadata" type="svg:metadataType"/>
 						<element name="desc" type="svg:descType" minOccurs="0" maxOccurs="1"/>
 					</sequence>
 				</choice>
 			</sequence>
-			<sequence minOccurs="0" maxOccurs="1">
+			<sequence>
 				<element name="metadata" type="svg:metadataType"/>
-				<choice>
-					<sequence minOccurs="0" maxOccurs="1">
+				<choice minOccurs="0" maxOccurs="1">
+					<sequence>
 						<element name="desc" type="svg:descType"/>
 						<element name="title" type="svg:titleType" minOccurs="0" maxOccurs="1"/>
 					</sequence>
-					<sequence minOccurs="0" maxOccurs="1">
+					<sequence>
 						<element name="title" type="svg:titleType"/>
 						<element name="desc" type="svg:descType" minOccurs="0" maxOccurs="1"/>
 					</sequence>
@@ -963,7 +972,7 @@
 			</sequence>
 		</choice>
 	</group>
- 
+-->
   <element name="svg" type="svg:svgType"/>
   <element name="g" type="svg:gType"/>
   <element name="defs" type="svg:defsType"/>
@@ -1110,11 +1119,10 @@
     <attributeGroup ref="svg:documentEvents"/>
     <attribute name="x" type="svg:CoordinateType" use="optional"/>
     <attribute name="y" type="svg:CoordinateType" use="optional"/>
-    <attribute name="width" type="svg:LengthType" use="optional"/>
-    <attribute name="height" type="svg:LengthType" use="optional"/>
+    <attribute name="width" type="svg:LengthType" use="required"/>
+    <attribute name="height" type="svg:LengthType" use="required"/>
     <attribute name="contentScriptType" type="svg:ContentTypeType" default="text/ecmascript"/>
     <attribute name="contentStyleType" type="svg:ContentTypeType" default="text/css"/>
-    <attribute name="version" type="float" use="optional" fixed="1.1"/>
   </complexType>
   <complexType name="gType">
     <choice minOccurs="0" maxOccurs="unbounded">
@@ -1288,7 +1296,7 @@
   </complexType>
   <complexType name="useType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <choice minOccurs="0" maxOccurs="unbounded">
         <element ref="svg:animate"/>
         <element ref="svg:set"/>
@@ -1315,7 +1323,7 @@
   </complexType>
   <complexType name="imageType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <choice minOccurs="0" maxOccurs="unbounded">
         <element ref="svg:animate"/>
         <element ref="svg:set"/>
@@ -1345,7 +1353,7 @@
   </complexType>
   <complexType name="switchType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <choice minOccurs="0" maxOccurs="unbounded">
         <element ref="svg:path"/>
         <element ref="svg:text"/>
@@ -1388,7 +1396,7 @@
   </complexType>
   <complexType name="pathType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <choice minOccurs="0" maxOccurs="unbounded">
         <element ref="svg:animate"/>
         <element ref="svg:set"/>
@@ -1414,7 +1422,7 @@
   </complexType>
   <complexType name="rectType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <choice minOccurs="0" maxOccurs="unbounded">
         <element ref="svg:animate"/>
         <element ref="svg:set"/>
@@ -1443,7 +1451,7 @@
   </complexType>
   <complexType name="circleType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <choice minOccurs="0" maxOccurs="unbounded">
         <element ref="svg:animate"/>
         <element ref="svg:set"/>
@@ -1469,7 +1477,7 @@
   </complexType>
   <complexType name="ellipseType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <choice minOccurs="0" maxOccurs="unbounded">
         <element ref="svg:animate"/>
         <element ref="svg:set"/>
@@ -1496,7 +1504,7 @@
   </complexType>
   <complexType name="lineType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <choice minOccurs="0" maxOccurs="unbounded">
         <element ref="svg:animate"/>
         <element ref="svg:set"/>
@@ -1524,7 +1532,7 @@
   </complexType>
   <complexType name="polylineType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <choice minOccurs="0" maxOccurs="unbounded">
         <element ref="svg:animate"/>
         <element ref="svg:set"/>
@@ -1549,7 +1557,7 @@
   </complexType>
   <complexType name="polygonType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <choice minOccurs="0" maxOccurs="unbounded">
         <element ref="svg:animate"/>
         <element ref="svg:set"/>
@@ -1602,8 +1610,8 @@
     <attributeGroup ref="svg:PresentationAttributes-TextElements"/>
     <attribute name="transform" type="svg:TransformListType" use="optional"/>
     <attributeGroup ref="svg:graphicsElementEvents"/>
-    <attribute name="x" type="svg:CoordinatesType" use="optional"/>
-    <attribute name="y" type="svg:CoordinatesType" use="optional"/>
+    <attribute name="x" type="svg:CoordinateType" use="optional"/>
+    <attribute name="y" type="svg:CoordinateType" use="optional"/>
     <attribute name="textLength" type="svg:LengthType" use="optional"/>
     <attribute name="lengthAdjust" use="optional">
       <simpleType>
@@ -1863,11 +1871,11 @@
   </complexType>
   <complexType name="color-profileType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
     </sequence>
     <attributeGroup ref="svg:stdAttrs"/>
     <attributeGroup ref="svg:xlinkRefAttrs"/>
-    <attribute ref="xlink:href"/>
+    <attribute ref="xlink:href" type="anyURI" use="optional"/>
     <attribute name="local" type="string" use="optional"/>
     <attribute name="name" type="string" use="required"/>
     <attribute name="rendering-intent" default="auto">
@@ -1884,7 +1892,7 @@
   </complexType>
   <complexType name="linearGradientType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <choice minOccurs="0" maxOccurs="unbounded">
         <element ref="svg:stop"/>
         <element ref="svg:animate"/>
@@ -1924,7 +1932,7 @@
   </complexType>
   <complexType name="radialGradientType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <choice minOccurs="0" maxOccurs="unbounded">
         <element ref="svg:stop"/>
         <element ref="svg:animate"/>
@@ -2043,7 +2051,7 @@
   </complexType>
   <complexType name="clipPathType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <choice minOccurs="0" maxOccurs="unbounded">
         <element ref="svg:path"/>
         <element ref="svg:text"/>
@@ -2151,7 +2159,7 @@
   </complexType>
   <complexType name="filterType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <choice minOccurs="0" maxOccurs="unbounded">
         <element ref="svg:feBlend"/>
         <element ref="svg:feFlood"/>
@@ -2294,6 +2302,17 @@
       <element ref="svg:set"/>
     </choice>
     <attributeGroup ref="svg:stdAttrs"/>
+    <attribute name="type" use="required">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="identity"/>
+          <enumeration value="table"/>
+          <enumeration value="discrete"/>
+          <enumeration value="linear"/>
+          <enumeration value="gamma"/>
+        </restriction>
+      </simpleType>
+    </attribute>
     <attributeGroup ref="svg:component_transfer_function_attributes"/>
   </complexType>
   <complexType name="feFuncGType">
@@ -2302,6 +2321,17 @@
       <element ref="svg:set"/>
     </choice>
     <attributeGroup ref="svg:stdAttrs"/>
+    <attribute name="type" use="required">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="identity"/>
+          <enumeration value="table"/>
+          <enumeration value="discrete"/>
+          <enumeration value="linear"/>
+          <enumeration value="gamma"/>
+        </restriction>
+      </simpleType>
+    </attribute>
     <attributeGroup ref="svg:component_transfer_function_attributes"/>
   </complexType>
   <complexType name="feFuncBType">
@@ -2310,6 +2340,17 @@
       <element ref="svg:set"/>
     </choice>
     <attributeGroup ref="svg:stdAttrs"/>
+    <attribute name="type" use="required">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="identity"/>
+          <enumeration value="table"/>
+          <enumeration value="discrete"/>
+          <enumeration value="linear"/>
+          <enumeration value="gamma"/>
+        </restriction>
+      </simpleType>
+    </attribute>
     <attributeGroup ref="svg:component_transfer_function_attributes"/>
   </complexType>
   <complexType name="feFuncAType">
@@ -2318,6 +2359,18 @@
       <element ref="svg:set"/>
     </choice>
     <attributeGroup ref="svg:stdAttrs"/>
+    <attribute name="type" use="required">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="identity"/>
+          <enumeration value="table"/>
+          <enumeration value="discrete"/>
+          <enumeration value="linear"/>
+          <enumeration value="gamma"/>
+        </restriction>
+      </simpleType>
+      <!-- these all need to be stripped out and checked -->
+    </attribute>
     <attributeGroup ref="svg:component_transfer_function_attributes"/>
   </complexType>
   <complexType name="feCompositeType">
@@ -2558,7 +2611,7 @@
     </attribute>
   </complexType>
   <complexType name="cursorType">
-    <group ref="svg:descTitleMetadata"/>
+    <group ref="svg:descTitleMetadata" minOccurs="0"/>
     <attributeGroup ref="svg:stdAttrs"/>
     <attributeGroup ref="svg:xlinkRefAttrs"/>
     <attribute ref="xlink:href" use="optional"/>
@@ -2632,7 +2685,7 @@
     <!-- change from string to URI -->
   </complexType>
   <complexType name="viewType">
-    <group ref="svg:descTitleMetadata"/>
+    <group ref="svg:descTitleMetadata" minOccurs="0"/>
     <attributeGroup ref="svg:stdAttrs"/>
     <attribute name="externalResourcesRequired" type="boolean" use="optional"/>
     <attribute name="viewBox" type="svg:ViewBoxSpecType" use="optional"/>
@@ -2656,7 +2709,7 @@
     <attribute name="type" type="svg:ContentTypeType" use="required"/>
   </complexType>
   <complexType name="animateType">
-    <group ref="svg:descTitleMetadata"/>
+    <group ref="svg:descTitleMetadata" minOccurs="0"/>
     <attributeGroup ref="svg:stdAttrs"/>
     <attributeGroup ref="svg:testAttrs"/>
     <attribute name="externalResourcesRequired" type="boolean" use="optional"/>
@@ -2667,7 +2720,7 @@
     <attributeGroup ref="svg:animAdditionAttrs"/>
   </complexType>
   <complexType name="setType">
-    <group ref="svg:descTitleMetadata"/>
+    <group ref="svg:descTitleMetadata" minOccurs="0"/>
     <attributeGroup ref="svg:stdAttrs"/>
     <attributeGroup ref="svg:testAttrs"/>
     <attribute name="externalResourcesRequired" type="boolean" use="optional"/>
@@ -2678,7 +2731,7 @@
   </complexType>
   <complexType name="animateMotionType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <element ref="svg:mpath" minOccurs="0"/>
     </sequence>
     <attributeGroup ref="svg:stdAttrs"/>
@@ -2695,14 +2748,14 @@
     <attribute name="origin" type="string" use="optional"/>
   </complexType>
   <complexType name="mpathType">
-    <group ref="svg:descTitleMetadata"/>
+    <group ref="svg:descTitleMetadata" minOccurs="0"/>
     <attributeGroup ref="svg:stdAttrs"/>
     <attributeGroup ref="svg:xlinkRefAttrs"/>
     <attribute ref="xlink:href" use="optional"/>
     <attribute name="externalResourcesRequired" type="boolean" use="optional"/>
   </complexType>
   <complexType name="animateColorType">
-    <group ref="svg:descTitleMetadata"/>
+    <group ref="svg:descTitleMetadata" minOccurs="0"/>
     <attributeGroup ref="svg:stdAttrs"/>
     <attributeGroup ref="svg:testAttrs"/>
     <attribute name="externalResourcesRequired" type="boolean" use="optional"/>
@@ -2713,7 +2766,7 @@
     <attributeGroup ref="svg:animAdditionAttrs"/>
   </complexType>
   <complexType name="animateTransformType">
-    <group ref="svg:descTitleMetadata"/>
+    <group ref="svg:descTitleMetadata" minOccurs="0"/>
     <attributeGroup ref="svg:stdAttrs"/>
     <attributeGroup ref="svg:testAttrs"/>
     <attribute name="externalResourcesRequired" type="boolean" use="optional"/>
@@ -2736,7 +2789,7 @@
   </complexType>
   <complexType name="fontType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <element ref="svg:font-face"/>
       <element ref="svg:missing-glyph"/>
       <choice minOccurs="0" maxOccurs="unbounded">
@@ -2880,7 +2933,7 @@
   </complexType>
   <complexType name="font-faceType">
     <sequence>
-      <group ref="svg:descTitleMetadata"/>
+      <group ref="svg:descTitleMetadata" minOccurs="0"/>
       <element ref="svg:font-face-src"/>
       <element ref="svg:definition-src"/>
     </sequence>

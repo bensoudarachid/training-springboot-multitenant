@@ -4,7 +4,7 @@ git commit -m "$*"
 git push httpsorigin master
 curl --insecure https://localhost:6767/jenkins/buildByToken/build?job=GetRestTrainingAppFromGitlab\&token=d8g347rg375trft3dr34r8zr84t845gc58g5t
 cd /d/RP/Tests/ReactToDoExp2
-npm run build
+npm run buildserver
 git add .
 git commit -m "$*"
 git push httpsorigin master
