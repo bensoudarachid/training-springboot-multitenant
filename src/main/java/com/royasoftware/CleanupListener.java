@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import com.royasoftware.repository.MultitenantDbConfiguration;
+
 public class CleanupListener implements ServletContextListener {
 	private static Logger logger = LoggerFactory.getLogger(CleanupListener.class);
 
@@ -16,7 +18,7 @@ public class CleanupListener implements ServletContextListener {
 	public void contextDestroyed(ServletContextEvent arg0) {
 		logger.info("!!!!!----going down baby-----!!!!!");
 		// forceThreadStop(CleanerThread.currentThread());
-		initiateShutdown(0);
+//		initiateShutdown(0);
 	}
 
 	@Override
@@ -29,7 +31,7 @@ public class CleanupListener implements ServletContextListener {
 		// SpringApplication.exit(appContext, () -> returnCode);
 		AnnotationConfigApplicationContext context = null;
 		try {
-			context = new AnnotationConfigApplicationContext(MyBootSpring.class);
+			context = new AnnotationConfigApplicationContext(MyBootSpring.class, MultitenantDbConfiguration.class);
 			Thread.sleep(5000);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -37,6 +39,7 @@ public class CleanupListener implements ServletContextListener {
 			if (context != null)
 				context.close();
 		}
+
 	}
 
 	public static void forceThreadStop(Thread thread) {

@@ -341,7 +341,7 @@ public class RouterMonitor {
 				logger.debug("Joker response " + sendJokerDomainMappingUpdate());
 				return true;
 			} else if (actualIP.equals(ip)) {
-				logger.info("n 3 Same ips, no domain mapping update");
+				logger.info("n 4 Same ips, no domain mapping update");
 				return true;
 			}
 		} catch (Exception e) {
@@ -455,46 +455,46 @@ public class RouterMonitor {
 	}
 
 
-	@Scheduled(fixedDelay = 1400000, initialDelay = 1200000)
-	public void pingHerokuConnection() {
-		soundClipTest(SOUND_HEROKU_PING);
-		Calendar rightNow = Calendar.getInstance();
-		int hour = rightNow.get(Calendar.HOUR_OF_DAY);
-		logger.info("Actual hour: " + hour);
-		if (hour < 7 || hour > 22) {
-			logger.info("No heroku pinging");
-			return;
-		}
-
-		for (int i = 0; i < 5; i++) {
-			try {
-				// boolean ping = false;
-				boolean pingOk = pingHost("google.com", 6000);
-				Thread.sleep(3000);
-				if (!pingOk)
-					continue;
-				int rdm = new Random().nextInt(180);
-				logger.info("Sleeping random seconds before heroku call: " + rdm);
-				Thread.sleep(rdm * 1000);
-				logger.info("Ping heroku server." + (i + 1) + " iteration");
-				// ping = pingHost("rlearn.herokuapp.com", 5000);
-				String out = connectUrl("http://rlearn.herokuapp.com/bundle.js");
-				if (out != null)
-					logger.info("heroku is alive!");
-				else
-					logger.info("heroku has a problem! i got no output from connection");
-				// connectUrl("http://abbaslearning.royasoftware.com");
-				Thread.sleep(10000);
-				// if( ping ){
-				return;
-				// }
-			} catch (Exception e) {
-				logger.error("heroku not alive: " + e.getMessage());
-				// e.printStackTrace();
-			}
-		}
-		logger.info("Heroku scheduler: i m out");
-	}
+//	@Scheduled(fixedDelay = 1400000, initialDelay = 1200000)
+//	public void pingHerokuConnection() {
+//		soundClipTest(SOUND_HEROKU_PING);
+//		Calendar rightNow = Calendar.getInstance();
+//		int hour = rightNow.get(Calendar.HOUR_OF_DAY);
+//		logger.info("Actual hour: " + hour);
+//		if (hour < 7 || hour > 22) {
+//			logger.info("No heroku pinging");
+//			return;
+//		}
+//
+//		for (int i = 0; i < 5; i++) {
+//			try {
+//				// boolean ping = false;
+//				boolean pingOk = pingHost("google.com", 6000);
+//				Thread.sleep(3000);
+//				if (!pingOk)
+//					continue;
+//				int rdm = new Random().nextInt(180);
+//				logger.info("Sleeping random seconds before heroku call: " + rdm);
+//				Thread.sleep(rdm * 1000);
+//				logger.info("Ping heroku server." + (i + 1) + " iteration");
+//				// ping = pingHost("rlearn.herokuapp.com", 5000);
+//				String out = connectUrl("http://rlearn.herokuapp.com/bundle.js");
+//				if (out != null)
+//					logger.info("heroku is alive!");
+//				else
+//					logger.info("heroku has a problem! i got no output from connection");
+//				// connectUrl("http://abbaslearning.royasoftware.com");
+//				Thread.sleep(10000);
+//				// if( ping ){
+//				return;
+//				// }
+//			} catch (Exception e) {
+//				logger.error("heroku not alive: " + e.getMessage());
+//				// e.printStackTrace();
+//			}
+//		}
+//		logger.info("Heroku scheduler: i m out");
+//	}
 
 	
 	public static void main(String[] args) {

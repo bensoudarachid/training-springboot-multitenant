@@ -1,0 +1,40 @@
+<project name="TrainingApp" default="tstampnode" basedir=".">
+  <description>
+    simple example build file
+  </description>
+  <!-- set global properties for this build -->
+  <property name="nodedir" location="../ReactToDoExp2/src/services"/>
+  <property name="springdir" location="src/main/resources"/>
+
+  <target name="init">
+    <!-- Create the time stamp -->
+	<tstamp>
+     <format property="time.stamp" pattern="yyyy-MM-dd-HH-mm-ss-ms"/>
+	</tstamp>  
+	<!-- Create the build directory structure used by compile 
+    <mkdir dir="${springdist}"/>
+    <mkdir dir="${nodedist}"/>
+	-->
+	
+  </target>
+
+  <target name="tstampnode" depends="init,tstampspring"
+        description="generate node timestamp">
+    <!-- Compile the java code from ${src} into ${build} -->
+	<echo file="${nodedir}/version.js" message="export const appversion='${time.stamp}'"/>
+  </target>
+
+  <target name="tstampspring" depends="init"
+        description="generate spring timestamp">
+    <!-- Compile the java code from ${src} into ${build} -->
+	<echo file="${springdir}/version.properties" message="appversion=${time.stamp}"/>
+  </target>
+
+
+  <target name="clean"
+        description="clean up">
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete file="${nodedir}/version.json"/>
+    <delete file="${springdir}/version.properties"/>
+  </target>
+</project>

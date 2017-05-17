@@ -1,40 +1,55 @@
 package com.royasoftware.settings.configuration;
 
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.royasoftware.TenantContext;
-import com.royasoftware.settings.security.CustomUserDetails;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsAndMultitenantDomainFilterRequest implements Filter {
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
-
+	private final DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
     private final Logger log = LoggerFactory.getLogger(CorsAndMultitenantDomainFilterRequest.class);
-
+    final Calendar calendar = Calendar.getInstance();
+    
     public CorsAndMultitenantDomainFilterRequest() {
         log.info("SimpleCORSFilter init");
     }
 
-    @Override
+        @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 //    	logger.info("CorsAndMultitenantDomainFilterRequest. Call ");
+    	
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-
+//        final HttpSession httpSession = request.getSession(true);
+//        if (httpSession.isNew()) {
+//          logger.info("Create user session"); 
+//          httpSession.setAttribute("userArrived",
+//              dateFormat.format(calendar.getTime()));
+//        }else{
+//        	logger.info("User arrived at "+httpSession.getAttribute("userArrived")+ "session id = "+httpSession.getId()); 
+//        }
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE, HEAD");
         response.setHeader("Access-Control-Allow-Origin", "*");

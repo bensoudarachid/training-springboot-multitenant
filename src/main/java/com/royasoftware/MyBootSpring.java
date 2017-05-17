@@ -13,17 +13,22 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.view.script.ScriptTemplateConfigurer;
+import org.springframework.web.servlet.view.script.ScriptTemplateViewResolver;
 
 //import com.royasoftware.filter.SimpleFilter;
 
 //import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 
 //EnableZuulProxy
+
+@EnableWebMvc
 @SpringBootApplication 
 //SpringBootApplication replaces: @Configuration @ComponentScan @EnableAutoConfiguration
 @EnableScheduling
@@ -99,7 +104,7 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
     public Executor taskExecutor() {
         return Executors.newScheduledThreadPool(10);
     }
-    
+
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         WebApplicationContext rootAppContext = createRootApplicationContext(servletContext);
@@ -112,5 +117,38 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
                     + "createRootApplicationContext() did not "
                     + "return an application context");
         }
-    }	
+    }
+//    @Bean
+//    public ViewResolver reactViewResolver() {
+//        ScriptTemplateViewResolver viewResolver = new ScriptTemplateViewResolver();
+//        viewResolver.setPrefix("static2/");
+//        viewResolver.setSuffix(".ejs");
+//        return viewResolver;
+//    }
+    @Bean
+    public ViewResolver viewResolver() {
+        return new ScriptTemplateViewResolver("/static2/", ".html");
+    }    
+    @Bean
+    public ScriptTemplateConfigurer reactConfigurer() {
+        ScriptTemplateConfigurer configurer = new ScriptTemplateConfigurer();
+        configurer.setEngineName("nashorn");
+        configurer.setScripts(
+        		"static2/polyfill.js",
+                "static2/lib/js/ejs.min.js",
+                "static2/lib/js/react.js",
+                "static2/render.js",
+//                "D:/RP/Tests/ReactToDoExp2/node_modules/react-dom/dist/react-dom.js",
+//                "/META-INF/resources/webjars/react/0.13.1/JSXTransformer.js",
+                "static/vendor.bundle.js",
+                "static/1.bundle.js",
+                "static2/server.js"
+//                "static/output/comment.js",
+//                "static/output/comment-form.js",
+//                "static/output/comment-list.js"
+                );
+        configurer.setRenderFunction("render");
+        configurer.setSharedEngine(false);
+        return configurer;
+    }
 }
