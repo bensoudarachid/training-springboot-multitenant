@@ -4,17 +4,17 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.royasoftware.script.ScriptHelper;
 import com.royasoftware.settings.security.CustomUserDetails;
 
 public class TenantContext {
 	
 	private static Logger logger = LoggerFactory.getLogger(TenantContext.class);
 //    private static ThreadLocal<Map<String,Object>> currentTenant = new ThreadLocal<>();
-	public static String userUploadStorage=System.getenv("JAVA_HOME");
+	public static String userUploadStorage=System.getenv("TRAINING_APP_STORAGE");
 	private static Set<String> validTenantSet= new HashSet<>();
     private static ThreadLocal<HashMap<String, Object>> myContextThreadLocal = new ThreadLocal<HashMap<String, Object>>() {
         @Override
@@ -58,6 +58,7 @@ public class TenantContext {
 //        return userUploadStorage+(String)myContextThreadLocal.get().get("tenant")+"/";
     }
     private static String getTenantStoragePath(String tenant) {
+    	logger.info("userUploadStorage="+userUploadStorage); 
     	return new StringBuffer(userUploadStorage).append(tenant).append("/").toString();
 //        return userUploadStorage+(String)myContextThreadLocal.get().get("tenant")+"/";
     }
