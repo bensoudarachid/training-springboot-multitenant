@@ -298,7 +298,9 @@
 				<dependency> <groupId>org.javassist</groupId> <artifactId>javassist</artifactId> 
 				<version>3.18.1-GA</version> </dependency> </dependencies> </plugin> -->
 		</plugins>
+		
   		<finalName>${project.artifactId}-${appversion}</finalName>
+  		
 	</build>
 
   <!-- Add Spring repositories -->
