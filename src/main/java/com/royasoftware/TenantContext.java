@@ -11,9 +11,10 @@ import com.royasoftware.script.ScriptHelper;
 import com.royasoftware.settings.security.CustomUserDetails;
 
 public class TenantContext {
+	
 	private static Logger logger = LoggerFactory.getLogger(TenantContext.class);
 //    private static ThreadLocal<Map<String,Object>> currentTenant = new ThreadLocal<>();
-	public static String userUploadStorage="../useruploadstorage/";
+	public static String userUploadStorage=System.getenv("JAVA_HOME")"../useruploadstorage/";
 	private static Set<String> validTenantSet= new HashSet<>();
     private static ThreadLocal<HashMap<String, Object>> myContextThreadLocal = new ThreadLocal<HashMap<String, Object>>() {
         @Override
