@@ -3,9 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.royasoftware</groupId>
+	<!--
 	<artifactId>training</artifactId>
 	<version>${appversion}</version>
-	<!-- -->
+	-->
+	<artifactId>ROOT</artifactId>
+	<version>${appversion}</version>
 
 	<packaging>war</packaging>
 	<!-- <properties> <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
