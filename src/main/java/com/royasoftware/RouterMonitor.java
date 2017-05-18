@@ -46,6 +46,11 @@ import com.royasoftware.script.ScriptHelper;
 
 @Component
 public class RouterMonitor {
+	public static String userUploadStorage=System.getenv("TRAINING_APP_STORAGE");
+	static{
+		if( !userUploadStorage.endsWith(File.separator) )
+			userUploadStorage=userUploadStorage+File.separator;
+	}
 	final private static short STATUS_CONNECTION_OK = 0;
 	final private static short STATUS_CONNECTION_LOST = 1;
 	final private static short WAIT_FOR_PING_MAX_ITERATIONS = 14;
@@ -499,12 +504,13 @@ public class RouterMonitor {
 	
 	public static void main(String[] args) {
 		try {
+			logger.info("userUploadStorage="+userUploadStorage); 
 //			DOMConfigurator.configure("log4j.xml");
 			
 //			RouterMonitor rm = new RouterMonitor("192.168.1.1", "admin", "royaZoft");
-			RouterMonitor rm = new RouterMonitor();
+//			RouterMonitor rm = new RouterMonitor();
 //			rm.reconnect();
-			rm.updateDomainToIpMappping();
+//			rm.updateDomainToIpMappping();
 //			logger.info("connect router "+rm.pingHost("192.168.1.1", 6000)); 
 			
 			// rm.reconnect();
