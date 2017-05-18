@@ -115,7 +115,12 @@ public class MultitenantDbConfiguration {
 				flyway.setLocations(tenantProperties.getProperty("flyway.locations"));
 				//!!!!IMPORTANT!!!!! Repair dbs.
 //				flyway.repair();
-				flyway.migrate();
+				try {
+					flyway.migrate();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				if (tenantProperties.getProperty("datasource.url") != null)
 					dataSourceBuilder.driverClassName(properties.getDriverClassName())
