@@ -19,8 +19,7 @@ call npm install
 
 rem call npm run build
 
-rem pm2 reload all
-"C:\Users\RA\AppData\Roaming\npm\node_modules\pm2-windows-service\src\daemon\pm2.exe" reload all
+pm2 reload all
 
 
 rem c:
