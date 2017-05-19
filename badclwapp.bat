@@ -11,8 +11,8 @@ ping 127.0.0.1 -n 80 -w 1000 > nul
 
 
 rem Get Node and Webapp files into web app program folder
-robocopy D:\ProgFiles\jenkins\workspace\GetNodeTrainingAppFromGitlab\build C:\Programme\TrainingNodeApp\build /e /zb /xo /copyall /dcopy:t /purge
-robocopy D:\ProgFiles\jenkins\workspace\GetNodeTrainingAppFromGitlab C:\Programme\TrainingNodeApp\ /e /zb /xo /copyall /dcopy:t /xd .git src build
+robocopy D:\ProgFiles\jenkins\workspace\GetNodeTrainingAppFromGitlab\build C:\Programme\TrainingNodeApp\build /NFL /NDL /NJH /NJS /NC /NS /NP /e /zb /xo /copyall /dcopy:t /purge 
+robocopy D:\ProgFiles\jenkins\workspace\GetNodeTrainingAppFromGitlab C:\Programme\TrainingNodeApp\ /NFL /NDL /NJH /NJS /NC /NS /NP /e /zb /xo /copyall /dcopy:t /xd .git src build
 c:
 cd C:\Programme\TrainingNodeApp\
 call npm install
