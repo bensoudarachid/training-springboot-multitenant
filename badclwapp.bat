@@ -10,16 +10,17 @@ copy /y C:\Programme\TrainingRestApp\target\*.war C:\Programme\apache-tomcat-8.0
 ping 127.0.0.1 -n 80 -w 1000 > nul
 
 
-rem Get Node and Webapp files into web app program folder
-robocopy D:\ProgFiles\jenkins\workspace\GetNodeTrainingAppFromGitlab\build C:\Programme\TrainingNodeApp\build /NFL /NDL /NJH /NJS /NC /NS /NP /e /zb /xo /copyall /dcopy:t /purge 
-robocopy D:\ProgFiles\jenkins\workspace\GetNodeTrainingAppFromGitlab C:\Programme\TrainingNodeApp\ /NFL /NDL /NJH /NJS /NC /NS /NP /e /zb /xo /copyall /dcopy:t /xd .git src build
+rem Get Node and Webapp files into web app program folder /NFL /NDL /NJH /NJS /NC /NS /NP
+robocopy D:\ProgFiles\jenkins\workspace\GetNodeTrainingAppFromGitlab\build C:\Programme\TrainingNodeApp\build /e /zb /xo /copyall /dcopy:t /purge 
+robocopy D:\ProgFiles\jenkins\workspace\GetNodeTrainingAppFromGitlab C:\Programme\TrainingNodeApp\ /e /zb /xo /copyall /dcopy:t /xd .git src build
 c:
 cd C:\Programme\TrainingNodeApp\
 call npm install
 
 rem call npm run build
 
-pm2 reload all
+rem pm2 reload all
+"C:\Users\RA\AppData\Roaming\npm\node_modules\pm2-windows-service\src\daemon\pm2.exe" reload all
 
 
 rem c:
