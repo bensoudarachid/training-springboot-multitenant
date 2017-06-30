@@ -53,6 +53,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.svg.SVGDocument;
 
+import com.royasoftware.LetsencryptMonitor;
 import com.royasoftware.TenantContext;
 import com.royasoftware.model.Training;
 import com.royasoftware.service.TrainingService;
@@ -152,6 +153,14 @@ public class TrainingController extends BaseController {
 		Training training = trainingService.updateTraining(trainingParam);
 		if (file != null)
 			fileUpload(training.getId(), file);
+		try {
+			LetsencryptMonitor letsencryptMonitor = new LetsencryptMonitor();
+			letsencryptMonitor.renewCertificate();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return new ResponseEntity<Training>(training, HttpStatus.OK);
 	}
 

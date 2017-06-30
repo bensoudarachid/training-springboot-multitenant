@@ -62,7 +62,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class LetsencryptMonitor {
-	private static final String CERT_PATH = "C:/Programm/Apache24/conf/ssl/royasoftware.com-acme4j";
+//	private static final String CERT_PATH = "C:/Programm/Apache24/conf/ssl/royasoftware.com-acme4j";
+	static private String CERT_PATH = "C:/Programm/Apache24/conf/ssl/royasoftware.com-acme4j";
+	static {
+		if( System.getenv("NODE_ENV")!= null && System.getenv("NODE_ENV").equals("production") )
+			CERT_PATH = "C:/Programme/Apache24/conf/ssl/royasoftware.com-acme4j";		
+	}
+	
 	// File name of the User Key Pair
 	private static final File USER_KEY_FILE = new File(CERT_PATH + "/rbensoudauser.key");
 
@@ -157,6 +163,7 @@ public class LetsencryptMonitor {
 	 * @return User's {@link KeyPair}.
 	 */
 	private KeyPair loadOrCreateUserKeyPair() throws IOException {
+		logger.info("USER_KEY_FILE="+USER_KEY_FILE); 
 		if (USER_KEY_FILE.exists()) {
 			// If there is a key file, read it
 			try (FileReader fr = new FileReader(USER_KEY_FILE)) {
@@ -221,7 +228,6 @@ public class LetsencryptMonitor {
 			URI agreement = reg.getAgreement();
 			logger.info("Terms of Service: " + agreement);
 			acceptAgreement(reg, agreement);
-
 		} catch (AcmeConflictException ex) {
 			// The Key Pair is already registered. getLocation() contains the
 			// URL of the existing registration's location. Bind it to the
@@ -533,7 +539,7 @@ public class LetsencryptMonitor {
 	}
 	
 	@Scheduled(cron = "0 25 12 * * *")
-	private void renewCertificate() throws Exception {
+	public void renewCertificate() throws Exception {
 		Calendar c = Calendar.getInstance();
 		// c.add(field, amount); // getCertificateValidationDate()
 
