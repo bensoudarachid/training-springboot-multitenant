@@ -526,7 +526,7 @@ public class LetsencryptMonitor {
 				"name8.school.royasoftware.com", "name9.school.royasoftware.com" };
 		// String[] domainArray = new String[]{"royasoftware.com"};
 
-		logger.info("Starting up...");
+		logger.info("Create School Certificate. Starting up...");
 
 		Security.addProvider(new BouncyCastleProvider());
 
