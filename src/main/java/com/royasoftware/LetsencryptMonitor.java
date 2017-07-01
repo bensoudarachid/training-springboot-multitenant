@@ -150,7 +150,7 @@ public class LetsencryptMonitor {
 		}
 
 		// That's all! Configure your web server to use the DOMAIN_KEY_FILE and
-		// DOMAIN_CHAIN_FILE for the requested domans.
+		// DOMAIN_CHAIN_FILE for the requested domains.
 	}
 
 	/**
@@ -517,7 +517,7 @@ public class LetsencryptMonitor {
 	public void createSchoolCertificate() {
 
 		String[] domainArray = new String[] {
-				// "royasoftware.com",
+				"royasoftware.com",
 				"reactlearning.school.royasoftware.com", "abibislearning.school.royasoftware.com",
 				"it.school.royasoftware.com", "hanya.school.royasoftware.com", "name1.school.royasoftware.com",
 				"name2.school.royasoftware.com", "name3.school.royasoftware.com", "name4.school.royasoftware.com",
