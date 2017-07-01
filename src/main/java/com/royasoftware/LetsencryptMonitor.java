@@ -572,6 +572,15 @@ public class LetsencryptMonitor {
 			logger.info("Wont renew cert");
 	}
 
+	public void restartApache() {
+		Process process = null;
+		try {
+			process = Runtime.getRuntime().exec(APACHE_PATH+"/bin/httpd.exe -k restart");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void main(String... args) {
 		// if (args.length == 0) {
 		// System.err.println("Usage: ClientTest <domain>...");
@@ -587,4 +596,5 @@ public class LetsencryptMonitor {
 			ex.printStackTrace();
 		}
 	}
+
 }
