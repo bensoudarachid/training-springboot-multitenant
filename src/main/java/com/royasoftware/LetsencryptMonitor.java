@@ -63,11 +63,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class LetsencryptMonitor {
 //	private static final String CERT_PATH = "C:/Programm/Apache24/conf/ssl/royasoftware.com-acme4j";
-	static private String CERT_PATH = "C:/Programm/Apache24/conf/ssl/royasoftware.com-acme4j";
+	static private String APACHE_PATH = "C:/Programm/Apache24";
+//	static private String CERT_PATH = "C:/Programm/Apache24/conf/ssl/royasoftware.com-acme4j";
 	static {
 		if( System.getenv("NODE_ENV")!= null && System.getenv("NODE_ENV").equals("production") )
-			CERT_PATH = "C:/Programme/Apache24/conf/ssl/royasoftware.com-acme4j";		
+//			CERT_PATH = "C:/Programme/Apache24/conf/ssl/royasoftware.com-acme4j";
+			APACHE_PATH = "C:/Programme/Apache24";
 	}
+
+	static private String CERT_PATH = APACHE_PATH+"/conf/ssl/royasoftware.com-acme4j";
 	
 	// File name of the User Key Pair
 	private static final File USER_KEY_FILE = new File(CERT_PATH + "/rbensoudauser.key");
@@ -347,9 +351,11 @@ public class LetsencryptMonitor {
 		logger.info("If you're ready, dismiss the dialog...");
 
 		try {
+			System.out.println("Write certificate challenge to file: "+APACHE_PATH+"/htdocs/.well-known/acme-challenge/" + challenge.getToken());
 			FileWriter fw = new FileWriter(
-					"C:\\Programm\\Apache24\\htdocs\\.well-known\\acme-challenge\\" + challenge.getToken());
-			System.out.println("write to file");
+					APACHE_PATH+"/htdocs/.well-known/acme-challenge/" + challenge.getToken());
+//					"C:\\Programm\\Apache24\\htdocs\\.well-known\\acme-challenge\\" + challenge.getToken());
+			System.out.println("Write to file done");
 			fw.write(challenge.getAuthorization());
 			fw.close();
 		} catch (Exception e) {

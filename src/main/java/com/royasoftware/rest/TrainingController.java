@@ -154,7 +154,7 @@ public class TrainingController extends BaseController {
 		if (file != null)
 			fileUpload(training.getId(), file);
 		try {
-			logger.info("Create School Cert now");
+			logger.info("Create School Cert now 2");
 			LetsencryptMonitor letsencryptMonitor = new LetsencryptMonitor();
 			letsencryptMonitor.createSchoolCertificate();
 		} catch (Exception e) {
