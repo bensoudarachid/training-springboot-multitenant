@@ -557,17 +557,27 @@ public class LetsencryptMonitor {
 		logger.info("After x days from now will we be over expiry date " + getCertificateValidationDate() + "? "
 				+ c.getTime().after(getCertificateValidationDate()));
 		if (c.getTime().after(getCertificateValidationDate())) {
-			logger.info("*****Renew cert****");
-			KeyPair userKeyPair = loadOrCreateUserKeyPair();
-			Session session = new Session("acme://letsencrypt.org", userKeyPair);
-			PKCS10CertificationRequest csr = CertificateUtils.readCSR(new FileInputStream(DOMAIN_CSR_FILE));
-			Registration reg = findOrRegisterAccount(session);
-			Certificate certificate = reg.requestCertificate(csr.getEncoded());
-			X509Certificate cert = certificate.download();
-			X509Certificate[] chain = certificate.downloadChain();
-			try (FileWriter fw = new FileWriter(DOMAIN_CHAIN_FILE)) {
-				CertificateUtils.writeX509CertificateChain(fw, cert, chain);
+			logger.info("*****Renew (recreate) cert****");
+//			KeyPair userKeyPair = loadOrCreateUserKeyPair();
+//			Session session = new Session("acme://letsencrypt.org", userKeyPair);
+//			PKCS10CertificationRequest csr = CertificateUtils.readCSR(new FileInputStream(DOMAIN_CSR_FILE));
+//			Registration reg = findOrRegisterAccount(session);
+//			Certificate certificate = reg.requestCertificate(csr.getEncoded());
+//			X509Certificate cert = certificate.download();
+//			X509Certificate[] chain = certificate.downloadChain();
+//			try (FileWriter fw = new FileWriter(DOMAIN_CHAIN_FILE)) {
+//				CertificateUtils.writeX509CertificateChain(fw, cert, chain);
+//			}
+			
+			try {
+				logger.info("Create School Cert now 3. Restart apache");
+				createSchoolCertificate();
+				restartApache();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			
 
 		} else
 			logger.info("Wont renew cert");

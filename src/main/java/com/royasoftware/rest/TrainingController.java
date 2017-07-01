@@ -153,15 +153,15 @@ public class TrainingController extends BaseController {
 		Training training = trainingService.updateTraining(trainingParam);
 		if (file != null)
 			fileUpload(training.getId(), file);
-		try {
-			logger.info("Create School Cert now 3. Restart apache");
-			LetsencryptMonitor letsencryptMonitor = new LetsencryptMonitor();
+//		try {
+//			logger.info("Create School Cert now 3. Restart apache");
+//			LetsencryptMonitor letsencryptMonitor = new LetsencryptMonitor();
 //			letsencryptMonitor.createSchoolCertificate();
-			letsencryptMonitor.restartApache();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//			letsencryptMonitor.restartApache();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		return new ResponseEntity<Training>(training, HttpStatus.OK);
 	}
@@ -391,7 +391,7 @@ public class TrainingController extends BaseController {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/item/{_param}")
 	public ResponseEntity<Training> getTraining(@PathVariable Long _param) throws Exception {
 		// CustomUserDetails activeUser = TenantContext.getCurrentUser();
-		logger.info("------ Getting ready 2. Calling Get rest controller get training id = " + _param);
+		logger.info("Calling Get rest controller get training id = " + _param);
 		rdmTimeRdmSuccess();
 		Training training = trainingService.findById(_param);
 		// logger.info("training found =" + training);
