@@ -391,7 +391,7 @@ public class TrainingController extends BaseController {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/item/{_param}")
 	public ResponseEntity<Training> getTraining(@PathVariable Long _param) throws Exception {
 		// CustomUserDetails activeUser = TenantContext.getCurrentUser();
-		logger.info("Getting ready. Calling Get rest controller get training id = " + _param);
+		logger.info("------ Getting ready 2. Calling Get rest controller get training id = " + _param);
 		rdmTimeRdmSuccess();
 		Training training = trainingService.findById(_param);
 		// logger.info("training found =" + training);

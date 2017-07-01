@@ -20,6 +20,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.ProcessBuilder.Redirect;
 import java.net.URI;
 import java.security.KeyPair;
 import java.security.Security;
@@ -52,7 +53,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
 //import ch.qos.logback.core.status.Status;
 
 /**
@@ -63,27 +63,28 @@ import org.springframework.stereotype.Component;
 @Component
 public class LetsencryptMonitor {
 //	private static final String CERT_PATH = "C:/Programm/Apache24/conf/ssl/royasoftware.com-acme4j";
-	static private String APACHE_PATH = "C:/Programm/Apache24";
+	
+	static private String APACHE_PATH = "C:"+File.separator+"Programm"+File.separator+"Apache24";
 //	static private String CERT_PATH = "C:/Programm/Apache24/conf/ssl/royasoftware.com-acme4j";
 	static {
 		if( System.getenv("NODE_ENV")!= null && System.getenv("NODE_ENV").equals("production") )
 //			CERT_PATH = "C:/Programme/Apache24/conf/ssl/royasoftware.com-acme4j";
-			APACHE_PATH = "C:/Programme/Apache24";
+			APACHE_PATH = "C:"+File.separator+"Programme"+File.separator+"Apache24";
 	}
 
-	static private String CERT_PATH = APACHE_PATH+"/conf/ssl/royasoftware.com-acme4j";
+	static private String CERT_PATH = APACHE_PATH+File.separator+"conf"+File.separator+"ssl"+File.separator+"royasoftware.com-acme4j";
 	
 	// File name of the User Key Pair
-	private static final File USER_KEY_FILE = new File(CERT_PATH + "/rbensoudauser.key");
+	private static final File USER_KEY_FILE = new File(CERT_PATH +File.separator+"rbensoudauser.key");
 
 	// File name of the Domain Key Pair
-	private static final File DOMAIN_KEY_FILE = new File(CERT_PATH + "/royasoftwaredomain.key");
+	private static final File DOMAIN_KEY_FILE = new File(CERT_PATH + File.separator+"royasoftwaredomain.key");
 
 	// File name of the CSR
-	private static final File DOMAIN_CSR_FILE = new File(CERT_PATH + "/royasoftwaredomain.csr");
+	private static final File DOMAIN_CSR_FILE = new File(CERT_PATH + File.separator+"royasoftwaredomain.csr");
 
 	// File name of the signed certificate
-	private static final File DOMAIN_CHAIN_FILE = new File(CERT_PATH + "/royasoftwaredomain-chain.crt");
+	private static final File DOMAIN_CHAIN_FILE = new File(CERT_PATH + File.separator+"royasoftwaredomain-chain.crt");
 
 	// Challenge type to be used
 	private static final ChallengeType CHALLENGE_TYPE = ChallengeType.HTTP;
@@ -575,7 +576,13 @@ public class LetsencryptMonitor {
 	public void restartApache() {
 		Process process = null;
 		try {
-			process = Runtime.getRuntime().exec(APACHE_PATH+"/bin/httpd.exe -k restart");
+//			process = Runtime.getRuntime().exec(APACHE_PATH+"/bin/httpd.exe -k restart");
+//			process.waitFor();
+			
+			ProcessBuilder pb = new ProcessBuilder(APACHE_PATH+File.separator+"bin"+File.separator+"httpd.exe","-k","restart","-n","apache24");
+			pb.redirectOutput(Redirect.INHERIT);
+			pb.redirectError(Redirect.INHERIT);
+			Process p = pb.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
