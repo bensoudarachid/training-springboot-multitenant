@@ -233,7 +233,8 @@ public class LetsencryptMonitor {
 			// URL of the existing registration's location. Bind it to the
 			// session.
 			reg = Registration.bind(session, ex.getLocation());
-			logger.info("Account does already exist, URI: " + reg.getLocation(), ex);
+//			logger.info("Account does already exist, URI: " + reg.getLocation(), ex);
+			logger.info("Account does already exist, URI: " + reg.getLocation());
 		}
 
 		return reg;
