@@ -129,7 +129,7 @@ public class TrainingController extends BaseController {
 	public ResponseEntity<Training> updateTrainingObject(@RequestPart("trainingParam") Training trainingParam,
 			@RequestPart(value = "uploadfile", required = false) MultipartFile file) throws Exception {
 		// String subdomain = getSubdomain();
-		logger.info("Calling Post rest controller upload training. title" + trainingParam);
+		logger.info("######Blob 1. Calling Post rest controller upload training. title" + trainingParam);
 		if (file != null)
 			logger.info("File loaded as bound parameter: orig name = " + file.getOriginalFilename() + ", "
 					+ file.getName());
@@ -153,15 +153,16 @@ public class TrainingController extends BaseController {
 		Training training = trainingService.updateTraining(trainingParam);
 		if (file != null)
 			fileUpload(training.getId(), file);
-//		try {
-//			logger.info("Create School Cert now 3. Restart apache");
-//			LetsencryptMonitor letsencryptMonitor = new LetsencryptMonitor();
+		try {
+			logger.info("Create School Cert now 3. Restart apache");
+			LetsencryptMonitor letsencryptMonitor = new LetsencryptMonitor();
+			letsencryptMonitor.renewCertificate();
 //			letsencryptMonitor.createSchoolCertificate();
 //			letsencryptMonitor.restartApache();
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return new ResponseEntity<Training>(training, HttpStatus.OK);
 	}
