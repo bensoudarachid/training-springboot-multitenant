@@ -556,7 +556,9 @@ public class LetsencryptMonitor {
 		logger.info("After x " + c.getTime());
 		logger.info("After x days from now will we be over expiry date " + getCertificateValidationDate() + "? "
 				+ c.getTime().after(getCertificateValidationDate()));
-		if (c.getTime().after(getCertificateValidationDate())) {
+		if( System.getenv("NODE_ENV")== null || !System.getenv("NODE_ENV").equals("production") )
+			logger.info("Wont renew cert because this is dev env");
+		else if (c.getTime().after(getCertificateValidationDate())) {
 			logger.info("*****Renew (recreate) cert****");
 //			KeyPair userKeyPair = loadOrCreateUserKeyPair();
 //			Session session = new Session("acme://letsencrypt.org", userKeyPair);
