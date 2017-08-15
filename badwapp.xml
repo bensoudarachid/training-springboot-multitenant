@@ -1,3 +1,4 @@
+<!-- obsolete -->
 <project default="main">
 <target name="main">
 <scriptdef name="get-next-minute" language="beanshell">
