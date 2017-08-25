@@ -94,12 +94,13 @@ public class MultitenantDbConfiguration {
 		flyway.setLocations("db.migration");
 		flyway.repair();
 		DataSource ds = null;
+		String tenantId = null;
 		for (Resource propertyFile : resources) {
 			Properties tenantProperties = new Properties();
 			DataSourceBuilder dataSourceBuilder = new DataSourceBuilder(this.getClass().getClassLoader());
 			try {
 				tenantProperties.load(propertyFile.getInputStream()); 
-				String tenantId = tenantProperties.getProperty("name");
+				tenantId = tenantProperties.getProperty("name");
 				logger.info("tenantId: " + tenantId +" propertyFile"+ propertyFile.getFilename());
 				flyway = new Flyway();
 //				flyway.setValidateOnMigrate(false);
@@ -146,8 +147,9 @@ public class MultitenantDbConfiguration {
 			} catch (IOException e) {
 				// Ooops, tenant could not be loaded. This is bad.
 				// Stop the application!
+				logger.info("IGNORE. tenantId: " + tenantId );
 				e.printStackTrace();
-				return null;
+//				return null;
 			}
 		}
 
