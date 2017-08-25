@@ -113,12 +113,14 @@ public class MultitenantDbConfiguration {
 							"root", "1qay2wsx");
 				flyway.setLocations(tenantProperties.getProperty("flyway.locations"));
 				//!!!!IMPORTANT!!!!! Repair dbs.
-				flyway.repair();
 				try {
+					flyway.repair();
 					flyway.migrate();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+//					e.printStackTrace();
+					logger.info("Break migration for tenantId: " + tenantId +", e="+e.getMessage());
+					continue;
 				}
 
 				if (tenantProperties.getProperty("datasource.url") != null)
