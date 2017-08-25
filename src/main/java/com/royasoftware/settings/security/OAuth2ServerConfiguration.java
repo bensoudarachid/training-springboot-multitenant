@@ -33,7 +33,6 @@ public class OAuth2ServerConfiguration {
     @EnableResourceServer
     protected class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
-        
         @Autowired
         private TokenStore tokenStore;
 
@@ -125,7 +124,7 @@ public class OAuth2ServerConfiguration {
     }
 //    @Bean
 //    public TokenStore tokenStore() {
-//    	TokenStore ts = new InMemoryTokenStore();
+//    	TokenStore ts = new org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore();
 //        return ts;
 //    }
     @Bean

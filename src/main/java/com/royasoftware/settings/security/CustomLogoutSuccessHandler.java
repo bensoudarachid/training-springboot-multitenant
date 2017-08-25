@@ -1,12 +1,8 @@
 package com.royasoftware.settings.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -14,12 +10,15 @@ import org.springframework.stereotype.Component;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 /**
  * Spring Security logout handler
  */
 @Component
+
+
 public class CustomLogoutSuccessHandler
         extends AbstractAuthenticationTargetUrlRequestHandler
         implements LogoutSuccessHandler {
@@ -27,7 +26,8 @@ public class CustomLogoutSuccessHandler
 //	@Autowired
     private TokenStore tokenStore;
 
-	private static final String BEARER_AUTHENTICATION = "Bearer ";
+
+    private static final String BEARER_AUTHENTICATION = "Bearer ";
     private static final String HEADER_AUTHORIZATION = "authorization";
 
     
@@ -66,6 +66,17 @@ public class CustomLogoutSuccessHandler
         }else{
             System.out.println("wrong token = "+token);
         }
+//        if (tokenStore instanceof InMemoryTokenStore) {
+//    		((InMemoryTokenStore) tokenStore).clear();
+//    	}
+//    	if (tokenStore instanceof JdbcTokenStore) {
+//
+//    		JdbcTemplate template = new JdbcTemplate(dataSource);
+//    		template.execute("delete from oauth_access_token");
+//    		template.execute("delete from oauth_refresh_token");
+//    		template.execute("delete from oauth_client_token");
+//    		template.execute("delete from oauth_code");
+//    	}        
 //        if (token != null && token.startsWith(BEARER_AUTHENTICATION)) {
 //            OAuth2RefreshToken oAuth2RefToken = tokenStore.readRefreshToken(token.split(" ")[1]);
 //            System.out.println("before removing oAuth2RefToken = "+oAuth2RefToken);

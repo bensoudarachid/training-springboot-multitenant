@@ -1,6 +1,5 @@
 package com.royasoftware;
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -46,16 +45,17 @@ import com.royasoftware.script.ScriptHelper;
 
 @Component
 public class RouterMonitor {
-	public static String userUploadStorage=System.getenv("TRAINING_APP_STORAGE");
-	static{
-		if( !userUploadStorage.endsWith(File.separator) )
-			userUploadStorage=userUploadStorage+File.separator;
+	public static String userUploadStorage = System.getenv("TRAINING_APP_STORAGE");
+	static {
+		if (!userUploadStorage.endsWith(File.separator))
+			userUploadStorage = userUploadStorage + File.separator;
 	}
 	final private static short STATUS_CONNECTION_OK = 0;
 	final private static short STATUS_CONNECTION_LOST = 1;
 	final private static short WAIT_FOR_PING_MAX_ITERATIONS = 14;
-//	final private static String SOUND_DOWN = "E:\\Samples\\FreeSound\\FX\\Powerdown2.wav";
-	final private static String SOUND_DOWN = "E:\\Samples\\SONY LOOPS & SAMPLES LIBRARIES SCRATCH TACTICS by DJ PUZZLE\\BPM Tactics\\100 BPM\\100 BPM Tactic 093_2.wav";	
+	// final private static String SOUND_DOWN =
+	// "E:\\Samples\\FreeSound\\FX\\Powerdown2.wav";
+	final private static String SOUND_DOWN = "E:\\Samples\\SONY LOOPS & SAMPLES LIBRARIES SCRATCH TACTICS by DJ PUZZLE\\BPM Tactics\\100 BPM\\100 BPM Tactic 093_2.wav";
 	final private static String SOUND_HEROKU_PING = "E:\\Samples\\Hip Hop 3\\Scratches\\hit me b2.wav";
 
 	// private short status = STATUS_CONNECTION_OK;
@@ -64,7 +64,8 @@ public class RouterMonitor {
 	private boolean updateDomainToIpMapppingOk;
 	private int connectionCheckLoop = 0;
 	// private String lastIP = null;
-//	private static final Logger logger = Logger.getLogger(RouterMonitor.class);
+	// private static final Logger logger =
+	// Logger.getLogger(RouterMonitor.class);
 	private static final Logger logger = LoggerFactory.getLogger(RouterMonitor.class);
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
@@ -72,18 +73,20 @@ public class RouterMonitor {
 
 	// String version = null;
 
-//	SSHClient sshClient = null;
+	// SSHClient sshClient = null;
 
-	public RouterMonitor(){}
+	public RouterMonitor() {
+	}
+
 	@Autowired
 	public RouterMonitor(@Value("${app.router.host}") String host, @Value("${app.router.login}") String login,
 			@Value("${app.router.passwd}") String passwd) throws Exception {
 		setHost(host);
-//		sshClient = new SSHClient(host, login, passwd);
+		// sshClient = new SSHClient(host, login, passwd);
 		logger.info("calling updateDomainToIpMappping one tine on router monitor init");
 		setUpdateDomainToIpMapppingOk(updateDomainToIpMappping());
-//    	logger.info("--------> RUN AUTOIT F10");
-    	ScriptHelper.run(ScriptHelper.RUN_WEB_APP);
+		// logger.info("--------> RUN AUTOIT F10");
+		ScriptHelper.run(ScriptHelper.RUN_WEB_APP);
 	}
 
 	public void reconnect() {
@@ -155,7 +158,6 @@ public class RouterMonitor {
 		}
 	}
 
-
 	private String getActualIp() throws Exception {
 		logger.debug("calling getActualIp()");
 		String address = null;
@@ -186,20 +188,21 @@ public class RouterMonitor {
 		return address;
 	}
 
-//	public String pppConnect() throws Exception {
-//		return sshClient.execCmd("ppp config 0.8.35 1 up\n");
-//	}
-//
-//	public String pppDisconnect() throws Exception {
-//		return sshClient.execCmd("ppp config 0.8.35 1 down\n");
-//	}
-//
-//	public String wanSetIspLogin() throws Exception {
-//		return sshClient.execCmd("wan config 0.8.35 1 --username f_chahid --password f_chahid\n");
-//	}
+	// public String pppConnect() throws Exception {
+	// return sshClient.execCmd("ppp config 0.8.35 1 up\n");
+	// }
+	//
+	// public String pppDisconnect() throws Exception {
+	// return sshClient.execCmd("ppp config 0.8.35 1 down\n");
+	// }
+	//
+	// public String wanSetIspLogin() throws Exception {
+	// return sshClient.execCmd("wan config 0.8.35 1 --username f_chahid
+	// --password f_chahid\n");
+	// }
 
 	private String connectUrl(String url) throws Exception {
-		logger.debug("connectUrl "+url);
+		logger.debug("connectUrl " + url);
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		@SuppressWarnings("unchecked")
@@ -218,7 +221,7 @@ public class RouterMonitor {
 				con.setRequestProperty("User-Agent", USER_AGENT);
 
 				int responseCode = con.getResponseCode();
-				if( responseCode == 401 )
+				if (responseCode == 401)
 					return "unauthorized";
 				if (responseCode != 200)
 					throw new Exception("Could not connect to url: " + url);
@@ -240,7 +243,7 @@ public class RouterMonitor {
 		try {
 			// System.out.println(future.get(10, TimeUnit.SECONDS));
 			String returned = future.get(10, TimeUnit.SECONDS);
-//			logger.info("returned="+returned); 
+			// logger.info("returned="+returned);
 			return returned;
 		} catch (Exception e) {
 			System.err.println("connectUrl Exception");
@@ -248,8 +251,9 @@ public class RouterMonitor {
 		executor.shutdownNow();
 		return null;
 	}
+
 	private String connectHttpsUrl(String url) throws Exception {
-		logger.debug("connectUrl "+url);
+		logger.debug("connectUrl " + url);
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		@SuppressWarnings("unchecked")
@@ -260,12 +264,12 @@ public class RouterMonitor {
 
 				URL obj = new URL(url);
 				HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-//				con.setHostnameVerifier(new HostnameVerifier() {
-//				    public boolean verify(String hostname, SSLSession session) {
-//				      return true;
-//				    }
-//				});
-				
+				// con.setHostnameVerifier(new HostnameVerifier() {
+				// public boolean verify(String hostname, SSLSession session) {
+				// return true;
+				// }
+				// });
+
 				// optional default is GET
 				con.setRequestMethod("GET");
 
@@ -273,7 +277,7 @@ public class RouterMonitor {
 				con.setRequestProperty("User-Agent", USER_AGENT);
 
 				int responseCode = con.getResponseCode();
-				if( responseCode == 401 )
+				if (responseCode == 401)
 					return "unauthorized";
 				if (responseCode != 200)
 					throw new Exception("Could not connect to url: " + url);
@@ -295,7 +299,7 @@ public class RouterMonitor {
 		try {
 			// System.out.println(future.get(10, TimeUnit.SECONDS));
 			String returned = future.get(10, TimeUnit.SECONDS);
-//			logger.info("returned="+returned); 
+			// logger.info("returned="+returned);
 			return returned;
 		} catch (Exception e) {
 			logger.error("connectUrl Exception");
@@ -307,10 +311,10 @@ public class RouterMonitor {
 
 	private String sendJokerDomainMappingUpdate() throws Exception {
 		String out = connectHttpsUrl(
-		"https://svc.joker.com/nic/update?username=8508eb847ea580bc&password=b592711a66266d6f&hostname=*.royasoftware.com");
+				"https://svc.joker.com/nic/update?username=8508eb847ea580bc&password=b592711a66266d6f&hostname=*.royasoftware.com");
 		Thread.sleep(9000);
 		connectHttpsUrl(
-		"https://svc.joker.com/nic/update?username=8508eb847ea580bc&password=b592711a66266d6f&hostname=royasoftware.com");
+				"https://svc.joker.com/nic/update?username=8508eb847ea580bc&password=b592711a66266d6f&hostname=royasoftware.com");
 		// log.info("Joker returned: " + out);
 		return out;
 	}
@@ -326,51 +330,54 @@ public class RouterMonitor {
 			clip.open(audioIn);
 			clip.start();
 		} catch (Exception e) {
-			logger.info("error playing sound:"+e.getMessage());
+			logger.info("error playing sound:" + e.getMessage());
 		}
 	}
 
 	private boolean updateDomainToIpMappping() {
-		try {
-			String ip = getPublicIp();
-			logger.debug("public ip = " + ip);
-			String actualIP = null;
-			if( ip != null )
-				actualIP = getActualIp();
-			if (ip == null || actualIP == null) {
-				logger.info("one of the ips is null. no update");
+		if (System.getenv("NODE_ENV") != null && System.getenv("NODE_ENV").equals("production"))
+			try {
+				String ip = getPublicIp();
+				logger.debug("public ip = " + ip);
+				String actualIP = null;
+				if (ip != null)
+					actualIP = getActualIp();
+				if (ip == null || actualIP == null) {
+					logger.info("one of the ips is null. no update");
+					return false;
+				}
+				if (!actualIP.equals(ip)) {
+					logger.info("Different ips, actual ip = " + actualIP + ". Call domain mapping update");
+					logger.debug("Joker response " + sendJokerDomainMappingUpdate());
+					return true;
+				} else if (actualIP.equals(ip)) {
+					logger.info("Same ips, no domain mapping update");
+					return true;
+				}
+			} catch (Exception e) {
+				logger.info("No domain mapping update becase of exception:  " + e.getMessage());
 				return false;
 			}
-			if (!actualIP.equals(ip)) {
-				logger.info("Different ips, actual ip = " + actualIP + ". Call domain mapping update");
-				logger.debug("Joker response " + sendJokerDomainMappingUpdate());
-				return true;
-			} else if (actualIP.equals(ip)) {
-				logger.info("n 4 Same ips, no domain mapping update");
-				return true;
-			}
-		} catch (Exception e) {
-			logger.info("No domain mapping update becase of exception:  " + e.getMessage());
-			return false;
-		}
+		else
+			logger.info("Dev environment, no domain mapping update");
 		return false;
 	}
 
-//	private static  String c = "caca";
-//	private static  String l = "lala";
+	// private static String c = "caca";
+	// private static String l = "lala";
 
-//	private static boolean test() {
-//		// logger.info("pingHost()");
-//		String v = "hahuu";
-//		try{
-////			logger.info("just a tester assi c. "+c);
-//			logger.info("just a tester assi h. "+v);
-////			logger.info("just a test assi. ");
-//			return true;
-//		} catch (Exception e) {
-//			return false; // Either timeout or unreachable or failed DNS lookup.
-//		}
-//	}
+	// private static boolean test() {
+	// // logger.info("pingHost()");
+	// String v = "hahuu";
+	// try{
+	//// logger.info("just a tester assi c. "+c);
+	// logger.info("just a tester assi h. "+v);
+	//// logger.info("just a test assi. ");
+	// return true;
+	// } catch (Exception e) {
+	// return false; // Either timeout or unreachable or failed DNS lookup.
+	// }
+	// }
 
 	@Scheduled(fixedDelay = 18000)
 	public void checkAndFixRouterConnection() {
@@ -381,16 +388,16 @@ public class RouterMonitor {
 			short status = STATUS_CONNECTION_OK;
 			// if( !pingOk )
 			// Thread.sleep(3000);
-			
-//			System.out.print(".");
-//			logger.info("getConnectionCheckLoop()="+getConnectionCheckLoop());
-			if(getConnectionCheckLoop() > 20){
+
+			// System.out.print(".");
+			// logger.info("getConnectionCheckLoop()="+getConnectionCheckLoop());
+			if (getConnectionCheckLoop() > 20) {
 				setConnectionCheckLoop(0);
-				jokerUpdated = false;		
-			}else
-				setConnectionCheckLoop(getConnectionCheckLoop()+1);
-//			test();
-			
+				jokerUpdated = false;
+			} else
+				setConnectionCheckLoop(getConnectionCheckLoop() + 1);
+			// test();
+
 			if (pingOk && !isUpdateDomainToIpMapppingOk())
 				setUpdateDomainToIpMapppingOk(updateDomainToIpMappping());
 			while (!pingOk || !jokerUpdated) {
@@ -398,7 +405,7 @@ public class RouterMonitor {
 				setConnectionCheckLoop(0);
 				switch (status) {
 				case STATUS_CONNECTION_OK:
-						
+
 					for (int i = 0; i < WAIT_FOR_PING_MAX_ITERATIONS; i++) {
 						pingOk = pingHost("google.com", 6000);
 						if (pingOk) {
@@ -407,7 +414,8 @@ public class RouterMonitor {
 							jokerUpdated = true;
 							break;
 						}
-//						logger.info("Iterations until reboot " + (WAIT_FOR_PING_MAX_ITERATIONS - i));
+						// logger.info("Iterations until reboot " +
+						// (WAIT_FOR_PING_MAX_ITERATIONS - i));
 						soundClipTest(SOUND_DOWN);
 						Thread.sleep(3000);
 					}
@@ -415,22 +423,22 @@ public class RouterMonitor {
 						status = STATUS_CONNECTION_LOST;
 						jokerUpdated = false;
 						logger.info("Reboot now deactivated!");
-//						reconnect();
+						// reconnect();
 					}
 					break;
 				case STATUS_CONNECTION_LOST:
 					System.out.print("-");
 					pingOk = pingHost("google.com", 6000);
-					pingRouter +=  pingHost("192.168.1.1", 6000)?1:0;
+					pingRouter += pingHost("192.168.1.1", 6000) ? 1 : 0;
 
-//					logger.info("pingRouter="+pingRouter);
+					// logger.info("pingRouter="+pingRouter);
 
-					if ( pingRouter > 25){
+					if (pingRouter > 25) {
 						status = STATUS_CONNECTION_OK;
 						pingRouter = 0;
 						break;
 					}
-					if (pingOk ) {
+					if (pingOk) {
 						status = STATUS_CONNECTION_OK;
 						logger.info("Before call http://abbaslearning.royasoftware.com ");
 						connectUrl("http://abbaslearning.royasoftware.com");
@@ -459,60 +467,59 @@ public class RouterMonitor {
 		}
 	}
 
+	// @Scheduled(fixedDelay = 1400000, initialDelay = 1200000)
+	// public void pingHerokuConnection() {
+	// soundClipTest(SOUND_HEROKU_PING);
+	// Calendar rightNow = Calendar.getInstance();
+	// int hour = rightNow.get(Calendar.HOUR_OF_DAY);
+	// logger.info("Actual hour: " + hour);
+	// if (hour < 7 || hour > 22) {
+	// logger.info("No heroku pinging");
+	// return;
+	// }
+	//
+	// for (int i = 0; i < 5; i++) {
+	// try {
+	// // boolean ping = false;
+	// boolean pingOk = pingHost("google.com", 6000);
+	// Thread.sleep(3000);
+	// if (!pingOk)
+	// continue;
+	// int rdm = new Random().nextInt(180);
+	// logger.info("Sleeping random seconds before heroku call: " + rdm);
+	// Thread.sleep(rdm * 1000);
+	// logger.info("Ping heroku server." + (i + 1) + " iteration");
+	// // ping = pingHost("rlearn.herokuapp.com", 5000);
+	// String out = connectUrl("http://rlearn.herokuapp.com/bundle.js");
+	// if (out != null)
+	// logger.info("heroku is alive!");
+	// else
+	// logger.info("heroku has a problem! i got no output from connection");
+	// // connectUrl("http://abbaslearning.royasoftware.com");
+	// Thread.sleep(10000);
+	// // if( ping ){
+	// return;
+	// // }
+	// } catch (Exception e) {
+	// logger.error("heroku not alive: " + e.getMessage());
+	// // e.printStackTrace();
+	// }
+	// }
+	// logger.info("Heroku scheduler: i m out");
+	// }
 
-//	@Scheduled(fixedDelay = 1400000, initialDelay = 1200000)
-//	public void pingHerokuConnection() {
-//		soundClipTest(SOUND_HEROKU_PING);
-//		Calendar rightNow = Calendar.getInstance();
-//		int hour = rightNow.get(Calendar.HOUR_OF_DAY);
-//		logger.info("Actual hour: " + hour);
-//		if (hour < 7 || hour > 22) {
-//			logger.info("No heroku pinging");
-//			return;
-//		}
-//
-//		for (int i = 0; i < 5; i++) {
-//			try {
-//				// boolean ping = false;
-//				boolean pingOk = pingHost("google.com", 6000);
-//				Thread.sleep(3000);
-//				if (!pingOk)
-//					continue;
-//				int rdm = new Random().nextInt(180);
-//				logger.info("Sleeping random seconds before heroku call: " + rdm);
-//				Thread.sleep(rdm * 1000);
-//				logger.info("Ping heroku server." + (i + 1) + " iteration");
-//				// ping = pingHost("rlearn.herokuapp.com", 5000);
-//				String out = connectUrl("http://rlearn.herokuapp.com/bundle.js");
-//				if (out != null)
-//					logger.info("heroku is alive!");
-//				else
-//					logger.info("heroku has a problem! i got no output from connection");
-//				// connectUrl("http://abbaslearning.royasoftware.com");
-//				Thread.sleep(10000);
-//				// if( ping ){
-//				return;
-//				// }
-//			} catch (Exception e) {
-//				logger.error("heroku not alive: " + e.getMessage());
-//				// e.printStackTrace();
-//			}
-//		}
-//		logger.info("Heroku scheduler: i m out");
-//	}
-
-	
 	public static void main(String[] args) {
 		try {
-			logger.info("userUploadStorage="+userUploadStorage); 
-//			DOMConfigurator.configure("log4j.xml");
-			
-//			RouterMonitor rm = new RouterMonitor("192.168.1.1", "admin", "royaZoft");
-//			RouterMonitor rm = new RouterMonitor();
-//			rm.reconnect();
-//			rm.updateDomainToIpMappping();
-//			logger.info("connect router "+rm.pingHost("192.168.1.1", 6000)); 
-			
+			logger.info("userUploadStorage=" + userUploadStorage);
+			// DOMConfigurator.configure("log4j.xml");
+
+			// RouterMonitor rm = new RouterMonitor("192.168.1.1", "admin",
+			// "royaZoft");
+			// RouterMonitor rm = new RouterMonitor();
+			// rm.reconnect();
+			// rm.updateDomainToIpMappping();
+			// logger.info("connect router "+rm.pingHost("192.168.1.1", 6000));
+
 			// rm.reconnect();
 			// rm.pppDisconnect();
 			// Thread.sleep(40000);
@@ -559,4 +566,3 @@ public class RouterMonitor {
 	}
 
 }
-

@@ -1,12 +1,11 @@
 package com.royasoftware.repository;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
@@ -15,7 +14,6 @@ import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -106,11 +104,11 @@ public class MultitenantDbConfiguration {
 				flyway = new Flyway();
 //				flyway.setValidateOnMigrate(false);
 				if (tenantProperties.getProperty("datasource.url") != null)
-					flyway.setDataSource(tenantProperties.getProperty("datasource.url"),
+					flyway.setDataSource(resolveEnvVars(tenantProperties.getProperty("datasource.url")),
 							tenantProperties.getProperty("datasource.username"),
 							tenantProperties.getProperty("datasource.password"));
 				else
-					flyway.setDataSource("jdbc:mysql://localhost:3306/" + tenantId + "?autoReconnect=true&useSSL=false",
+					flyway.setDataSource("jdbc:mysql://"+System.getenv("MYSQL_HOST")+":3306/" + tenantId + "?autoReconnect=true&useSSL=false",
 							"root", "1qay2wsx");
 				flyway.setLocations(tenantProperties.getProperty("flyway.locations"));
 				//!!!!IMPORTANT!!!!! Repair dbs.
@@ -124,12 +122,12 @@ public class MultitenantDbConfiguration {
 
 				if (tenantProperties.getProperty("datasource.url") != null)
 					dataSourceBuilder.driverClassName(properties.getDriverClassName())
-							.url(tenantProperties.getProperty("datasource.url"))
+							.url(resolveEnvVars(tenantProperties.getProperty("datasource.url")))
 							.username(tenantProperties.getProperty("datasource.username"))
 							.password(tenantProperties.getProperty("datasource.password"));
 				else
 					dataSourceBuilder.driverClassName(properties.getDriverClassName())
-							.url("jdbc:mysql://localhost:3306/" + tenantId + "?autoReconnect=true&useSSL=false") //autoReconnect=true&
+							.url("jdbc:mysql://"+System.getenv("MYSQL_HOST")+":3306/" + tenantId + "?autoReconnect=true&useSSL=false") //autoReconnect=true&
 							.username("root").password("1qay2wsx");
 
 				logger.info("------->properties.getType()="+properties.getType());
@@ -167,7 +165,24 @@ public class MultitenantDbConfiguration {
 		
 		return dataSource;
 	}
-
+	private String resolveEnvVars(String input)
+	{
+	    if (null == input)
+	    {
+	        return null;
+	    }
+	    // match ${ENV_VAR_NAME} or $ENV_VAR_NAME
+	    Pattern p = Pattern.compile("\\$\\{(\\w+)\\}|\\$(\\w+)");
+	    Matcher m = p.matcher(input); // get a matcher object
+	    StringBuffer sb = new StringBuffer();
+	    while(m.find()){
+	        String envVarName = null == m.group(1) ? m.group(2) : m.group(1);
+	        String envVarValue = System.getenv(envVarName);
+	        m.appendReplacement(sb, null == envVarValue ? "" : envVarValue);
+	    }
+	    m.appendTail(sb);
+	    return sb.toString();
+	}
 	/**
 	 * Creates the default data source for the application
 	 * 
