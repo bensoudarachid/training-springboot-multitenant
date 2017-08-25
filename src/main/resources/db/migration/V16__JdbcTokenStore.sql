@@ -45,12 +45,14 @@ create table oauth_code (
   code VARCHAR(255), authentication LONG VARBINARY
 );
  
+
 drop table if exists oauth_approvals;
 create table oauth_approvals (
-    userid VARCHAR(255),
-    clientid VARCHAR(255),
+    user_id VARCHAR(255),
+    client_id VARCHAR(255),
     scope VARCHAR(255),
     status VARCHAR(10),
-    expiresat TIMESTAMP,
-    lastmodifiedat TIMESTAMP
+    expires_at TIMESTAMP default CURRENT_TIMESTAMP,
+    last_modified_at TIMESTAMP default CURRENT_TIMESTAMP
 );
+
