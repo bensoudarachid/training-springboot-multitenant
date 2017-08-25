@@ -89,10 +89,10 @@ public class MultitenantDbConfiguration {
 		Map<Object, Object> resolvedDataSources = new HashMap<>();
 
 		//!!!!IMPORTANT!!!!! Repair default db. 
-//		flyway = new Flyway();
-//		flyway.setDataSource(properties.getUrl(),properties.getUsername(),properties.getPassword());
-//		flyway.setLocations("db.migration");
-//		flyway.repair();
+		flyway = new Flyway();
+		flyway.setDataSource(properties.getUrl(),properties.getUsername(),properties.getPassword());
+		flyway.setLocations("db.migration");
+		flyway.repair();
 		DataSource ds = null;
 		for (Resource propertyFile : resources) {
 			Properties tenantProperties = new Properties();
@@ -112,7 +112,7 @@ public class MultitenantDbConfiguration {
 							"root", "1qay2wsx");
 				flyway.setLocations(tenantProperties.getProperty("flyway.locations"));
 				//!!!!IMPORTANT!!!!! Repair dbs.
-//				flyway.repair();
+				flyway.repair();
 				try {
 					flyway.migrate();
 				} catch (Exception e) {
