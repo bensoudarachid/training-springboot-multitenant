@@ -109,28 +109,28 @@ public class OAuth2ServerConfiguration {
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
             // @formatter:off
-            clients .jdbc(dataSource)
-//            		.inMemory()
-//                    .withClient("clientapp")
-//                    .authorizedGrantTypes("password","refresh_token")
-//                    .authorities("USER")
-//                    .scopes("read", "write")
-//                    .resourceIds(RESOURCE_ID)
-//                    .secret("123456")
+            clients //.jdbc(dataSource)
+            		.inMemory()
+                    .withClient("clientapp")
+                    .authorizedGrantTypes("password","refresh_token")
+                    .authorities("USER")
+                    .scopes("read", "write")
+                    .resourceIds(RESOURCE_ID)
+                    .secret("123456")
             ;
             // @formatter:on
         }
 
     }
-//    @Bean
-//    public TokenStore tokenStore() {
-//    	TokenStore ts = new org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore();
-//        return ts;
-//    }
     @Bean
-    public JdbcTokenStore tokenStore() {
-        return new JdbcTokenStore(dataSource);
-    }    
+    public TokenStore tokenStore() {
+    	TokenStore ts = new org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore();
+        return ts;
+    }
+//    @Bean
+//    public JdbcTokenStore tokenStore() {
+//        return new JdbcTokenStore(dataSource);
+//    }    
     
 //    @Bean
 //    @Primary
