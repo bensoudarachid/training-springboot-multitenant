@@ -1,6 +1,5 @@
 package com.royasoftware.settings.configuration;
 
-
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -36,7 +35,7 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
         log.info("SimpleCORSFilter init");
     }
 
-        @Override
+    @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 //    	logger.info("CorsAndMultitenantDomainFilterRequest. Call ");
     	
@@ -70,7 +69,7 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
 			String[] parts = site.split("\\.");
 //			for( String part : parts)
 //				logger.info("next part "+part); 
-			if( parts==null||parts.length!=4||!parts[3].equals("com")||!parts[2].equals("royasoftware")||!parts[1].equals("school") ){
+			if( parts==null||parts.length!=4||!parts[3].equals("com")||!parts[2].equals("royasoftware")||!parts[1].equals("schoolapi") ){
 				TenantContext.setCurrentTenant(null);
 				throw new Exception("Malformed URL");
 			}else
@@ -107,8 +106,7 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
 		}finally{
 			TenantContext.resetThreadLocal();
 		}
-
-        
+       
     }
 
     @Override

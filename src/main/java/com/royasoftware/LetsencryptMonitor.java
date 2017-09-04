@@ -545,7 +545,7 @@ public class LetsencryptMonitor {
 			logger.error("Failed to get a certificate for domains " + domains, ex);
 		}
 	}
-	
+
 	@Scheduled(cron = "0 25 12 * * *")
 	public void renewCertificate() throws Exception {
 		Calendar c = Calendar.getInstance();
