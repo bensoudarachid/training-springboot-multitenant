@@ -220,7 +220,7 @@ public class TodosController extends BaseController {
 	}
 
 	// @AuthenticationPrincipal CustomUserDetails activeUser
-	
+
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/todos/{_param}")
 	public ResponseEntity<Object> getTodosPost(@PathVariable String _param) throws Exception {
@@ -240,12 +240,15 @@ public class TodosController extends BaseController {
 		// + subdomain);
 		// TenantContext.setCurrentTenant(subdomain);
 		CustomUserDetails activeUser = TenantContext.getCurrentUser();
-//		logger.info("User connected as bound parameter: name = " + activeUser.getUsername() + ", id = "
-//				+ activeUser.getId() + ", role = " + activeUser.getAuthorities().toString());
+		// logger.info("User connected as bound parameter: name = " +
+		// activeUser.getUsername() + ", id = "
+		// + activeUser.getId() + ", role = " +
+		// activeUser.getAuthorities().toString());
 		logger.info("Calling Get rest controller get todos " + _param);
 		rdmTimeRdmSuccess();
 		return new ResponseEntity<Object>(todoService.findByUserId(activeUser.getId()), HttpStatus.OK);
-//		return new ResponseEntity<Object>(todoService.findByUserId(1l), HttpStatus.OK);
+		// return new ResponseEntity<Object>(todoService.findByUserId(1l),
+		// HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.IMAGE_PNG_VALUE }, value = "/todo/img/{_param}")
@@ -273,7 +276,7 @@ public class TodosController extends BaseController {
 			}
 		});
 		File file = null;
-		if (files== null || files.length == 0)
+		if (files == null || files.length == 0)
 			return new ResponseEntity<Object>(null, HttpStatus.NOT_FOUND);
 		file = files[0];
 		for (int i = 1; i < files.length; i++)
@@ -290,21 +293,21 @@ public class TodosController extends BaseController {
 			Image scaledImg = originalImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 			BufferedImage thumbnail = new BufferedImage(50, 50, BufferedImage.TYPE_INT_RGB);
 			Graphics2D g = thumbnail.createGraphics();
-			g.drawImage(scaledImg,0,0,null);
+			g.drawImage(scaledImg, 0, 0, null);
 			g.dispose();
 			g.setComposite(AlphaComposite.Src);
 			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 			g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-	
-			
+
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageIO.write(thumbnail, "jpg", baos);
 			baos.flush();
 			ret = baos.toByteArray();
-			
-//			ret = ((DataBufferByte) thumbnail.getData().getDataBuffer()).getData();
-//			logger.info("ret=" + ret.length);
+
+			// ret = ((DataBufferByte)
+			// thumbnail.getData().getDataBuffer()).getData();
+			// logger.info("ret=" + ret.length);
 
 			// ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 			// InputStream inStream = new FileInputStream(file);
@@ -369,27 +372,34 @@ public class TodosController extends BaseController {
 		// return true;
 	}
 
-//	private static BufferedImage resizeImage(BufferedImage originalImage, int type) {
-//		BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, type);
-//		Graphics2D g = resizedImage.createGraphics();
-//		g.drawImage(originalImage, 0, 0, IMG_WIDTH, IMG_HEIGHT, null);
-//		g.dispose();
-//
-//		return resizedImage;
-//	}
-//
-//	private static BufferedImage resizeImageWithHint(BufferedImage originalImage, int type) {
-//
-//		BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, type);
-//		Graphics2D g = resizedImage.createGraphics();
-//		g.drawImage(originalImage, 0, 0, IMG_WIDTH, IMG_HEIGHT, null);
-//		g.dispose();
-//		g.setComposite(AlphaComposite.Src);
-//
-//		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-//		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-//		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//
-//		return resizedImage;
-//	}
+	// private static BufferedImage resizeImage(BufferedImage originalImage, int
+	// type) {
+	// BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT,
+	// type);
+	// Graphics2D g = resizedImage.createGraphics();
+	// g.drawImage(originalImage, 0, 0, IMG_WIDTH, IMG_HEIGHT, null);
+	// g.dispose();
+	//
+	// return resizedImage;
+	// }
+	//
+	// private static BufferedImage resizeImageWithHint(BufferedImage
+	// originalImage, int type) {
+	//
+	// BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT,
+	// type);
+	// Graphics2D g = resizedImage.createGraphics();
+	// g.drawImage(originalImage, 0, 0, IMG_WIDTH, IMG_HEIGHT, null);
+	// g.dispose();
+	// g.setComposite(AlphaComposite.Src);
+	//
+	// g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+	// RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+	// g.setRenderingHint(RenderingHints.KEY_RENDERING,
+	// RenderingHints.VALUE_RENDER_QUALITY);
+	// g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+	// RenderingHints.VALUE_ANTIALIAS_ON);
+	//
+	// return resizedImage;
+	// }
 }
