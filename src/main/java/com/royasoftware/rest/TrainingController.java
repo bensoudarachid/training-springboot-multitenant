@@ -316,6 +316,7 @@ public class TrainingController extends BaseController {
 		FileOutputStream fos = new FileOutputStream(uploadFile);
 		fos.write(file.getBytes());
 		fos.close();
+		logger.info("storing in " + uploadFile.getPath()+"finished");
 
 		rdmTimeRdmSuccess();
 		// Training training = new Training();
