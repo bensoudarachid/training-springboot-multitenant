@@ -297,8 +297,11 @@ public class TrainingController extends BaseController {
 
 		// logger.info("file upload here: Size=" + file.getBytes()+",
 		// path="+abbas.getAbsolutePath());
-		uploadFilePath.mkdirs();
-
+		if( !uploadFilePath.mkdirs() )
+			logger.info("Could not create directories "+uploadPath);
+		else{
+			logger.info("Could not create directories "+uploadFilePath.getAbsolutePath());
+		}
 		// Delete all files beginning with thw id number
 		File uploadDirectory = new File(uploadPath);
 		File[] files = uploadDirectory.listFiles(new FileFilter() {
@@ -312,11 +315,11 @@ public class TrainingController extends BaseController {
 				files[i].delete();
 
 		// Now store the new file
-		logger.info("storing in " + uploadFile.getPath());
+		logger.info("We're storing in " + uploadFile.getPath());
 		FileOutputStream fos = new FileOutputStream(uploadFile);
 		fos.write(file.getBytes());
 		fos.close();
-		logger.info("storing in " + uploadFile.getPath()+"finished");
+		logger.info("storing in " + uploadFile.getPath()+" finished");
 
 		rdmTimeRdmSuccess();
 		// Training training = new Training();
