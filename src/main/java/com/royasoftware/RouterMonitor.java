@@ -43,7 +43,7 @@ import com.royasoftware.script.ScriptHelper;
 @lombok.Getter
 @lombok.Setter
 
-@Component
+//@Component
 public class RouterMonitor {
 	public static String userUploadStorage = System.getenv("TRAINING_APP_STORAGE");
 	static {
@@ -379,7 +379,7 @@ public class RouterMonitor {
 	// }
 	// }
 
-	@Scheduled(fixedDelay = 18000)
+	//@Scheduled(fixedDelay = 18000)
 	public void checkAndFixRouterConnection() {
 		try {
 			boolean jokerUpdated = true;

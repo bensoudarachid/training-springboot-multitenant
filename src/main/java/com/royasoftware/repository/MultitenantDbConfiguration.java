@@ -57,7 +57,6 @@ public class MultitenantDbConfiguration {
 //        p.setMinIdle(10);
 //        p.setLogAbandoned(true);
 //        p.setRemoveAbandoned(true);
-
 		
 		String pathString = "db/datasource/tenants";
 		logger.info("Search tenant files in path: " + pathString);
@@ -169,6 +168,7 @@ public class MultitenantDbConfiguration {
 		
 		return dataSource;
 	}
+
 	private String resolveEnvVars(String input)
 	{
 	    if (null == input)
@@ -204,7 +204,7 @@ public class MultitenantDbConfiguration {
 		setDataSourcePoolProps(ds);
 		return ds;
 	}
-	
+
 	private void setDataSourcePoolProps(DataSource ds) {
 //		((org.apache.tomcat.jdbc.pool.DataSource)ds).setSuspectTimeout(2000);
 		((org.apache.tomcat.jdbc.pool.DataSource)ds).setValidationInterval(20000);

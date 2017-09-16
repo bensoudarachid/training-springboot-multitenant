@@ -13,7 +13,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,9 +56,12 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
         response.setHeader("Access-Control-Allow-Headers", "x-requested-with, cache-control, authentication, authorization, Content-Type, Origin, X-Auth-Token, client-security-token");
         response.setHeader("Access-Control-Max-Age", "3600");
         
-        
+        String remoteHost = request.getHeader("ClientHost");
+		logger.info("The alternative to Server: Original client Host = "+remoteHost); 
 		String site = request.getServerName();
-//		logger.info("filter site="+site); 
+		if( remoteHost !=null )
+			site = remoteHost.replace(".school.",".schoolapi."); 
+		logger.info("filter site="+site); 
 //		if( site.equals("127.0.0.1"))
 //			site = "abbaslearn.royasoftware.com";
 		String domain = null;
@@ -74,7 +76,6 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
 				throw new Exception("Malformed URL");
 			}else
 				TenantContext.setCurrentTenant(parts[0]);
-		
 		
 //		domain = site.substring(site.lastIndexOf('.', site.lastIndexOf('.')-1) + 1);
 //		// else
