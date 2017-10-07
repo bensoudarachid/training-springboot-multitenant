@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.royasoftware.repository.TrainingDAO;
 import com.royasoftware.repository.TrainingRepository;
 
 /**
@@ -25,7 +26,9 @@ public class TrainingServiceBean implements TrainingService {
 	 */
 	@Autowired
 	private TrainingRepository trainingRepository;
-
+	@Autowired
+	private TrainingDAO trainingDao;
+	
 	/**
 	 * Get by id
 	 * 
@@ -34,7 +37,7 @@ public class TrainingServiceBean implements TrainingService {
 	 */
 	@Override
 	public Training findById(Long id) {
-		Training training = trainingRepository.findById(id);
+		Training training = trainingDao.findById(id);
 		return training;
 	}
 

@@ -86,7 +86,7 @@ public class RouterMonitor {
 		logger.info("calling updateDomainToIpMappping one tine on router monitor init");
 		setUpdateDomainToIpMapppingOk(updateDomainToIpMappping());
 		// logger.info("--------> RUN AUTOIT F10");
-		ScriptHelper.run(ScriptHelper.RUN_WEB_APP);
+//		ScriptHelper.run(ScriptHelper.RUN_WEB_APP);
 	}
 
 	public void reconnect() {

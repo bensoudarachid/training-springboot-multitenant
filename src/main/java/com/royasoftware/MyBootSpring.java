@@ -22,6 +22,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.script.ScriptTemplateConfigurer;
 import org.springframework.web.servlet.view.script.ScriptTemplateViewResolver;
 
+import com.royasoftware.script.ScriptHelper;
+
 //import com.royasoftware.filter.SimpleFilter;
 
 //import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
@@ -41,6 +43,7 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 	}
 
 	public static void main(String[] args) {
+
 //		System.out.println("this.getClass().getResource(log4j.xml)="+MyBootSpring.class.getResourceAsStream("/db/datasource/tenants/school1.properties")); 
 //		System.out.println("this.getClass().getResource(log4j.xml)="+MyBootSpring.class.getResource("/log4j.xml")); 
 //		DOMConfigurator.configure("/log4j.xml");
@@ -58,7 +61,9 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 		// flyway.setLocations("db.migration");
 		// flyway.migrate();
 		SpringApplication.run(MyBootSpring.class, args);
-		// System.out.println("Hi tani");
+		System.out.println("Hi tani");
+		ScriptHelper.run(ScriptHelper.RUN_WEB_APP);
+
 	}
 
 	// Bean
@@ -117,6 +122,7 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
                     + "createRootApplicationContext() did not "
                     + "return an application context");
         }
+       
     }
 //    @Bean
 //    public ViewResolver reactViewResolver() {

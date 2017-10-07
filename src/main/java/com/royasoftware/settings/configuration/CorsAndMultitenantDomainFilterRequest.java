@@ -57,11 +57,13 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
         response.setHeader("Access-Control-Max-Age", "3600");
         
         String remoteHost = request.getHeader("ClientHost");
-		logger.info("The alternative to Server: Original client Host = "+remoteHost); 
+//		logger.info("The alternative to Server: Original client Host = "+remoteHost); 
+//        String abbas = request.getHeader("Abbas");
+//        logger.info("############### Abbas = "+abbas); 
 		String site = request.getServerName();
 		if( remoteHost !=null )
 			site = remoteHost.replace(".school.",".schoolapi."); 
-		logger.info("filter site="+site); 
+//		logger.info("filter site="+site); 
 //		if( site.equals("127.0.0.1"))
 //			site = "abbaslearn.royasoftware.com";
 		String domain = null;

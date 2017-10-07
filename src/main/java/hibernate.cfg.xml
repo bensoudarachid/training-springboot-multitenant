@@ -22,6 +22,7 @@
         <mapping class="com.royasoftware.model.Role" />
         <mapping class="com.royasoftware.model.Todo" />
         <mapping class="com.royasoftware.model.TenantProfile" />
+        <mapping class="com.royasoftware.model.Event" />
         <mapping class="com.royasoftware.model.Training" />
     </session-factory>
 </hibernate-configuration>

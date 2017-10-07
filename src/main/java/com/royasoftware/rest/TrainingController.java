@@ -344,8 +344,7 @@ public class TrainingController extends BaseController {
 		// return "Hello mama: "+_param;
 	}
 
-	// @ PreAuthorize("isAuthenticated()")
-	
+//	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
 	public ResponseEntity<Object> getTrainingsGet(@PathVariable String _param) throws Exception {
@@ -390,6 +389,7 @@ public class TrainingController extends BaseController {
 	}
 
 	// @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/item/{_param}")
 	public ResponseEntity<Training> getTraining(@PathVariable Long _param) throws Exception {
