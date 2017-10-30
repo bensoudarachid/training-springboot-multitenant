@@ -351,26 +351,6 @@ public class TodosController extends BaseController {
 		}
 	}
 
-	private void rdmTimeRdmSuccess() throws Exception {
-		boolean RDM_TIME = true;
-		boolean RDM_SUCCESS = true;
-
-		RDM_TIME = false;
-		RDM_SUCCESS = false;
-
-		if (RDM_TIME)
-			try {
-				Random rand = new Random();
-				int random = rand.nextInt(100);
-				Thread.sleep(50 * random);
-				if (RDM_SUCCESS && random > 50)
-					throw new Exception("Random Rejection"); //
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		// return true;
-	}
 
 	// private static BufferedImage resizeImage(BufferedImage originalImage, int
 	// type) {

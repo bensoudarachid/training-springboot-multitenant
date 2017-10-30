@@ -49,7 +49,7 @@ import java.security.cert.X509Certificate;
  * Class used to add the server's certificate to the KeyStore
  * with your trusted certificates.
  * example call
- * D:\RP\Tests\SpringBoot_Training\target\classes>java com.royasoftware.tools.InstallCert svc.joker.com:443
+ * D:\PathToProject\target\classes>java com.royasoftware.tools.InstallCert svc.joker.com:443
  * call generates truststore jssecacerts. 
  * Copy it to C:\Program Files (x86)\Java\jdk1.8.0_77\jre\lib\security\jssecacerts
  * Add java argument: -Djavax.net.ssl.trustStore="C:\Program Files (x86)\Java\jdk1.8.0_77\jre\lib\security\jssecacerts"

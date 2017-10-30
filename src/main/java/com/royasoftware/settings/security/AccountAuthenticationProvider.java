@@ -1,5 +1,7 @@
 package com.royasoftware.settings.security;
 
+import java.util.Random;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,12 +53,18 @@ public class AccountAuthenticationProvider extends AbstractUserDetailsAuthentica
 
     @Override
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken token) throws AuthenticationException {
-        logger.info("> retrieveUser");
-
+//        logger.info("RetrieveUser");
+//		//Simulate delay of a real network connection to see the animation on front end 
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
         logger.info("< retrieveUser");
         return userDetails;
     }
+
 
 }

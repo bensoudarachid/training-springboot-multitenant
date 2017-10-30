@@ -515,29 +515,29 @@ public class TrainingController extends BaseController {
 	// }
 	// return new ResponseEntity<>(HttpStatus.OK);
 	// }
-	private BufferedImage generatePngFromSvg(File file, Integer width, Integer height) throws Exception {
-		FileInputStream fr = new FileInputStream(file);
-		TranscoderInput input_svg_image = new TranscoderInput(fr);
-		// Step-2: Define OutputStream to PNG Image and attach to
-		// TranscoderOutput
-		// OutputStream png_ostream = new FileOutputStream("chessboard.png");
-		ByteArrayOutputStream png_ostream = new ByteArrayOutputStream();
-		TranscoderOutput output_png_image = new TranscoderOutput(png_ostream);
-		// Step-3: Create PNGTranscoder and define hints if required
-		PNGTranscoder my_converter = new PNGTranscoder();
-		// Step-4: Convert and Write output
-		my_converter.addTranscodingHint(JPEGTranscoder.KEY_WIDTH, new Float(width));
-		my_converter.addTranscodingHint(JPEGTranscoder.KEY_HEIGHT, new Float(height));
-		my_converter.transcode(input_svg_image, output_png_image);
-		// Step 5- close / flush Output Stream
-		png_ostream.flush();
-		byte[] ret = png_ostream.toByteArray();
-		png_ostream.close();
-
-		// ByteArrayInputStream is = new ByteArrayInputStream(ret);
-
-		return ImageIO.read(new ByteArrayInputStream(ret));
-	}
+//	private BufferedImage generatePngFromSvg(File file, Integer width, Integer height) throws Exception {
+//		FileInputStream fr = new FileInputStream(file);
+//		TranscoderInput input_svg_image = new TranscoderInput(fr);
+//		// Step-2: Define OutputStream to PNG Image and attach to
+//		// TranscoderOutput
+//		// OutputStream png_ostream = new FileOutputStream("chessboard.png");
+//		ByteArrayOutputStream png_ostream = new ByteArrayOutputStream();
+//		TranscoderOutput output_png_image = new TranscoderOutput(png_ostream);
+//		// Step-3: Create PNGTranscoder and define hints if required
+//		PNGTranscoder my_converter = new PNGTranscoder();
+//		// Step-4: Convert and Write output
+//		my_converter.addTranscodingHint(JPEGTranscoder.KEY_WIDTH, new Float(width));
+//		my_converter.addTranscodingHint(JPEGTranscoder.KEY_HEIGHT, new Float(height));
+//		my_converter.transcode(input_svg_image, output_png_image);
+//		// Step 5- close / flush Output Stream
+//		png_ostream.flush();
+//		byte[] ret = png_ostream.toByteArray();
+//		png_ostream.close();
+//
+//		// ByteArrayInputStream is = new ByteArrayInputStream(ret);
+//
+//		return ImageIO.read(new ByteArrayInputStream(ret));
+//	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/training/imgtest/{_param}")
 	public void getTrainingImg(@PathVariable String _param, HttpServletResponse response) throws Exception {
@@ -611,25 +611,5 @@ public class TrainingController extends BaseController {
 		}
 	}
 
-	private void rdmTimeRdmSuccess() throws Exception {
-		boolean RDM_TIME = true;
-		boolean RDM_SUCCESS = true;
-
-		RDM_TIME = false;
-		RDM_SUCCESS = false;
-
-		if (RDM_TIME)
-			try {
-				Random rand = new Random();
-				int random = rand.nextInt(100);
-				Thread.sleep(50 * random);
-				if (RDM_SUCCESS && random > 50)
-					throw new Exception("Random Rejection"); //
-			} catch (InterruptedException e) {
-				// Training Auto-generated catch block
-				e.printStackTrace();
-			}
-		// return true;
-	}
 
 }

@@ -1,35 +1,20 @@
 package com.royasoftware.tools;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.util.Collections;
 import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-import com.sshtools.j2ssh.io.IOStreamConnector;
-import com.sshtools.j2ssh.io.IOStreamConnectorState;
-import com.sshtools.j2ssh.connection.*;
-import com.royasoftware.RouterMonitor;
 import com.sshtools.j2ssh.SshClient;
-
-import com.sshtools.j2ssh.authentication.PasswordAuthenticationClient;
 import com.sshtools.j2ssh.authentication.AuthenticationProtocolState;
-import com.sshtools.j2ssh.authentication.PublicKeyAuthenticationClient;
-import com.sshtools.j2ssh.session.SessionChannelClient;
-
+import com.sshtools.j2ssh.authentication.PasswordAuthenticationClient;
 import com.sshtools.j2ssh.configuration.SshConnectionProperties;
-
-import com.sshtools.j2ssh.transport.HostKeyVerification;
+import com.sshtools.j2ssh.connection.ChannelInputStream;
+import com.sshtools.j2ssh.connection.ChannelOutputStream;
+import com.sshtools.j2ssh.session.SessionChannelClient;
 import com.sshtools.j2ssh.transport.IgnoreHostKeyVerification;
-import com.sshtools.j2ssh.transport.publickey.SshPrivateKey;
-import com.sshtools.j2ssh.transport.publickey.SshPrivateKeyFile;
-import com.sshtools.j2ssh.transport.publickey.SshPublicKey;
 
 public class SSHClient {
 	private static final Logger log = LoggerFactory.getLogger(SSHClient.class);

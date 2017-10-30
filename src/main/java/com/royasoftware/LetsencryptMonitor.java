@@ -60,7 +60,7 @@ import org.springframework.stereotype.Component;
  * <p>
  * Pass the names of the domains as parameters.
  */
-@Component
+//@Component
 public class LetsencryptMonitor {
 //	private static final String CERT_PATH = "C:/Programm/Apache24/conf/ssl/royasoftware.com-acme4j";
 	
@@ -525,7 +525,6 @@ public class LetsencryptMonitor {
 	public void createSchoolCertificate() {
 
 		String[] domainArray = new String[] {
-				"royasoftware.com",
 				"reactlearning.school.royasoftware.com", "abibislearning.school.royasoftware.com",
 				"it.school.royasoftware.com", "hanya.school.royasoftware.com", "name1.school.royasoftware.com",
 				"name2.school.royasoftware.com", "name3.school.royasoftware.com", "name4.school.royasoftware.com",
@@ -546,7 +545,7 @@ public class LetsencryptMonitor {
 		}
 	}
 
-	@Scheduled(cron = "0 25 12 * * *")
+//	@Scheduled(cron = "0 25 12 * * *")
 	public void renewCertificate() throws Exception {
 		Calendar c = Calendar.getInstance();
 		// c.add(field, amount); // getCertificateValidationDate()
@@ -590,7 +589,6 @@ public class LetsencryptMonitor {
 		try {
 //			process = Runtime.getRuntime().exec(APACHE_PATH+"/bin/httpd.exe -k restart");
 //			process.waitFor();
-			
 			ProcessBuilder pb = new ProcessBuilder(APACHE_PATH+File.separator+"bin"+File.separator+"httpd.exe","-k","restart","-n","apache24");
 			pb.redirectOutput(Redirect.INHERIT);
 			pb.redirectError(Redirect.INHERIT);

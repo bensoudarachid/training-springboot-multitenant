@@ -61,7 +61,7 @@ public class TenantContext {
     	return new StringBuffer(userUploadStorage).append(myContextThreadLocal.get().get("tenant")).append("/user/").append(user.getId()).append("/").append(name).append("/").toString();
 //        return userUploadStorage+(String)myContextThreadLocal.get().get("tenant")+"/";
     }
-    private static String getTenantStoragePath(String tenant) {
+    public static String getTenantStoragePath(String tenant) {
     	logger.info("userUploadStorage="+userUploadStorage); 
     	return new StringBuffer(userUploadStorage).append(tenant).append("/").toString();
 //        return userUploadStorage+(String)myContextThreadLocal.get().get("tenant")+"/";

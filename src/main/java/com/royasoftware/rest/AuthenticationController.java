@@ -92,12 +92,12 @@ public class AuthenticationController extends BaseController {
 
 		// account.setRegisterId(new Integer(rand));
 		// account.setRegisterDate(new Date());
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		if (!new EmailValidator().validate(email))
 			throw new Exception("Email is not valid");
 		if (password.length() < 8) {
@@ -135,12 +135,12 @@ public class AuthenticationController extends BaseController {
 		// account.setRegisterId(new Integer(rand));
 		// account.setRegisterDate(new Date());
 		HashMap<String, Object> registerResponse = new HashMap();
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(5000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		if (username == null || username.length() == 0) {
 			errorMap.put("username", "required");
 		}else if(username.length() > 25){

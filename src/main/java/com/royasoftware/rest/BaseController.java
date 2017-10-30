@@ -1,8 +1,20 @@
 package com.royasoftware.rest;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Random;
+
+import javax.imageio.ImageIO;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.JPEGTranscoder;
+import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -195,4 +207,49 @@ public class BaseController {
 //		TenantContext.setCurrentTenant(subdomain);
 //      return subdomain;
 //	}
+	protected BufferedImage generatePngFromSvg(File file, Integer width, Integer height) throws Exception {
+		FileInputStream fr = new FileInputStream(file);
+		TranscoderInput input_svg_image = new TranscoderInput(fr);
+		// Step-2: Define OutputStream to PNG Image and attach to
+		// TranscoderOutput
+		// OutputStream png_ostream = new FileOutputStream("chessboard.png");
+		ByteArrayOutputStream png_ostream = new ByteArrayOutputStream();
+		TranscoderOutput output_png_image = new TranscoderOutput(png_ostream);
+		// Step-3: Create PNGTranscoder and define hints if required
+		PNGTranscoder my_converter = new PNGTranscoder();
+		// Step-4: Convert and Write output
+		my_converter.addTranscodingHint(JPEGTranscoder.KEY_WIDTH, new Float(width));
+		my_converter.addTranscodingHint(JPEGTranscoder.KEY_HEIGHT, new Float(height));
+		my_converter.transcode(input_svg_image, output_png_image);
+		// Step 5- close / flush Output Stream
+		png_ostream.flush();
+		byte[] ret = png_ostream.toByteArray();
+		png_ostream.close();
+
+		// ByteArrayInputStream is = new ByteArrayInputStream(ret);
+
+		return ImageIO.read(new ByteArrayInputStream(ret));
+	}
+	
+	protected void rdmTimeRdmSuccess() throws Exception {
+		boolean RDM_TIME = true;
+		boolean RDM_SUCCESS = true;
+
+		RDM_TIME = false;
+		RDM_SUCCESS = false;
+
+		if (RDM_TIME)
+			try {
+				Random rand = new Random();
+				int random = rand.nextInt(100);
+				Thread.sleep(50 * random);
+				if (RDM_SUCCESS && random > 50)
+					throw new Exception("Random Rejection"); //
+			} catch (InterruptedException e) {
+				// Training Auto-generated catch block
+				e.printStackTrace();
+			}
+		// return true;
+	}
+
 }
