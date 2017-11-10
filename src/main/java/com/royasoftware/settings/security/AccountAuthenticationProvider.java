@@ -55,11 +55,11 @@ public class AccountAuthenticationProvider extends AbstractUserDetailsAuthentica
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken token) throws AuthenticationException {
 //        logger.info("RetrieveUser");
 //		//Simulate delay of a real network connection to see the animation on front end 
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
         logger.info("< retrieveUser");

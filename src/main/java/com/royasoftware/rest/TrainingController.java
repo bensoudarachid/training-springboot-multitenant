@@ -66,7 +66,8 @@ import com.royasoftware.utils.SVGValidator;
 public class TrainingController extends BaseController {
 	@Autowired
 	private TrainingService trainingService;
-
+//	@Autowired
+//	LetsencryptMonitor letsencryptMonitor;  
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@RequestMapping(method = RequestMethod.POST, produces = {
@@ -121,6 +122,8 @@ public class TrainingController extends BaseController {
 			files[i].delete();
 		}
 		trainingService.deleteTraining(trainingParam);
+//		letsencryptMonitor.renewCertificate();
+
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 

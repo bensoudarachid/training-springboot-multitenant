@@ -60,7 +60,7 @@ import org.springframework.stereotype.Component;
  * <p>
  * Pass the names of the domains as parameters.
  */
-//@Component
+@Component
 public class LetsencryptMonitor {
 //	private static final String CERT_PATH = "C:/Programm/Apache24/conf/ssl/royasoftware.com-acme4j";
 	
@@ -114,6 +114,7 @@ public class LetsencryptMonitor {
 		// Session session = new Session("acme://letsencrypt.org/staging",
 		// userKeyPair);
 		Session session = new Session("acme://letsencrypt.org", userKeyPair);
+		logger.info("session="+session); 
 
 		// Get the Registration to the account.
 		// If there is no account yet, create a new one.
@@ -352,14 +353,16 @@ public class LetsencryptMonitor {
 		logger.info("If you're ready, dismiss the dialog...");
 
 		try {
-			System.out.println("Write certificate challenge to file: "+APACHE_PATH+"/htdocs/.well-known/acme-challenge/" + challenge.getToken());
-			FileWriter fw = new FileWriter(
-					APACHE_PATH+"/htdocs/.well-known/acme-challenge/" + challenge.getToken());
+			logger.info("Write certificate challenge to file: "+APACHE_PATH+"/htdocs/.well-known/acme-challenge/" + challenge.getToken());
+			String tokenPath = APACHE_PATH+"/htdocs/.well-known/acme-challenge/";
+			new File(tokenPath).mkdirs();
+			FileWriter fw = new FileWriter(tokenPath + challenge.getToken());
 //					"C:\\Programm\\Apache24\\htdocs\\.well-known\\acme-challenge\\" + challenge.getToken());
-			System.out.println("Write to file done");
+			logger.info("Write to file done");
 			fw.write(challenge.getAuthorization());
 			fw.close();
 		} catch (Exception e) {
+			logger.info("Write to file error"+e.getMessage());
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -524,12 +527,12 @@ public class LetsencryptMonitor {
 	 */
 	public void createSchoolCertificate() {
 
-		String[] domainArray = new String[] {
+		String[] domainArray = new String[] {"royasoftware.com",
 				"reactlearning.school.royasoftware.com", "abibislearning.school.royasoftware.com",
-				"it.school.royasoftware.com", "hanya.school.royasoftware.com", "name1.school.royasoftware.com",
+				"it.school.royasoftware.com", "it.schoolapi.royasoftware.com", "hanya.school.royasoftware.com", "name1.school.royasoftware.com",
 				"name2.school.royasoftware.com", "name3.school.royasoftware.com", "name4.school.royasoftware.com",
 				"name5.school.royasoftware.com", "name6.school.royasoftware.com", "name7.school.royasoftware.com",
-				"name8.school.royasoftware.com", "name9.school.royasoftware.com" };
+				"name8.school.royasoftware.com" };
 		// String[] domainArray = new String[]{"royasoftware.com"};
 
 		logger.info("Create School Certificate. Starting up...");
@@ -545,7 +548,7 @@ public class LetsencryptMonitor {
 		}
 	}
 
-//	@Scheduled(cron = "0 25 12 * * *")
+//	@Scheduled(cron = "0 * * * * *") //"0 45 12 * * *"
 	public void renewCertificate() throws Exception {
 		Calendar c = Calendar.getInstance();
 		// c.add(field, amount); // getCertificateValidationDate()
