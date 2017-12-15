@@ -26,6 +26,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+#jenkins scripts
+badwapp.*
+jenkins.bat
+PushDeployTraining*.sh
 
 ### Java ###
 *.class
