@@ -7,6 +7,7 @@ import com.royasoftware.model.Training;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +59,7 @@ public class TrainingServiceBean implements TrainingService {
 		return trainingRepository.save(training);
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public Training updateTraining(Training training){
 		return trainingRepository.save(training);
 	}

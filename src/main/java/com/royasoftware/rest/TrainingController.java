@@ -127,6 +127,7 @@ public class TrainingController extends BaseController {
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/updatetraining")
 	public ResponseEntity<Training> updateTrainingObject(@RequestPart("trainingParam") Training trainingParam,
@@ -231,7 +232,7 @@ public class TrainingController extends BaseController {
 	// Training training = trainingService.updateTraining(trainingParam);
 	// return new ResponseEntity<Training>(training, HttpStatus.OK);
 	// }
-
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/save")
 	public ResponseEntity<Training> saveTraining(@RequestPart("title") String title) throws Exception {
@@ -248,7 +249,8 @@ public class TrainingController extends BaseController {
 		return new ResponseEntity<Training>(training, HttpStatus.OK);
 		// return "Hello mama: "+_param;
 	}
-
+	
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/{trainingId}/fileupload")
 	public ResponseEntity<Object> fileUpload(@PathVariable Long trainingId,
@@ -391,7 +393,7 @@ public class TrainingController extends BaseController {
 		// "}";
 	}
 
-	// @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 //	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/item/{_param}")
@@ -404,7 +406,7 @@ public class TrainingController extends BaseController {
 		return new ResponseEntity<Training>(training, HttpStatus.OK);
 	}
 
-	// @PreAuthorize("isAuthenticated()")
+//	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.IMAGE_PNG_VALUE }, value = "/training/img/{_param}")
 	public ResponseEntity<Object> getTrainingImage(@PathVariable Long _param, @RequestParam("width") Integer width,
