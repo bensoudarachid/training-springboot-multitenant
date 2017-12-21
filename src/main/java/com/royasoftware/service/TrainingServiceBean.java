@@ -4,7 +4,11 @@ import com.royasoftware.model.Role;
 import com.royasoftware.model.Todo;
 import com.royasoftware.model.Training;
 
+import static akka.pattern.Patterns.ask;
+import static sample.SpringExtension.SpringExtProvider;
+
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.royasoftware.repository.TrainingDAO;
 import com.royasoftware.repository.TrainingRepository;
 
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.util.Timeout;
+import sample.cluster.simple.CountingActor.Count;
+import sample.cluster.simple.CountingActor.Get;
+import scala.concurrent.Await;
+import scala.concurrent.Future;
+import scala.concurrent.duration.FiniteDuration;
+import static sample.SpringExtension.SpringExtProvider;
 /**
  * Manage the data from database from Role table user
  */
@@ -25,11 +38,13 @@ public class TrainingServiceBean implements TrainingService {
 	/**
 	 * The Spring Data repository for Account entities.
 	 */
-	@Autowired
+	@Autowired(required = false)
 	private TrainingRepository trainingRepository;
-	@Autowired
+	@Autowired(required = false)
 	private TrainingDAO trainingDao;
-	
+
+	@Autowired(required = false)
+	private ActorSystem system;
 	/**
 	 * Get by id
 	 * 
@@ -51,6 +66,29 @@ public class TrainingServiceBean implements TrainingService {
 	 */
 	@Override
 	public Collection<Training> findAll() {
+		
+		
+		// use the Spring Extension to create props for a named actor bean
+		ActorRef counter = system.actorOf(SpringExtProvider.get(system).props("MyCountingActor")); //, "counter"
+
+		// tell it to count three times
+		counter.tell(new Count(), null);
+//		counter.tell(new Count(), null);
+//		counter.tell(new Count(), null);
+
+		// print the result
+//		FiniteDuration duration = FiniteDuration.create(3, TimeUnit.SECONDS);
+//		Future<Object> result = ask(counter, new Get(), Timeout.durationToTimeout(duration));
+//		try {
+//			System.out.println("Got back " + Await.result(result, duration));
+//		} catch (Exception e) {
+//			System.err.println("Failed getting result: " + e.getMessage());
+//		} 
+//		finally {
+//			system.terminate();
+//
+//		}
+		
 		return trainingRepository.findAll();
 	}
 

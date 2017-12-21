@@ -20,7 +20,7 @@ public class RoleServiceBean implements RoleService{
     /**
      * The Spring Data repository for Account entities.
      */
-    @Autowired
+    @Autowired(required = false)
     private RoleRepository roleRepository;
 
     /**

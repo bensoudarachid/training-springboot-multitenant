@@ -16,8 +16,9 @@
 		<version>1.5.1.RELEASE</version>
 	</parent>
 	<properties>
-	    <!-- The main class to start by executing java -jar -->
-	    <start-class>com.royasoftware.MyBootSpring</start-class>
+		<!-- The main class to start by executing java -jar -->
+		<start-class>com.royasoftware.MyBootSpring</start-class>
+		<com.typesafe.akka.version>2.5.4</com.typesafe.akka.version>
 	</properties>
 	<dependencies>
 		<!-- <dependency> <groupId>org.springframework.cloud</groupId> <artifactId>spring-cloud-starter-zuul</artifactId> 
@@ -26,25 +27,20 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-<!--         
 			<exclusions>
-			  <exclusion>
-			    <groupId>org.springframework.boot</groupId>
-			    <artifactId>spring-boot-starter-tomcat</artifactId>
-			  </exclusion>
-			</exclusions>			
- -->	
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-<!--         
-            <scope>provided</scope>
- -->	
-        </dependency>
-<!--         
- -->	
- 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<!-- <scope>provided</scope> -->
+		</dependency>
+		<!-- -->
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 		</dependency>
@@ -59,29 +55,21 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-		<!-- Dependencies for Security
+		<!-- Dependencies for Security <dependency> <groupId>org.springframework.security.oauth</groupId> 
+			<artifactId>spring-security-oauth2</artifactId> </dependency> -->
 		<dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
+			<version>2.2.0.RELEASE</version>
 		</dependency>
-		-->
-		<dependency>
-		    <groupId>org.springframework.security.oauth</groupId>
-		    <artifactId>spring-security-oauth2</artifactId>
-		    <version>2.2.0.RELEASE</version>
-		</dependency>
-		
-		<!-- Dependencies for JPA Data Persistence --> 
+
+		<!-- Dependencies for JPA Data Persistence -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-		</dependency>
-		-->
+		<!-- <dependency> <groupId>org.hsqldb</groupId> <artifactId>hsqldb</artifactId> 
+			</dependency> -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -120,32 +108,13 @@
 		</dependency>
 
 		<!-- Views Dependencies -->
-		<!--
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-		</dependency>
-		-->
-<!--         
-		<dependency>
-		    <groupId>javax.servlet</groupId>
-		    <artifactId>javax.servlet-api</artifactId>
-		    <version>3.1.0</version>
-		    <scope>provided</scope>
-		</dependency>		
- -->	
-		<!-- 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-jasper</artifactId>
-			<scope>provided</scope>
-		</dependency>
- 		-->
+		<!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>jstl</artifactId> 
+			</dependency> -->
+		<!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>javax.servlet-api</artifactId> 
+			<version>3.1.0</version> <scope>provided</scope> </dependency> -->
+		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-tomcat</artifactId> 
+			<scope>provided</scope> </dependency> <dependency> <groupId>org.apache.tomcat.embed</groupId> 
+			<artifactId>tomcat-embed-jasper</artifactId> <scope>provided</scope> </dependency> -->
 		<!-- Email -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -180,54 +149,108 @@
 			<artifactId>j2ssh-core</artifactId>
 			<version>0.2.9</version>
 		</dependency>
-<!-- letsencrypt java lib -->		
+		<!-- letsencrypt java lib -->
 		<dependency>
-		  <groupId>org.shredzone.acme4j</groupId>
-		  <artifactId>acme4j-client</artifactId>
-		  <version>0.9</version>
-		</dependency>	
-		<dependency>
-		  <groupId>org.shredzone.acme4j</groupId>
-		  <artifactId>acme4j-utils</artifactId>
-		  <version>0.9</version>
+			<groupId>org.shredzone.acme4j</groupId>
+			<artifactId>acme4j-client</artifactId>
+			<version>0.9</version>
 		</dependency>
-<!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-transcoder -->
 		<dependency>
-		    <groupId>org.apache.xmlgraphics</groupId>
-		    <artifactId>batik-transcoder</artifactId>
-		    <version>1.8</version>
+			<groupId>org.shredzone.acme4j</groupId>
+			<artifactId>acme4j-utils</artifactId>
+			<version>0.9</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-transcoder -->
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>batik-transcoder</artifactId>
+			<version>1.8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
 			<artifactId>batik-codec</artifactId>
 			<version>1.7</version>
 		</dependency>
-<!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/xmlgraphics-commons -->
+		<!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/xmlgraphics-commons -->
 		<dependency>
-		    <groupId>org.apache.xmlgraphics</groupId>
-		    <artifactId>xmlgraphics-commons</artifactId>
-		    <version>1.5</version>
-		</dependency>		
-<!-- https://mvnrepository.com/artifact/javax.xml.parsers/jaxp-api -->
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>xmlgraphics-commons</artifactId>
+			<version>1.5</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.xml.parsers/jaxp-api -->
 		<dependency>
-		    <groupId>javax.xml.parsers</groupId>
-		    <artifactId>jaxp-api</artifactId>
-		    <version>1.4.5</version>
+			<groupId>javax.xml.parsers</groupId>
+			<artifactId>jaxp-api</artifactId>
+			<version>1.4.5</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
 		</dependency>
 
-<!-- 
-	    <dependency>
-	        <groupId>org.springframework.boot</groupId>
-	        <artifactId>spring-boot-devtools</artifactId>
-	        <optional>true</optional>
-	    </dependency>		
+		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-devtools</artifactId> 
+			<optional>true</optional> </dependency> <dependency> <groupId>jmagick</groupId> 
+			<artifactId>jmagick</artifactId> <version>6.3.9</version> </dependency> -->
+		<!-- logging -->
 		<dependency>
-		    <groupId>jmagick</groupId>
-		    <artifactId>jmagick</artifactId>
-		    <version>6.3.9</version>
+			<groupId>com.typesafe.akka</groupId>
+			<artifactId>akka-actor_2.12</artifactId>
+			<version>${com.typesafe.akka.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.typesafe.akka</groupId>
+			<artifactId>akka-remote_2.12</artifactId>
+			<version>${com.typesafe.akka.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.typesafe.akka</groupId>
+			<artifactId>akka-cluster_2.12</artifactId>
+			<version>${com.typesafe.akka.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.typesafe.akka</groupId>
+			<artifactId>akka-cluster-metrics_2.12</artifactId>
+			<version>${com.typesafe.akka.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.typesafe.akka</groupId>
+			<artifactId>akka-cluster-tools_2.12</artifactId>
+			<version>${com.typesafe.akka.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.typesafe.akka</groupId>
+			<artifactId>akka-multi-node-testkit_2.12</artifactId>
+			<version>${com.typesafe.akka.version}</version>
+		</dependency>
+
+
+<!-- 
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-jcl</artifactId>
+			<version>2.7</version>
 		</dependency>
  -->
-<!-- logging -->		
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-log4j2</artifactId>
+    <version>1.5.1.RELEASE</version>
+</dependency>		
+		
+		<!-- <dependency> <groupId>org.apache.logging.log4j</groupId> <artifactId>log4j-slf4j-impl</artifactId> 
+			<version>2.7</version> </dependency> -->
+
 	</dependencies>
 
 	<!-- <dependencyManagement> <dependencies> <dependency> <groupId>org.springframework.cloud</groupId> 
@@ -236,60 +259,33 @@
 
 	<build>
 		<plugins>
-		      <plugin>
-		        <groupId>org.codehaus.mojo</groupId>
-		        <artifactId>properties-maven-plugin</artifactId>
-		        <version>1.0.0</version>
-		        <executions>
-		          <execution>
-		            <phase>initialize</phase>
-		            <goals>
-		              <goal>read-project-properties</goal>
-		            </goals>
-		            <configuration>
-		              <files>
-		                <file>src/main/resources/version.properties</file>
-		              </files>
-		            </configuration>
-		          </execution>
-		        </executions>
-		      </plugin>
-<!-- 
-            <plugin>
-                <groupId>ru.yaal.maven</groupId>
-                <artifactId>write-text-files-maven-plugin</artifactId>
-                <version>1.1</version>
-                <configuration>
-                    <charset>UTF-8</charset>
-                    <files>
-                        <file>
-                            <path>src/main/resources/version.properties</path>
-                            <lines>
-                                <line># Maven generated properties version file</line>
-                                <line>version=${timestamp}</line>
-                            </lines>
-                        </file>
-                        <file>
-                            <path>src/main/resources/version.json</path>
-                            <lines>
-                                <line>{</line>
-                                <line>version:${timestamp}</line>
-                                <line>}</line>
-                            </lines>
-                        </file>
-                    </files>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>write-text-files</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>write-text-files</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
- -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>src/main/resources/version.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- <plugin> <groupId>ru.yaal.maven</groupId> <artifactId>write-text-files-maven-plugin</artifactId> 
+				<version>1.1</version> <configuration> <charset>UTF-8</charset> <files> <file> 
+				<path>src/main/resources/version.properties</path> <lines> <line># Maven 
+				generated properties version file</line> <line>version=${timestamp}</line> 
+				</lines> </file> <file> <path>src/main/resources/version.json</path> <lines> 
+				<line>{</line> <line>version:${timestamp}</line> <line>}</line> </lines> 
+				</file> </files> </configuration> <executions> <execution> <id>write-text-files</id> 
+				<phase>clean</phase> <goals> <goal>write-text-files</goal> </goals> </execution> 
+				</executions> </plugin> -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -307,17 +303,9 @@
 			</plugin>
 
 			<!-- mvn hibernate3:hbm2ddl -->
-			<!-- 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-			-->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-compiler-plugin</artifactId> 
+				<version>3.1</version> <configuration> <source>1.8</source> <target>1.8</target> 
+				</configuration> </plugin> -->
 			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>hibernate3-maven-plugin</artifactId> 
 				<version>3.0</version> <configuration> <namingStrategy>org.hibernate.cfg.ImprovedNamingStrategy</namingStrategy> 
 				<hibernatetool> <hbm2ddl update="true" export="false" outputfilename="update-ddl.sql" 
@@ -329,16 +317,16 @@
 				<dependency> <groupId>org.javassist</groupId> <artifactId>javassist</artifactId> 
 				<version>3.18.1-GA</version> </dependency> </dependencies> </plugin> -->
 		</plugins>
-		
-  		<finalName>${project.artifactId}-${appversion}</finalName>
-  		
+
+		<finalName>${project.artifactId}-${appversion}</finalName>
+
 	</build>
 
-  <!-- Add Spring repositories -->
-    <!-- (you don't need this if you are using a .RELEASE version) -->
-    
-   <!-- Remove above repositories if using RELEASE version-->
-    <!-- (you don't need this if you are using a .RELEASE version) -->
-    
+	<!-- Add Spring repositories -->
+	<!-- (you don't need this if you are using a .RELEASE version) -->
+
+	<!-- Remove above repositories if using RELEASE version -->
+	<!-- (you don't need this if you are using a .RELEASE version) -->
+
 </project>
 <!-- Package: mvn package Run: mvn spring-boot:run -->

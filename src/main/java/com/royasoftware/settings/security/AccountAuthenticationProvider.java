@@ -25,13 +25,13 @@ public class AccountAuthenticationProvider extends AbstractUserDetailsAuthentica
      * A Spring Security UserDetailsService implementation based upon the
      * Account entity model.
      */
-    @Autowired
+    @Autowired(required = false)
     private CustomUserDetailsService userDetailsService;
 
     /**
      * A PasswordEncoder instance to hash clear test password values.
      */
-    @Autowired
+    @Autowired(required = false)
     private PasswordEncoder passwordEncoder;
 
     @Override

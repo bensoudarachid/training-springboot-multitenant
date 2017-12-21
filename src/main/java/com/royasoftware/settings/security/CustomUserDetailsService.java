@@ -21,12 +21,20 @@ import java.util.Collection;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final AccountRepository userRepository;
+//    private final AccountRepository userRepository;
 
-    @Autowired
-    public CustomUserDetailsService(AccountRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+	@Autowired(required = false)
+    private AccountRepository userRepository;
+
+//    @Autowired(required = false)
+//    public CustomUserDetailsService(AccountRepository userRepository) {
+//        this.userRepository = userRepository;
+//    }
+
+//    @Autowired(required = false)
+//    public CustomUserDetailsService(AccountRepository userRepository) {
+//        this.userRepository = userRepository;
+//    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

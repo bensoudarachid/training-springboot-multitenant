@@ -22,7 +22,7 @@ public class TodoServiceBean implements TodoService {
 	/**
 	 * The Spring Data repository for Account entities.
 	 */
-	@Autowired
+	@Autowired(required = false)
 	private TodoRepository todoRepository;
 	/**
 	 * Get by id

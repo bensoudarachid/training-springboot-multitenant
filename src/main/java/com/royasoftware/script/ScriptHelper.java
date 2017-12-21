@@ -3,7 +3,10 @@ package com.royasoftware.script;
 import java.io.File;
 import java.util.ResourceBundle;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import sample.http.AkkaSystemStarter;
 
 /**
  * <p>
@@ -20,7 +23,7 @@ import org.apache.log4j.Logger;
  * @version 1.0
  */
 public abstract class ScriptHelper {
-	private static final Logger logger = Logger.getLogger(ScriptHelper.class);
+	private static final Logger logger = LogManager.getLogger(ScriptHelper.class.getName());
 	static private boolean ACTIVE = false;
 
 	static public final int MAGO_STOP = 0;

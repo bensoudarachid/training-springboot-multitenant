@@ -1,21 +1,30 @@
 package com.royasoftware;
 
+import static akka.pattern.Patterns.ask;
+import static sample.SpringExtension.SpringExtProvider;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
@@ -29,6 +38,15 @@ import org.springframework.web.servlet.view.script.ScriptTemplateViewResolver;
 
 import com.royasoftware.script.ScriptHelper;
 
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.util.Timeout;
+import sample.cluster.simple.CountingActor.Get;
+import sample.cluster.simple.CountingActor.Count;
+import scala.concurrent.Await;
+import scala.concurrent.Future;
+import scala.concurrent.duration.FiniteDuration;
+
 //import com.royasoftware.filter.SimpleFilter;
 
 //import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
@@ -40,9 +58,13 @@ import com.royasoftware.script.ScriptHelper;
 // SpringBootApplication replaces: @Configuration @ComponentScan
 // @EnableAutoConfiguration
 @EnableScheduling
-public class MyBootSpring extends SpringBootServletInitializer implements SchedulingConfigurer {
-	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+@ComponentScan(basePackages={"sample","com.royasoftware"})
 
+public class MyBootSpring extends SpringBootServletInitializer implements SchedulingConfigurer {
+	private static Logger logger = LoggerFactory.getLogger(MyBootSpring.class);
+
+	
+	
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		return builder.sources(MyBootSpring.class);
@@ -50,16 +72,10 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 
 	static private void writeDemoDataToUserStorage(String tenant) {
 		try {
-			System.out.println("writeDemoDataToUserStorage "+tenant);
+
+			System.out.println("writeDemoDataToUserStorage " + tenant);
 			String fileName = "images/" + tenant + ".svg";
 			ClassPathResource cpr = new ClassPathResource(fileName);
-			
-			
-			
-//			ClassLoader classLoader = MyBootSpring.class.getClassLoader();
-//			File file = new File(classLoader.getResource(fileName).getFile());
-//			System.out.println("logoFileStr file="+file); 
-//			System.out.println("logoFileStr file path="+file.getPath()); 
 
 			String logoFilePath = TenantContext.getTenantStoragePath(tenant) + "profile";
 			File logoFileFolder = new File(logoFilePath);
@@ -67,7 +83,7 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 			System.out.println("writeDemoDataToUserStorage mkdirs");
 
 			String logoFileStr = TenantContext.getTenantStoragePath(tenant) + "profile/logo.svg";
-			System.out.println("logoFileStr="+logoFileStr); 
+			System.out.println("logoFileStr=" + logoFileStr);
 			File logoFile = new File(logoFileStr);
 			FileOutputStream fos = null;
 			if (!logoFile.exists()) {
@@ -92,14 +108,15 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 		}
 
 	}
+
 	static private void writeDemoDataToUserStorageold(String tenant) {
 		try {
-			System.out.println("writeDemoDataToUserStorage "+tenant);
+			System.out.println("writeDemoDataToUserStorage " + tenant);
 			String fileName = "images/" + tenant + ".svg";
 			ClassLoader classLoader = MyBootSpring.class.getClassLoader();
 			File file = new File(classLoader.getResource(fileName).getFile());
-			System.out.println("logoFileStr file="+file); 
-			System.out.println("logoFileStr file path="+file.getPath()); 
+			System.out.println("logoFileStr file=" + file);
+			System.out.println("logoFileStr file path=" + file.getPath());
 
 			String logoFilePath = TenantContext.getTenantStoragePath(tenant) + "profile";
 			File logoFileFolder = new File(logoFilePath);
@@ -107,7 +124,7 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 			System.out.println("writeDemoDataToUserStorage mkdirs");
 
 			String logoFileStr = TenantContext.getTenantStoragePath(tenant) + "profile/logo.svg";
-			System.out.println("logoFileStr="+logoFileStr); 
+			System.out.println("logoFileStr=" + logoFileStr);
 			File logoFile = new File(logoFileStr);
 			FileOutputStream fos = null;
 			if (!logoFile.exists()) {
@@ -138,6 +155,11 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 		writeDemoDataToUserStorage("demo1");
 		writeDemoDataToUserStorage("demo2");
 		writeDemoDataToUserStorage("abbaslearn");
+		
+		
+		
+		
+		
 		// System.exit(0);
 		// System.out.println("this.getClass().getResource(log4j.xml)="+MyBootSpring.class.getResourceAsStream("/db/datasource/tenants/school1.properties"));
 		// System.out.println("this.getClass().getResource(log4j.xml)="+MyBootSpring.class.getResource("/log4j.xml"));
@@ -155,9 +177,34 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 		// "root", "1qay2wsx");
 		// flyway.setLocations("db.migration");
 		// flyway.migrate();
-		SpringApplication.run(MyBootSpring.class, args);
+		ApplicationContext ctx = SpringApplication.run(MyBootSpring.class, args);
 		System.out.println("Hi tani");
-		ScriptHelper.run(ScriptHelper.RUN_WEB_APP);
+//		ScriptHelper.run(ScriptHelper.RUN_WEB_APP);
+		
+
+				
+
+//	    ActorSystem system = ctx.getBean(ActorSystem.class);
+//		
+//		// use the Spring Extension to create props for a named actor bean
+//		ActorRef counter = system.actorOf(SpringExtProvider.get(system).props("CountingActor"), "counter");
+//
+//		// tell it to count three times
+//		counter.tell(new Count(), null);
+//		counter.tell(new Count(), null);
+//		counter.tell(new Count(), null);
+//
+//		// print the result
+//		FiniteDuration duration = FiniteDuration.create(3, TimeUnit.SECONDS);
+//		Future<Object> result = ask(counter, new Get(), Timeout.durationToTimeout(duration));
+//		try {
+//			System.out.println("Got back " + Await.result(result, duration));
+//		} catch (Exception e) {
+//			System.err.println("Failed getting result: " + e.getMessage());
+//		} finally {
+//			system.terminate();
+//
+//		}
 
 	}
 

@@ -32,13 +32,13 @@ public class AccountServiceBean implements AccountService {
     /**
      * The Spring Data repository for Account entities.
      */
-    @Autowired
+    @Autowired(required=false)
     private AccountRepository accountRepository;
 
     /**
      * The Spring Data repository for Role entities
      */
-    @Autowired
+    @Autowired(required=false)
     private RoleService roleService;
 
     /**
