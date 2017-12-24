@@ -3,8 +3,10 @@ package sample.cluster.stats;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
+import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
+import akka.routing.FromConfig;
 
 public class StatsSampleMain {
 
@@ -30,15 +32,10 @@ public class StatsSampleMain {
 
       system.actorOf(Props.create(StatsWorker.class), "statsWorker1");
       system.actorOf(Props.create(StatsWorker.class), "statsWorker2");
+      
 
-      
-      
-      
-      
-      
-      
-      
       system.actorOf(Props.create(StatsService.class), "statsService");
+
     }
 
   }

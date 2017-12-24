@@ -4,8 +4,8 @@ import java.math.BigInteger;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import akka.actor.AbstractActor;
 import sample.cluster.stats.StatsWorker;
@@ -15,7 +15,7 @@ import sample.cluster.transformation.TransformationMessages.TransformationResult
 import static akka.pattern.PatternsCS.pipe;
 
 public class FactorialBackend extends AbstractActor {
-	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+	static Logger logger = LogManager.getLogger(StatsWorker.class.getName());
 
 	public FactorialBackend() {
 		logger.info("###########################################FactorialBackend constructor " + new Random().nextInt());
@@ -35,6 +35,9 @@ public class FactorialBackend extends AbstractActor {
 //			FactorialResult result = new FactorialResult(n, facResult);
 //			sender().tell(result, self());
 			
+		}).match(String.class, msg -> {
+			logger.info("Hallo "+msg);
+			sender().tell("Hallo "+msg, self());
 		}).build();
 	}
 

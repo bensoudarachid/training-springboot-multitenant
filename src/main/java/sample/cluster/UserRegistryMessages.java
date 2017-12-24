@@ -1,8 +1,8 @@
-package sample.http;
-
-import sample.http.UserRegistryActor.User;
+package sample.cluster;
 
 import java.io.Serializable;
+
+import sample.cluster.UserRegistryActor.User;
 
 public interface UserRegistryMessages {
 

@@ -74,7 +74,7 @@ public class ProfileController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.IMAGE_PNG_VALUE }, value = "/profile/logo")
 	public ResponseEntity<Object> getProfileLogo(@RequestParam("width") Integer width,
 			@RequestParam("height") Integer height) throws Exception {
-		logger.info("getProfileLogo " + " width=" + width + " height=" + height);
+//		logger.info("getProfileLogo " + " width=" + width + " height=" + height);
 //		try {
 //			Thread.sleep(1000);
 //		} catch (InterruptedException e) {
@@ -184,7 +184,7 @@ public class ProfileController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/profile/data")
 	public ResponseEntity<Tenant> getTenantData() throws Exception {
-		logger.info("Here i am get tenant data");
+//		logger.info("Here i am get tenant data");
 		
 
     	Properties prop = new Properties();
@@ -201,7 +201,7 @@ public class ProfileController extends BaseController {
 
 	    Tenant tenant = new Tenant();
 		tenant.setName1(prop.getProperty("tenant.name1"));
-		logger.info("prop.getProperty(name1)="+prop.getProperty("name1")); 
+//		logger.info("prop.getProperty(name1)="+prop.getProperty("name1")); 
 		tenant.setName2(prop.getProperty("tenant.name2"));
 		return new ResponseEntity<Tenant>(tenant, HttpStatus.OK);
 		// return "Hello mama: "+_param;

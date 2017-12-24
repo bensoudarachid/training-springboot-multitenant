@@ -49,5 +49,5 @@ public interface StatsMessages {
       return "JobFailed(" + reason + ")";
     }
   }
-
+  public static class SayHi implements Serializable {}
 }

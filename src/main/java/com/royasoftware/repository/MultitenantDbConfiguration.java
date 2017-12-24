@@ -26,9 +26,6 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 import com.royasoftware.TenantContext;
 
-import akka.actor.ActorSystem;
-import static sample.SpringExtension.SpringExtProvider;
-
 
 @Configuration
 public class MultitenantDbConfiguration {

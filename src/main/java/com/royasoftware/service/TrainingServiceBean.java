@@ -5,7 +5,7 @@ import com.royasoftware.model.Todo;
 import com.royasoftware.model.Training;
 
 import static akka.pattern.Patterns.ask;
-import static sample.SpringExtension.SpringExtProvider;
+//import static sample.config.SpringExtension.SpringExtProvider;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
@@ -22,12 +22,12 @@ import com.royasoftware.repository.TrainingRepository;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.util.Timeout;
+import sample.cluster.SpringExtension;
 import sample.cluster.simple.CountingActor.Count;
 import sample.cluster.simple.CountingActor.Get;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
 import scala.concurrent.duration.FiniteDuration;
-import static sample.SpringExtension.SpringExtProvider;
 /**
  * Manage the data from database from Role table user
  */
@@ -42,6 +42,8 @@ public class TrainingServiceBean implements TrainingService {
 	private TrainingRepository trainingRepository;
 	@Autowired(required = false)
 	private TrainingDAO trainingDao;
+	@Autowired
+	private SpringExtension springExtension;
 
 	@Autowired(required = false)
 	private ActorSystem system;
@@ -64,15 +66,16 @@ public class TrainingServiceBean implements TrainingService {
 	 *            - the code of the role
 	 * @return Role object
 	 */
+
 	@Override
 	public Collection<Training> findAll() {
 		
 		
 		// use the Spring Extension to create props for a named actor bean
-		ActorRef counter = system.actorOf(SpringExtProvider.get(system).props("MyCountingActor")); //, "counter"
+//		ActorRef counter = system.actorOf(springExtension.props("MyCountingActor")); //, "counter"
 
 		// tell it to count three times
-		counter.tell(new Count(), null);
+//		counter.tell(new Count(), null);
 //		counter.tell(new Count(), null);
 //		counter.tell(new Count(), null);
 

@@ -1,5 +1,6 @@
 package com.royasoftware.rest;
 
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -18,26 +19,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
-import org.apache.batik.ext.awt.image.codec.util.MemoryCacheSeekableStream;
-import org.apache.batik.transcoder.TranscoderInput;
-import org.apache.batik.transcoder.TranscoderOutput;
-import org.apache.batik.transcoder.image.JPEGTranscoder;
-import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,19 +47,39 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
-import org.w3c.dom.svg.SVGDocument;
 
-import com.royasoftware.LetsencryptMonitor;
+import com.royasoftware.MyBootSpring;
 import com.royasoftware.TenantContext;
 import com.royasoftware.model.Training;
 import com.royasoftware.service.TrainingService;
+import com.royasoftware.service.TrainingServiceActor;
+import com.royasoftware.service.TrainingServiceActor.GetTrainings;
+import com.royasoftware.service.TrainingServiceActor.Trainings;
 import com.royasoftware.settings.security.CustomUserDetails;
-import com.royasoftware.utils.SVGValidator;
+
+import akka.actor.ActorRef;
+import akka.actor.ActorSelection;
+import akka.actor.ActorSystem;
+import akka.pattern.Patterns;
+import akka.routing.FromConfig;
+import akka.routing.ConsistentHashingRouter.ConsistentHashableEnvelope;
+import akka.util.Timeout;
+import sample.cluster.SpringExtension;
+import sample.cluster.factorial.FactorialBackend;
+import sample.cluster.stats.StatsMessages;
+import scala.concurrent.Await;
+import scala.concurrent.Future;
+import scala.concurrent.duration.Duration;
 
 @RestController
 // RequestMapping("/reactor/api/**")
 @RequestMapping("/api/**")
 public class TrainingController extends BaseController {
+//	@Autowired
+//	private ActorSystem actorSystem;
+//	@Autowired
+//	private SpringExtension springExtension;
+
 	@Autowired
 	private TrainingService trainingService;
 //	@Autowired
@@ -353,7 +369,7 @@ public class TrainingController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
 	public ResponseEntity<Object> getTrainingsGet(@PathVariable String _param) throws Exception {
-		logger.info("Calling Post rest controller get trainings " + _param);
+//		logger.info("Calling Post rest controller get trainings " + _param);
 		// TenantContext.setCurrentTenant(subdomain);
 		CustomUserDetails activeUser = TenantContext.getCurrentUser();
 		// logger.info("User connected as bound parameter: name = " +
@@ -369,13 +385,33 @@ public class TrainingController extends BaseController {
 		rdmTimeRdmSuccess();
 		// logger.info("Get Trainings for user "+activeUser.getId()+". Size:
 		// "+trainingService.findByUserId(activeUser.getId()).size());
+//		ActorRef factorialBackendActor = actorSystem.actorOf(springExtension.props("FactorialBackendActor"),"factorialBackend");
+//		Timeout timeout = new Timeout(Duration.create(5, "seconds"));
+//		Future<Object> future = Patterns.ask(FactorialBackend, new FactorialBackend., timeout);
+//		Trainings trainings= (Trainings) Await.result(future, timeout.duration());
 
 		// return "forward:/test2?param1=foo&param2=bar";
 		// return "{trainings: [{task: 'make it now 7bayby',isCompleted:
 		// false,id:
 		// 24},{task: 'ya do it 7bayby',isCompleted: false,id: 25}]}";
+//		logger.info("**************************************TrainingController "+ TenantContext.getCurrentTenant());
+//		ActorRef trainingServiceActor = actorSystem.actorOf(FromConfig.getInstance().props(), "factorialBackendRouter");
+		
+//		ActorRef trainingServiceActor = actorSystem.actorOf(springExtension.props("TrainingServiceActor"));
+//		ActorSelection trainingService = actorSystem.actorSelection("/user/trainingServiceRouter");
+//		Timeout timeout = new Timeout(Duration.create(5, "seconds"));
+//		Future<Object> future = Patterns.ask(trainingService, new TrainingServiceActor.GetTrainings(), timeout);
+//		Trainings trainings= (Trainings) Await.result(future, timeout.duration());
+//		Collection<Training> trainingList = trainings.getTrainings();
+		
+		ActorSelection workerRouter = MyBootSpring.ACTOR_SYSTEM.actorSelection("/user/workerRouter");
+		Timeout timeout = new Timeout(Duration.create(5, "seconds"));
+		Future<Object> future = Patterns.ask(workerRouter, new StatsMessages.SayHi(), timeout);
+		Await.result(future, timeout.duration());
+
+		
 		Collection<Training> trainingList = trainingService.findAll();
-		logger.info("Home! trainingList size =" + trainingList.size());
+//		logger.info("Logger ! trainingList size =" + trainingList.size());
 		return new ResponseEntity<Object>(trainingList, HttpStatus.OK);
 		// return "{"+
 		// "\"trainings\": ["+

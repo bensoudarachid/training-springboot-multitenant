@@ -20,37 +20,50 @@ public class TenantContext {
 			userUploadStorage=userUploadStorage+File.separator;
 	}
 	private static Set<String> validTenantSet= new HashSet<>();
-    private static ThreadLocal<HashMap<String, Object>> myContextThreadLocal = new ThreadLocal<HashMap<String, Object>>() {
+    private static ThreadLocal<HashMap<String, Object>> tenantContextThreadLocal = new ThreadLocal<HashMap<String, Object>>() {
         @Override
         protected HashMap<String, Object> initialValue() {
             return new HashMap<>();
         }
     };
-    public static void resetThreadLocal(){
-    	myContextThreadLocal.remove();
+	public static ThreadLocal<HashMap<String, Object>> getTenantContextThreadLocal() {
+		return tenantContextThreadLocal;
+	}
+    public static void setTenantContextThreadLocalMap(HashMap<String, Object> tenantContextThreadLocalMap) {
+  	  ThreadLocal<HashMap<String, Object>> th = new ThreadLocal<HashMap<String, Object>>() {
+	        @Override
+	        protected HashMap<String, Object> initialValue() {
+	            return new HashMap<>();
+	        }
+	    };
+	    th.get().putAll(tenantContextThreadLocalMap);
+		TenantContext.tenantContextThreadLocal = th;
+	}
+	public static void resetThreadLocal(){
+    	tenantContextThreadLocal.remove();
     }
     public static void setCurrentTenant(String tenant) throws Exception{
 //    	logger.info("set current tenant "+tenant);
     	if( tenant==null)
-    		myContextThreadLocal.get().put("tenant",tenant);
+    		tenantContextThreadLocal.get().put("tenant",tenant);
 //    	logger.info("set valid current tenant "+tenant);
     	if( !isTenantValid(tenant)){
-    		myContextThreadLocal.get().put("tenant",null);
+    		tenantContextThreadLocal.get().put("tenant",null);
     		throw new Exception("Subdomain "+tenant+" not valid");
     	}
 //    	logger.info("set valid current tenant "+tenant);
-        myContextThreadLocal.get().put("tenant",tenant);
+        tenantContextThreadLocal.get().put("tenant",tenant);
     }
     public static String getCurrentTenant() {
 //    	logger.info("get current tenant "+myContextThreadLocal.get().get("tenant"));
-        return (String)myContextThreadLocal.get().get("tenant");
+        return (String)tenantContextThreadLocal.get().get("tenant");
     }
     public static String getCurrentTenantStoragePath() {
-    	return new StringBuffer(userUploadStorage).append(myContextThreadLocal.get().get("tenant")).append("/").toString();
+    	return new StringBuffer(userUploadStorage).append(tenantContextThreadLocal.get().get("tenant")).append("/").toString();
 //        return userUploadStorage+(String)myContextThreadLocal.get().get("tenant")+"/";
     }
     public static String getCurrentTenantStoragePath(String subfolder) {
-    	return new StringBuffer(userUploadStorage).append(myContextThreadLocal.get().get("tenant")).append("/").append(subfolder).append("/").toString();
+    	return new StringBuffer(userUploadStorage).append(tenantContextThreadLocal.get().get("tenant")).append("/").append(subfolder).append("/").toString();
     }
     public static String getCurrentUserStoragePath(String name) {
     	CustomUserDetails user = getCurrentUser();
@@ -58,7 +71,7 @@ public class TenantContext {
     		return null;
 //    	logger.info("myContextThreadLocal.get().get(tenant)="+myContextThreadLocal.get().get("tenant"));
 //    	return getCurrentTenantStoragePath();
-    	return new StringBuffer(userUploadStorage).append(myContextThreadLocal.get().get("tenant")).append("/user/").append(user.getId()).append("/").append(name).append("/").toString();
+    	return new StringBuffer(userUploadStorage).append(tenantContextThreadLocal.get().get("tenant")).append("/user/").append(user.getId()).append("/").append(name).append("/").toString();
 //        return userUploadStorage+(String)myContextThreadLocal.get().get("tenant")+"/";
     }
     public static String getTenantStoragePath(String tenant) {
@@ -68,10 +81,10 @@ public class TenantContext {
     }
     public static void setCurrentUser(CustomUserDetails user) {
 //    	logger.info("setCurrentUser user="+user.getUsername()); 
-        myContextThreadLocal.get().put("activeuser",user);
+        tenantContextThreadLocal.get().put("activeuser",user);
     }
     public static CustomUserDetails getCurrentUser() {
-    	return (CustomUserDetails)myContextThreadLocal.get().get("activeuser");
+    	return (CustomUserDetails)tenantContextThreadLocal.get().get("activeuser");
     }
     public static void setValidTenants(Set validTenants){
 //    	validTenantSet =  (Collection<String>)(Collection<?>)validTenants;

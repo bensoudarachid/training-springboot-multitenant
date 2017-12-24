@@ -1,11 +1,12 @@
 package com.royasoftware;
 
 import static akka.pattern.Patterns.ask;
-import static sample.SpringExtension.SpringExtProvider;
+//import static sample.config.SpringExtension.SpringExtProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
+import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -37,11 +38,21 @@ import org.springframework.web.servlet.view.script.ScriptTemplateConfigurer;
 import org.springframework.web.servlet.view.script.ScriptTemplateViewResolver;
 
 import com.royasoftware.script.ScriptHelper;
+import com.royasoftware.service.TrainingServiceActor;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
+import akka.actor.Props;
+import akka.routing.FromConfig;
+import akka.stream.ActorMaterializer;
 import akka.util.Timeout;
 import sample.cluster.simple.CountingActor.Get;
+import sample.cluster.stats.StatsSampleClientMain;
+import sample.cluster.stats.StatsWorker;
+import sample.cluster.AkkaSystemStarter;
+import sample.cluster.SpringExtension;
 import sample.cluster.simple.CountingActor.Count;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
@@ -58,22 +69,33 @@ import scala.concurrent.duration.FiniteDuration;
 // SpringBootApplication replaces: @Configuration @ComponentScan
 // @EnableAutoConfiguration
 @EnableScheduling
-@ComponentScan(basePackages={"sample","com.royasoftware"})
+@ComponentScan(basePackages = { "sample", "com.royasoftware" })
+// @ComponentScan(basePackages={"com.royasoftware"})
+@PropertySource(ignoreResourceNotFound = false, value = { "classpath:application.properties",
+		"classpath:mainakkaserver.properties" })
 
 public class MyBootSpring extends SpringBootServletInitializer implements SchedulingConfigurer {
 	private static Logger logger = LoggerFactory.getLogger(MyBootSpring.class);
 
-	
-	
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		return builder.sources(MyBootSpring.class);
 	}
+	public static ActorSystem ACTOR_SYSTEM = null;
+	static{
+		Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port=2551")
+				.withFallback(ConfigFactory.parseString("akka.cluster.roles = [compute]"))
+				.withFallback(ConfigFactory.load("stats1"));
 
+		ACTOR_SYSTEM = ActorSystem.create("TrainingAkkaSystem", config);
+	}
+	
+	
+	
 	static private void writeDemoDataToUserStorage(String tenant) {
 		try {
 
-			System.out.println("writeDemoDataToUserStorage " + tenant);
+			logger.info("writeDemoDataToUserStorage " + tenant);
 			String fileName = "images/" + tenant + ".svg";
 			ClassPathResource cpr = new ClassPathResource(fileName);
 
@@ -152,59 +174,58 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 	}
 
 	public static void main(String[] args) {
+		Properties props = System.getProperties();
+		// System property is needed for the async disruptor logger.
+		props.setProperty("log4j2.contextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
+
 		writeDemoDataToUserStorage("demo1");
 		writeDemoDataToUserStorage("demo2");
 		writeDemoDataToUserStorage("abbaslearn");
-		
-		
-		
-		
-		
-		// System.exit(0);
-		// System.out.println("this.getClass().getResource(log4j.xml)="+MyBootSpring.class.getResourceAsStream("/db/datasource/tenants/school1.properties"));
-		// System.out.println("this.getClass().getResource(log4j.xml)="+MyBootSpring.class.getResource("/log4j.xml"));
-		// DOMConfigurator.configure("/log4j.xml");
-		// DOMConfigurator.configure("file:/D:/RP/Tests/SpringBoot_Part_1/target/classes/log4j.xml");
-		// System.out.println("Hi");
 
-		// Flyway flyway = new Flyway();
-		// flyway.setDataSource("jdbc:mysql://localhost:3306/todospring1",
-		// "root", "1qay2wsx");
-		// flyway.setLocations("db.migration");
-		// flyway.migrate();
-		// flyway = new Flyway();
-		// flyway.setDataSource("jdbc:mysql://localhost:3306/todospring2",
-		// "root", "1qay2wsx");
-		// flyway.setLocations("db.migration");
-		// flyway.migrate();
 		ApplicationContext ctx = SpringApplication.run(MyBootSpring.class, args);
+		// ScriptHelper.run(ScriptHelper.RUN_WEB_APP);
 		System.out.println("Hi tani");
-//		ScriptHelper.run(ScriptHelper.RUN_WEB_APP);
-		
 
-				
+//		ActorSystem actorSystem = ctx.getBean(ActorSystem.class);
+		// SpringExtension springExtension = ctx.getBean(SpringExtension.class);
 
-//	    ActorSystem system = ctx.getBean(ActorSystem.class);
-//		
-//		// use the Spring Extension to create props for a named actor bean
-//		ActorRef counter = system.actorOf(SpringExtProvider.get(system).props("CountingActor"), "counter");
+		// final ActorMaterializer materializer =
+		// ActorMaterializer.create(system);
+		// ActorRef userRegistryActor =
+		// system.actorOf(SpringExtProvider.get(system).props("UserRegistryActor"),
+		// "userRegistry");
+		// logger.info("Main Akka server up");
+		// AkkaSystemStarter.main(new String[0]);
+
+		// ActorRef trainingServiceActor =
+		// actorSystem.actorOf(springExtension.props("TrainingServiceActor"),"trainingServiceActor1");
+		// actorSystem.actorOf(springExtension.props("TrainingServiceActor"),"trainingServiceRouter");
+		// actorSystem.actorOf(springExtension.props("TrainingServiceActor"),"trainingServiceRouter");
+
+//		Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port=2552")
+//				.withFallback(ConfigFactory.parseString("akka.cluster.roles = [compute]"))
+//				.withFallback(ConfigFactory.load("stats1"));
 //
-//		// tell it to count three times
-//		counter.tell(new Count(), null);
-//		counter.tell(new Count(), null);
-//		counter.tell(new Count(), null);
-//
-//		// print the result
-//		FiniteDuration duration = FiniteDuration.create(3, TimeUnit.SECONDS);
-//		Future<Object> result = ask(counter, new Get(), Timeout.durationToTimeout(duration));
-//		try {
-//			System.out.println("Got back " + Await.result(result, duration));
-//		} catch (Exception e) {
-//			System.err.println("Failed getting result: " + e.getMessage());
-//		} finally {
-//			system.terminate();
-//
-//		}
+//	    ActorSystem system = ActorSystem.create("ClusterSystem", config);
+
+//		actorSystem.actorOf(Props.create(StatsWorker.class), "statsWorker1");
+		// ActorRef workerRouter = system.actorOf(
+		// FromConfig.getInstance().props(Props.create(StatsWorker.class)),
+		// "workerRouter");
+		ActorRef workerRouter = ACTOR_SYSTEM.actorOf(Props.create(StatsWorker.class), "workerRouter");
+		ACTOR_SYSTEM.actorOf(Props.create(StatsWorker.class), "workerActor1");
+
+		// FiniteDuration duration = FiniteDuration.create(3, TimeUnit.SECONDS);
+		// Future<Object> result = ask(counter, new Get(),
+		// Timeout.durationToTimeout(duration));
+		// try {
+		// System.out.println("Got back " + Await.result(result, duration));
+		// } catch (Exception e) {
+		// System.err.println("Failed getting result: " + e.getMessage());
+		// } finally {
+		// system.terminate();
+		//
+		// }
 
 	}
 

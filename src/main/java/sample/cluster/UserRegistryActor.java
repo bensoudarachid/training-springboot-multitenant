@@ -1,4 +1,4 @@
-package sample.http;
+package sample.cluster;
 
 import akka.actor.*;
 import akka.event.Logging;
