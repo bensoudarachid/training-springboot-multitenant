@@ -75,10 +75,10 @@ import scala.concurrent.duration.Duration;
 // RequestMapping("/reactor/api/**")
 @RequestMapping("/api/**")
 public class TrainingController extends BaseController {
-//	@Autowired
-//	private ActorSystem actorSystem;
-//	@Autowired
-//	private SpringExtension springExtension;
+	@Autowired
+	private ActorSystem actorSystem;
+	@Autowired
+	private SpringExtension springExtension;
 
 	@Autowired
 	private TrainingService trainingService;
@@ -398,19 +398,19 @@ public class TrainingController extends BaseController {
 //		ActorRef trainingServiceActor = actorSystem.actorOf(FromConfig.getInstance().props(), "factorialBackendRouter");
 		
 //		ActorRef trainingServiceActor = actorSystem.actorOf(springExtension.props("TrainingServiceActor"));
-//		ActorSelection trainingService = actorSystem.actorSelection("/user/trainingServiceRouter");
-//		Timeout timeout = new Timeout(Duration.create(5, "seconds"));
-//		Future<Object> future = Patterns.ask(trainingService, new TrainingServiceActor.GetTrainings(), timeout);
-//		Trainings trainings= (Trainings) Await.result(future, timeout.duration());
-//		Collection<Training> trainingList = trainings.getTrainings();
-		
-		ActorSelection workerRouter = MyBootSpring.ACTOR_SYSTEM.actorSelection("/user/workerRouter");
+		ActorSelection trainingServiceActor = actorSystem.actorSelection("/user/trainingServiceActor");
 		Timeout timeout = new Timeout(Duration.create(5, "seconds"));
-		Future<Object> future = Patterns.ask(workerRouter, new StatsMessages.SayHi(), timeout);
-		Await.result(future, timeout.duration());
+		Future<Object> future = Patterns.ask(trainingServiceActor, new TrainingServiceActor.GetTrainings(), timeout);
+		Trainings trainings= (Trainings) Await.result(future, timeout.duration());
+		Collection<Training> trainingList = trainings.getTrainings();
+		
+//		ActorSelection workerRouter = MyBootSpring.ACTOR_SYSTEM.actorSelection("/user/workerRouter");
+//		Timeout timeout = new Timeout(Duration.create(5, "seconds"));
+//		Future<Object> future = Patterns.ask(workerRouter, new StatsMessages.SayHi(), timeout);
+//		Await.result(future, timeout.duration());
 
 		
-		Collection<Training> trainingList = trainingService.findAll();
+//		Collection<Training> trainingList = trainingService.findAll();
 //		logger.info("Logger ! trainingList size =" + trainingList.size());
 		return new ResponseEntity<Object>(trainingList, HttpStatus.OK);
 		// return "{"+

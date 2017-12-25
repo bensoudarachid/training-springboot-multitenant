@@ -41,14 +41,14 @@ public class AkkaSystemStarter  {
 //	@Autowired
 //	private SpringExtension springExtension;
 
-	public static ActorSystem ACTOR_SYSTEM = null;
-	static{
-		Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port=2552")
-				.withFallback(ConfigFactory.parseString("akka.cluster.roles = [compute]"))
-				.withFallback(ConfigFactory.load("stats1"));
-
-		ACTOR_SYSTEM = ActorSystem.create("TrainingAkkaSystem", config);
-	}
+//	public static ActorSystem ACTOR_SYSTEM = null;
+//	static{
+//		Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port=2552")
+//				.withFallback(ConfigFactory.parseString("akka.cluster.roles = [compute]"))
+//				.withFallback(ConfigFactory.load("stats1"));
+//
+//		ACTOR_SYSTEM = ActorSystem.create("TrainingAkkaSystem", config);
+//	}
 
 //	void init(){
 //		logger.info("springExtension="+springExtension); 
@@ -69,11 +69,11 @@ public class AkkaSystemStarter  {
 		logger.info("Lets go!");
 		Properties props = System.getProperties();
 		props.setProperty("log4j2.contextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");		
-//		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
-//        ctx.register(AkkaSpringConfig.class);
-//        
-//        ctx.refresh();		
-//		logger.info("context=" + ctx);
+		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+        ctx.register(AkkaSpringConfig.class);
+        
+        ctx.refresh();		
+		logger.info("context=" + ctx);
 
 		
 		
@@ -97,7 +97,7 @@ public class AkkaSystemStarter  {
 //	    logger.info("system="+actorSystem); 
 //	    ActorRef trainingServiceActor = system.actorOf(springExtension.props("TrainingServiceActor"));
 //		actorSystem.actorOf(springExtension.props("TrainingServiceActor"),"trainingServiceActor2");
-		ActorRef workerRouter = ACTOR_SYSTEM.actorOf(Props.create(StatsWorker.class), "workerActor2");
+//		ActorRef workerRouter = ACTOR_SYSTEM.actorOf(Props.create(StatsWorker.class), "workerActor2");
 
 
 //		ActorRef trainingServiceActor = system.actorOf(springExtension.props("TrainingServiceActor"),"factorialBackendRouter");

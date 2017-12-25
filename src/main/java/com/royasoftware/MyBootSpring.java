@@ -81,14 +81,14 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		return builder.sources(MyBootSpring.class);
 	}
-	public static ActorSystem ACTOR_SYSTEM = null;
-	static{
-		Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port=2551")
-				.withFallback(ConfigFactory.parseString("akka.cluster.roles = [compute]"))
-				.withFallback(ConfigFactory.load("stats1"));
-
-		ACTOR_SYSTEM = ActorSystem.create("TrainingAkkaSystem", config);
-	}
+//	public static ActorSystem ACTOR_SYSTEM = null;
+//	static{
+//		Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port=2551")
+//				.withFallback(ConfigFactory.parseString("akka.cluster.roles = [compute]"))
+//				.withFallback(ConfigFactory.load("stats1"));
+//
+//		ACTOR_SYSTEM = ActorSystem.create("ClusterSystem", config);
+//	}
 	
 	
 	
@@ -186,8 +186,8 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 		// ScriptHelper.run(ScriptHelper.RUN_WEB_APP);
 		System.out.println("Hi tani");
 
-//		ActorSystem actorSystem = ctx.getBean(ActorSystem.class);
-		// SpringExtension springExtension = ctx.getBean(SpringExtension.class);
+		ActorSystem actorSystem = ctx.getBean(ActorSystem.class);
+		SpringExtension springExtension = ctx.getBean(SpringExtension.class);
 
 		// final ActorMaterializer materializer =
 		// ActorMaterializer.create(system);
@@ -197,12 +197,12 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 		// logger.info("Main Akka server up");
 		// AkkaSystemStarter.main(new String[0]);
 
-		// ActorRef trainingServiceActor =
-		// actorSystem.actorOf(springExtension.props("TrainingServiceActor"),"trainingServiceActor1");
+//		 ActorRef trainingServiceActor =
+		 actorSystem.actorOf(springExtension.props("TrainingServiceActor"),"trainingServiceActor");
 		// actorSystem.actorOf(springExtension.props("TrainingServiceActor"),"trainingServiceRouter");
 		// actorSystem.actorOf(springExtension.props("TrainingServiceActor"),"trainingServiceRouter");
 
-//		Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port=2552")
+//		Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port=2551")
 //				.withFallback(ConfigFactory.parseString("akka.cluster.roles = [compute]"))
 //				.withFallback(ConfigFactory.load("stats1"));
 //
@@ -212,8 +212,7 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 		// ActorRef workerRouter = system.actorOf(
 		// FromConfig.getInstance().props(Props.create(StatsWorker.class)),
 		// "workerRouter");
-		ActorRef workerRouter = ACTOR_SYSTEM.actorOf(Props.create(StatsWorker.class), "workerRouter");
-		ACTOR_SYSTEM.actorOf(Props.create(StatsWorker.class), "workerActor1");
+//		ActorRef workerRouter = ACTOR_SYSTEM.actorOf(Props.create(StatsWorker.class), "workerRouter");
 
 		// FiniteDuration duration = FiniteDuration.create(3, TimeUnit.SECONDS);
 		// Future<Object> result = ask(counter, new Get(),
