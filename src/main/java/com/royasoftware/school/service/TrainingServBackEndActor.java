@@ -4,6 +4,7 @@ import static akka.pattern.PatternsCS.pipe;
 
 import java.util.Collection;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +16,8 @@ import com.royasoftware.school.model.Training;
 import com.royasoftware.school.service.TrainingServFrEndActor.GetTrainings;
 import com.royasoftware.school.service.TrainingServFrEndActor.Trainings;
 
+//import sample.cluster.factorial.FactorialResult;
+
 
 @Component("TrainingServBackEndActor")
 @Scope("prototype")
@@ -25,8 +28,6 @@ public class TrainingServBackEndActor extends AkkaAppActor {
 	private TrainingService trainingService;
 
 	public TrainingServBackEndActor() {
-//		logger.info("###########################################TrainingServBackEndActor constructor "
-//				+ new Random().nextInt());
 	}
 
 	@Override
@@ -45,15 +46,11 @@ public class TrainingServBackEndActor extends AkkaAppActor {
 	private void generalMessageProcessor(AkkaAppMsg msg) {
 		setTenantContext(msg);
 		if (msg instanceof GetTrainings) {
-			logger.info("Get Training list on TrainingServBackEndActor");
+			logger.debug("Get Training list on TrainingServBackEndActor");
 			Collection<Training> trainingColl = trainingService.findAll();
-//			logger.info("TrainingServBackEndActor. trainingColl size ="+trainingColl.size()); 
-//			logger.info("Send it to controller");
-//			pipe(result, getContext().dispatcher()).to(sender());
 			sender().tell(trainingColl, getSelf());
-//			sender().tell("Hey from TrainingServBackEndActor", getSelf());
-			
-
+//			CompletableFuture<Collection<Training>> result = CompletableFuture.supplyAsync(() -> trainingService.findAll());
+//			pipe(result, getContext().dispatcher()).to(sender());
 		} else if (msg instanceof Message) {
 			logger.info("BackEnd Got this message : " + ((Message) msg).getMessage()
 					+ ". Sending Hey back.");
