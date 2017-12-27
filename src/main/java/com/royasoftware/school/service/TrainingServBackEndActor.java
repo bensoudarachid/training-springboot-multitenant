@@ -34,11 +34,6 @@ public class TrainingServBackEndActor extends AkkaAppActor {
 	public Receive createReceive() {
 		return receiveBuilder()
 				.match(AkkaAppMsg.class, this::generalMessageProcessor).match(String.class, msg -> {
-
-			logger.info("Send Hallo to ");
-			// Collection<Training> trainingColl
-//			Training tr = trainingService.findById(1l);
-//			logger.info("I got a training tr=" + tr);
 			getSender().tell("Hey from TrainingServBackEndActor", getSelf());
 		}).build();
 	}
@@ -49,14 +44,12 @@ public class TrainingServBackEndActor extends AkkaAppActor {
 			logger.debug("Get Training list on TrainingServBackEndActor");
 			Collection<Training> trainingColl = trainingService.findAll();
 			sender().tell(trainingColl, getSelf());
+			//This doesnt work because of tenant threadlocal propagation... again
 //			CompletableFuture<Collection<Training>> result = CompletableFuture.supplyAsync(() -> trainingService.findAll());
 //			pipe(result, getContext().dispatcher()).to(sender());
 		} else if (msg instanceof Message) {
 			logger.info("BackEnd Got this message : " + ((Message) msg).getMessage()
 					+ ". Sending Hey back.");
-//			Collection<Training> trainingColl = trainingService.findAll();
-//			sender().tell("Hey from TrainingServBackEndActor", getSelf());
-//			sender().tell(new Trainings(trainingColl), getSelf());
 			Training training = trainingService.findById(1l);
 			sender().tell(training, getSelf());
 		}

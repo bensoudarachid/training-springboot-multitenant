@@ -17,7 +17,7 @@
 	</parent>
 	<properties>
 		<!-- The main class to start by executing java -jar -->
-		<start-class>com.royasoftware.MyBootSpring</start-class>
+		<start-class>com.royasoftware.school.MyBootSpring</start-class>
 		<com.typesafe.akka.version>2.5.4</com.typesafe.akka.version>
 	</properties>
 	<dependencies>
