@@ -28,17 +28,27 @@
 		</RollingFile>
 	</Appenders>
 	<Loggers>
+		<Logger name="com.royasoftware.school.service" level="info" includeLocation="true"
+			additivity="false">
+			<AppenderRef ref="SlowConsole" />
+			<AppenderRef ref="RollingFile" />
+		</Logger>
+		<Logger name="com.royasoftware.school.rest" level="info" includeLocation="true"
+			additivity="false">
+			<AppenderRef ref="SlowConsole" />
+			<AppenderRef ref="RollingFile" />
+		</Logger>
+		
 		<Logger name="com.royasoftware" level="info" includeLocation="true"
 			additivity="false">
 			<AppenderRef ref="SlowConsole" />
 			<AppenderRef ref="RollingFile" />
 		</Logger>
+		
 		<Logger name="com.memorynotfound" level="debug" />
 		<Logger name="org.hibernate" level="error" />
 		<Logger name="org.springframework" level="error" />
-		<!-- <Logger name="com.memorynotfound" level="debug"/> <Logger name="org.hibernate" 
-			level="error"/> <Logger name="org.springframework" level="error"/> -->
-		<Root level="info">
+		<Root level="info" >
 			<AppenderRef ref="RollingFile" />
 			<AppenderRef ref="FastConsole" />
 		</Root>
