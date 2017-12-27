@@ -1,5 +1,6 @@
 package sample.cluster;
 
+import akka.actor.AbstractActor;
 import akka.actor.Actor;
 import akka.actor.IndirectActorProducer;
 
@@ -36,9 +37,12 @@ public class SpringActorProducer implements IndirectActorProducer {
 //	        }
 //	    };	
 //	  th.get().putAll(origThreadHashMap);
+	   
 	  TenantContext.setTenantContextThreadLocalMap(origThreadHashMap);
-//	  logger.info("**************************************SpringActorProducer after "+ TenantContext.getCurrentTenant());
 	  Actor ac =  (Actor) applicationContext.getBean(actorBeanName);
+	  
+	  
+	  logger.info("**************************************SpringActorProducer " + actorBeanName+": "+ac);
 	  return ac;
   }
 

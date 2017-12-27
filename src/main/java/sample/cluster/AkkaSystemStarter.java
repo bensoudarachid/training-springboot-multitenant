@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.CompletionStage;
 
+import org.hibernate.cfg.Configuration;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import com.royasoftware.MyBootSpring;
 import com.royasoftware.repository.TrainingRepository;
+import com.royasoftware.script.ScriptHelper;
 import com.royasoftware.service.TrainingService;
 //import com.royasoftware.settings.configuration.AkkaSystemConfig;
 import com.typesafe.config.Config;
@@ -30,6 +32,7 @@ import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.Flow;
+import sample.cluster.factorial.FactorialBackend;
 import sample.cluster.stats.StatsWorker;
 import sample.config.AkkaSpringConfig;
 
@@ -74,9 +77,32 @@ public class AkkaSystemStarter  {
         
         ctx.refresh();		
 		logger.info("context=" + ctx);
+		new Configuration().configure( "/hibernate.cfg.xml").buildSessionFactory();
 
+
+
+//	    system.actorOf(Props.create(FactorialBackend.class), "factorialBackend");
+
+//	    system.actorOf(Props.create(MetricsListener.class), "metricsListener");
+			ActorSystem actorSystem = ctx.getBean(ActorSystem.class);
+			SpringExtension springExtension = ctx.getBean(SpringExtension.class);
+
+			// final ActorMaterializer materializer =
+			// ActorMaterializer.create(system);
+			// ActorRef userRegistryActor =
+			// system.actorOf(SpringExtProvider.get(system).props("UserRegistryActor"),
+			// "userRegistry");
+			// logger.info("Main Akka server up");
+			// AkkaSystemStarter.main(new String[0]);
+
+//			 ActorRef trainingServiceActor =
+			 actorSystem.actorOf(springExtension.props("TrainingServBackEndActor"),"trainingServBackEndActor");
+//			 actorSystem.actorOf(springExtension.props("TrainingServBackEndActor"),"trainingServBackEndActor2");
 		
-		
+
+	      
+	      
+	      
 		//		TrainingService trainingService = ctx.getBean(TrainingService.class); // ctx.getBean(TrainingService.class);
 //		logger.info("trainingService.sayHello()="+trainingService.sayHello());
 //		TrainingRepository trainingRepo = ctx.getBean(TrainingRepository.class); // ctx.getBean(TrainingService.class);
@@ -108,6 +134,7 @@ public class AkkaSystemStarter  {
 //		ActorRef trainingServiceActor = actorSystem.actorOf(springExtension.props("TrainingServiceActor"));
 		logger.info("Help Akka server up");
 //		System.out.println("Server online at http://localhost:8070/\nPress RETURN to stop...");
+		ScriptHelper.run(ScriptHelper.REFRESH_WEB_APP);
 		try {
 			System.in.read(); // let it run until user presses return
 		} catch (IOException e) {

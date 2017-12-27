@@ -1,5 +1,6 @@
 package com.royasoftware.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import java.util.Set;
@@ -30,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @NamedQuery(query = "SELECT tr FROM Training tr WHERE tr.id = :trainingid", name = "query_find_training_by_id")
-public class Training {
+public class Training implements Serializable{
 	@Transient
 	static private Logger logger = LoggerFactory.getLogger(Training.class);
 	

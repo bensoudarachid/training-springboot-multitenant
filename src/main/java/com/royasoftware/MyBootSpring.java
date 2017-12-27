@@ -25,7 +25,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
@@ -38,7 +40,7 @@ import org.springframework.web.servlet.view.script.ScriptTemplateConfigurer;
 import org.springframework.web.servlet.view.script.ScriptTemplateViewResolver;
 
 import com.royasoftware.script.ScriptHelper;
-import com.royasoftware.service.TrainingServiceActor;
+import com.royasoftware.service.TrainingServFrEndActor;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
@@ -68,6 +70,8 @@ import scala.concurrent.duration.FiniteDuration;
 @SpringBootApplication
 // SpringBootApplication replaces: @Configuration @ComponentScan
 // @EnableAutoConfiguration
+@EnableAspectJAutoProxy
+
 @EnableScheduling
 @ComponentScan(basePackages = { "sample", "com.royasoftware" })
 // @ComponentScan(basePackages={"com.royasoftware"})
@@ -81,17 +85,17 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		return builder.sources(MyBootSpring.class);
 	}
-//	public static ActorSystem ACTOR_SYSTEM = null;
-//	static{
-//		Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port=2551")
-//				.withFallback(ConfigFactory.parseString("akka.cluster.roles = [compute]"))
-//				.withFallback(ConfigFactory.load("stats1"));
-//
-//		ACTOR_SYSTEM = ActorSystem.create("ClusterSystem", config);
-//	}
-	
-	
-	
+	// public static ActorSystem ACTOR_SYSTEM = null;
+	// static{
+	// Config config =
+	// ConfigFactory.parseString("akka.remote.netty.tcp.port=2551")
+	// .withFallback(ConfigFactory.parseString("akka.cluster.roles =
+	// [compute]"))
+	// .withFallback(ConfigFactory.load("stats1"));
+	//
+	// ACTOR_SYSTEM = ActorSystem.create("ClusterSystem", config);
+	// }
+
 	static private void writeDemoDataToUserStorage(String tenant) {
 		try {
 
@@ -174,6 +178,10 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 	}
 
 	public static void main(String[] args) {
+		Thread t = new Thread(() -> {
+			AkkaSystemStarter.main(new String[0]);
+		});
+		t.start();
 		Properties props = System.getProperties();
 		// System property is needed for the async disruptor logger.
 		props.setProperty("log4j2.contextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
@@ -195,24 +203,26 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 		// system.actorOf(SpringExtProvider.get(system).props("UserRegistryActor"),
 		// "userRegistry");
 		// logger.info("Main Akka server up");
+
+		actorSystem.actorOf(springExtension.props("TrainingServFrEndActor"), "trainingServFrEndActor");
+
 		// AkkaSystemStarter.main(new String[0]);
+		logger.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++I m Done!");
+		// Config config =
+		// ConfigFactory.parseString("akka.remote.netty.tcp.port=2551")
+		// .withFallback(ConfigFactory.parseString("akka.cluster.roles =
+		// [compute]"))
+		// .withFallback(ConfigFactory.load("stats1"));
+		//
+		// ActorSystem system = ActorSystem.create("ClusterSystem", config);
 
-//		 ActorRef trainingServiceActor =
-		 actorSystem.actorOf(springExtension.props("TrainingServiceActor"),"trainingServiceActor");
-		// actorSystem.actorOf(springExtension.props("TrainingServiceActor"),"trainingServiceRouter");
-		// actorSystem.actorOf(springExtension.props("TrainingServiceActor"),"trainingServiceRouter");
-
-//		Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port=2551")
-//				.withFallback(ConfigFactory.parseString("akka.cluster.roles = [compute]"))
-//				.withFallback(ConfigFactory.load("stats1"));
-//
-//	    ActorSystem system = ActorSystem.create("ClusterSystem", config);
-
-//		actorSystem.actorOf(Props.create(StatsWorker.class), "statsWorker1");
+		// actorSystem.actorOf(Props.create(StatsWorker.class), "statsWorker1");
 		// ActorRef workerRouter = system.actorOf(
 		// FromConfig.getInstance().props(Props.create(StatsWorker.class)),
 		// "workerRouter");
-//		ActorRef workerRouter = ACTOR_SYSTEM.actorOf(Props.create(StatsWorker.class), "workerRouter");
+		// ActorRef workerRouter =
+		// ACTOR_SYSTEM.actorOf(Props.create(StatsWorker.class),
+		// "workerRouter");
 
 		// FiniteDuration duration = FiniteDuration.create(3, TimeUnit.SECONDS);
 		// Future<Object> result = ask(counter, new Get(),

@@ -11,7 +11,10 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +36,7 @@ import scala.concurrent.duration.FiniteDuration;
  */
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+//@Scope("prototype")
 public class TrainingServiceBean implements TrainingService {
 
 	/**

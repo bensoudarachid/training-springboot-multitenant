@@ -19,9 +19,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -33,7 +34,6 @@ import org.apache.batik.util.XMLResourceDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,25 +48,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 
-import com.royasoftware.MyBootSpring;
 import com.royasoftware.TenantContext;
 import com.royasoftware.model.Training;
+import com.royasoftware.service.TrainingServFrEndActor;
+import com.royasoftware.service.TrainingServFrEndActor.Trainings;
 import com.royasoftware.service.TrainingService;
-import com.royasoftware.service.TrainingServiceActor;
-import com.royasoftware.service.TrainingServiceActor.GetTrainings;
-import com.royasoftware.service.TrainingServiceActor.Trainings;
 import com.royasoftware.settings.security.CustomUserDetails;
 
-import akka.actor.ActorRef;
 import akka.actor.ActorSelection;
 import akka.actor.ActorSystem;
 import akka.pattern.Patterns;
-import akka.routing.FromConfig;
-import akka.routing.ConsistentHashingRouter.ConsistentHashableEnvelope;
 import akka.util.Timeout;
 import sample.cluster.SpringExtension;
-import sample.cluster.factorial.FactorialBackend;
-import sample.cluster.stats.StatsMessages;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
@@ -395,14 +388,28 @@ public class TrainingController extends BaseController {
 		// false,id:
 		// 24},{task: 'ya do it 7bayby',isCompleted: false,id: 25}]}";
 //		logger.info("**************************************TrainingController "+ TenantContext.getCurrentTenant());
-//		ActorRef trainingServiceActor = actorSystem.actorOf(FromConfig.getInstance().props(), "factorialBackendRouter");
-		
-//		ActorRef trainingServiceActor = actorSystem.actorOf(springExtension.props("TrainingServiceActor"));
-		ActorSelection trainingServiceActor = actorSystem.actorSelection("/user/trainingServiceActor");
+		ActorSelection trainingServFrEndActor = actorSystem.actorSelection("/user/trainingServFrEndActor");
 		Timeout timeout = new Timeout(Duration.create(5, "seconds"));
-		Future<Object> future = Patterns.ask(trainingServiceActor, new TrainingServiceActor.GetTrainings(), timeout);
-		Trainings trainings= (Trainings) Await.result(future, timeout.duration());
-		Collection<Training> trainingList = trainings.getTrainings();
+
+		Future<Object> future = Patterns.ask(trainingServFrEndActor, new TrainingServFrEndActor.GetTrainings(), timeout);
+//		Trainings trainings= (Trainings) Await.result(future, timeout.duration());
+//		Vector<Training> trainingList = trainings.getTrainings();
+		ArrayList<Training> trainingList = (ArrayList<Training>) Await.result(future, timeout.duration());
+		logger.info("trainingList="+trainingList.size()); 
+
+//		future = Patterns.ask(trainingServFrEndActor, new TrainingServFrEndActor.Message("Controller. Hi"), timeout);
+//		String mesgBack= (String) Await.result(future, timeout.duration());
+//		logger.info("Controller got mesg Back = "+mesgBack); 
+
+//		future = Patterns.ask(trainingServFrEndActor, new TrainingServFrEndActor.Message("Controller. Hi"), timeout);
+//		Trainings trainings2= (Trainings) Await.result(future, timeout.duration());
+//		Vector<Training> trainingList2 = trainings.getTrainings();
+//		logger.info("mesgBack="+trainingList2.firstElement()); 
+
+//		future = Patterns.ask(trainingServFrEndActor, new TrainingServFrEndActor.Message("Controller. Hi"), timeout);
+//		Training training= (Training) Await.result(future, timeout.duration());
+//		logger.info("mesgBack="+training); 
+		
 		
 //		ActorSelection workerRouter = MyBootSpring.ACTOR_SYSTEM.actorSelection("/user/workerRouter");
 //		Timeout timeout = new Timeout(Duration.create(5, "seconds"));

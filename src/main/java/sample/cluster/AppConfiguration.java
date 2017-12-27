@@ -20,6 +20,7 @@ import com.typesafe.config.ConfigFactory;
  */
 @Configuration
 class AppConfiguration {
+	private static Logger logger = LoggerFactory.getLogger(AppConfiguration.class);
 //	private static Logger logger = LoggerFactory.getLogger(AppConfiguration.class);
 	// the application context is needed to initialize the Akka Spring Extension
 	@Autowired
@@ -29,17 +30,20 @@ class AppConfiguration {
 
 	@Bean
 	public ActorSystem actorSystem(@Value("${akka.server.port}") String port) {
-		System.out.println("----------------------------> Create TrainingAkkaSystem mainActorSystem on port: "+port); 
+		System.out.println("----------------------------> Create ClusterSystem mainActorSystem on port: "+port); 
 		ActorSystem system = null;
 //		if( port.equals("2551"))
 		
 //	    final  Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port=88" )
 //	    		.withFallback(ConfigFactory.load("stats1"));
-
+		String role = "backend"; 
+		if( port.equals("2551") )
+			role = "frontend";
+		logger.info("role="+role); 
 		final Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port="+port)
-				.withFallback(ConfigFactory.parseString("akka.cluster.roles = [backend]"))
+				.withFallback(ConfigFactory.parseString("akka.cluster.roles = ["+role+"]"))
 				.withFallback(ConfigFactory.load("factorial"));
-			system = ActorSystem.create("TrainingAkkaSystem", config);
+			system = ActorSystem.create("ClusterSystem", config);
 //		else
 //			System.out.println("----------------------------> Create mainActorSystem on port iwa?: "+port);
 		// initialize the application context in the Akka Spring Extension

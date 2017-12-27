@@ -6,7 +6,7 @@
         <!-- DataSource & Connection info. -->
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/abibis</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/sql3210912</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">1qay2wsx</property>
         <property name="hibernate.connection.pool_size">1</property>

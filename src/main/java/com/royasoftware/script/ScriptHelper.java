@@ -47,6 +47,8 @@ public abstract class ScriptHelper {
 	static public final int ACTUAL_ACTION_SERVICES = 22;
 	static public final int ALERT_DEFENSE_CLOSER = 23;
 	static public final int RUN_WEB_APP = 24;
+	static public final int REFRESH_WEB_APP = 25;
+	
 
 	// static public final int IMEXFRAME_START = 15;
 	// static public final int ANIMALINFOFRAME_START = 16;
@@ -206,6 +208,10 @@ public abstract class ScriptHelper {
 			case RUN_WEB_APP:
 				process = Runtime.getRuntime().exec(
 						"C:\\Programme\\AutoIt3\\AutoIt3.exe D:\\RP\\Tests\\SpringBoot_Training\\relaunchwebapp.au3");
+				break;
+			case REFRESH_WEB_APP:
+				process = Runtime.getRuntime().exec(
+						"C:\\Programme\\AutoIt3\\AutoIt3.exe C:\\MyAutoItMacros\\chrome\\refresh.au3");
 				break;
 
 			default:

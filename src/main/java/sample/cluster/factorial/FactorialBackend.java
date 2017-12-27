@@ -1,11 +1,18 @@
 package sample.cluster.factorial;
 
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.royasoftware.model.Training;
+import com.royasoftware.service.TrainingService;
 
 import akka.actor.AbstractActor;
 import sample.cluster.stats.StatsWorker;
@@ -14,8 +21,13 @@ import sample.cluster.transformation.TransformationMessages.TransformationResult
 
 import static akka.pattern.PatternsCS.pipe;
 
+@Component("FactorialBackendActor")
+@Scope("prototype")
 public class FactorialBackend extends AbstractActor {
 	static Logger logger = LogManager.getLogger(StatsWorker.class.getName());
+
+	@Autowired(required = false)
+	private TrainingService trainingService;
 
 	public FactorialBackend() {
 		logger.info("###########################################FactorialBackend constructor " + new Random().nextInt());
@@ -36,8 +48,11 @@ public class FactorialBackend extends AbstractActor {
 //			sender().tell(result, self());
 			
 		}).match(String.class, msg -> {
-			logger.info("Hallo "+msg);
-			sender().tell("Hallo "+msg, self());
+			logger.info("Hallo from Backend.");
+			//Collection<Training> trainingColl 
+			Training tr = trainingService.findById(1l);
+			logger.info("I got a training tr="+tr); 
+			sender().tell("Hey from Backend", getSelf());
 		}).build();
 	}
 

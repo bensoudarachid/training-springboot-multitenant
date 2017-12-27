@@ -31,7 +31,7 @@ public class TrainingDAO {
 
 //	Query("SELECT tr FROM Training tr WHERE tr.id = :trainingid")
 	public Training findById(Long id) { //@Param("trainingid") 
-		TypedQuery<Training> query = em.createNamedQuery("query_find_training_by_id", Training.class);
+		TypedQuery<Training> query = em.createQuery("SELECT tr FROM Training tr WHERE tr.id = :trainingid", Training.class);
 		query.setParameter("trainingid", id);
 		return query.getSingleResult();
 	}

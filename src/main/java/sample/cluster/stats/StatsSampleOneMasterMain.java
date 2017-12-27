@@ -42,8 +42,7 @@ public class StatsSampleOneMasterMain {
       ClusterSingletonProxySettings proxySettings =
           ClusterSingletonProxySettings.create(system).withRole("compute");
       
-      system.actorOf(ClusterSingletonProxy.props("/user/statsService",
-          proxySettings), "statsServiceProxy");
+      system.actorOf(ClusterSingletonProxy.props("/user/statsService", proxySettings), "statsServiceProxy");
     }
 
   }
