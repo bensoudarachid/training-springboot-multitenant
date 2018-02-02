@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JOptionPane;
 
@@ -54,6 +55,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 //import ch.qos.logback.core.status.Status;
+
+import com.google.common.util.concurrent.Uninterruptibles;
 
 /**
  * A simple client test tool.
@@ -293,7 +296,7 @@ public class LetsencryptMonitor {
 		challenge.trigger();
 
 		// Poll for the challenge to complete.
-		try {
+//		try {
 			int attempts = 10;
 			while (challenge.getStatus() != Status.VALID && attempts-- > 0) {
 				// Did the authorization fail?
@@ -303,15 +306,16 @@ public class LetsencryptMonitor {
 				}
 
 				// Wait for a few seconds
-				Thread.sleep(1000);
+//				Thread.sleep(1000);
+				Uninterruptibles.sleepUninterruptibly(1000, TimeUnit.MILLISECONDS);
 
 				// Then update the status
 				challenge.update();
 			}
-		} catch (InterruptedException ex) {
-			logger.error("interrupted", ex);
-			Thread.currentThread().interrupt();
-		}
+//		} catch (InterruptedException ex) {
+//			logger.error("interrupted", ex);
+//			Thread.currentThread().interrupt();
+//		}
 
 		// All reattempts are used up and there is still no valid authorization?
 		if (challenge.getStatus() != Status.VALID) {

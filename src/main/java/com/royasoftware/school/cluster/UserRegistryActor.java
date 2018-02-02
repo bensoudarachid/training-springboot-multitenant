@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.royasoftware.school.repository.TrainingDAO;
+import com.royasoftware.school.repository.TrainingRepositoryImpl;
 import com.royasoftware.school.repository.TrainingRepository;
 import com.royasoftware.school.service.TrainingService;
 

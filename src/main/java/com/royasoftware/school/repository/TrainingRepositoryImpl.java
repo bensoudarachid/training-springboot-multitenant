@@ -1,15 +1,13 @@
 package com.royasoftware.school.repository;
 
-import java.util.Collection;
-import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.royasoftware.school.model.Account;
-import com.royasoftware.school.model.Todo;
 import com.royasoftware.school.model.Training;
 
 /**
@@ -19,7 +17,9 @@ import com.royasoftware.school.model.Training;
  * behaviors may be defined in this interface.
  */
 @Repository
-public interface TrainingRepository extends JpaRepository<Training, Long>, TrainingRepositoryCustom {
+public class TrainingRepositoryImpl implements TrainingRepositoryCustom{
+	@PersistenceContext
+	private EntityManager em;
 
 	/**
 	 * Query for a single Account entity by username.
@@ -29,8 +29,11 @@ public interface TrainingRepository extends JpaRepository<Training, Long>, Train
 	 * @return An Account or <code>null</code> if none found.
 	 */
 
-//	@Query("SELECT tr FROM Training tr WHERE tr.id = :trainingid")
-//	Training findById(@Param("trainingid") Long id);
-
+//	Query("SELECT tr FROM Training tr WHERE tr.id = :trainingid")
+	public Training findById(Long id) { //@Param("trainingid") 
+		TypedQuery<Training> query = em.createQuery("SELECT tr FROM Training tr WHERE tr.id = :trainingid", Training.class);
+		query.setParameter("trainingid", id);
+		return query.getSingleResult();
+	}
 
 }

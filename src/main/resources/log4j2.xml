@@ -5,19 +5,16 @@
 	</Properties>
 	<Appenders>
 		<Appender type="Console" name="FastConsole">
-			
 			<Layout type="PatternLayout" pattern="%d{MM-dd HH:mm} %-80m%n" />
 		</Appender>
+
 		<Console name="SlowConsole" target="SYSTEM_OUT">
-			
-			<PatternLayout
-				pattern="%d{HH:mm} %-5level %-120m (%F:%L)%n" />
+			<PatternLayout pattern="%d{HH:mm} %-5level %-120m (%F:%L)%n" />
 		</Console>
 		<!-- <Appender type="File" name="File" fileName="${filename}"> <Layout 
 			type="PatternLayout" pattern="%d{MM-dd HH:mm} %-80m (%F:%M:%L)%n" /> </Appender> -->
 		<RollingFile name="RollingFile" fileName="${log-path}/trainingapp.log"
 			filePattern="${log-path}/trainingapp-%d{yyyy-MM-dd}-%i.log.zip">
-			
 			<PatternLayout>
 				<pattern>%d{dd/MMM/yyyy HH:mm:ss}- %c{1}: %m%n</pattern>
 			</PatternLayout>

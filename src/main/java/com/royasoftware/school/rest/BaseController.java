@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 import javax.persistence.NoResultException;
@@ -27,33 +28,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 //import org.springframework.web.multipart.MultipartException;
 
-import com.google.common.net.InternetDomainName;
-import com.royasoftware.school.TenantContext;
+import com.google.common.util.concurrent.Uninterruptibles;
 
 /**
  * Base of all controllers
  */
 public class BaseController {
 	
-	/**
-	 * The Logger for this class.
-	 */
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private HttpServletRequest request;
 
-
-//	ResponseEntity<Map<String, Object>>
 	@ExceptionHandler(NoResultException.class)
 	public @ResponseBody ExceptionJSONInfo handleNoResultException(NoResultException noResultException,
 			HttpServletRequest request) {
 
 		logger.info("handleNoResultException");
 
-//		ExceptionAttributes exceptionAttributes = new DefaultExceptionAttributes();
-//
-//		Map<String, Object> responseBody = exceptionAttributes.getExceptionAttributes(noResultException, request,
-//				HttpStatus.NOT_FOUND);
 
 		ExceptionJSONInfo response = new ExceptionJSONInfo();
 		response.setUrl(request.getRequestURL().toString());
@@ -62,60 +53,21 @@ public class BaseController {
 
 		logger.info("handleNoResultException");
 		return response;
-//		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.NOT_FOUND);
 	}
-	// @ExceptionHandler(NoResultException.class)
-	// @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	// public @ResponseBody ExceptionJSONInfo handleNoResultException(
-	// NoResultException noResultException, HttpServletRequest request) {
-	//
-	// ExceptionJSONInfo response = new ExceptionJSONInfo();
-	// response.setUrl(request.getRequestURL().toString());
-	// response.setMessage("No result found");
-	// return response;
-	// }
 
-	//ResponseEntity<Map<String, Object>>
 	@ExceptionHandler(Exception.class)
 	public @ResponseBody ExceptionJSONInfo handleException(Exception exception, HttpServletRequest request) {
 
-//		logger.error("Base controller Exception handler > handleException");
 		logger.error("Exception handler. ", getMessage(exception));
 		exception.printStackTrace();
-//		ExceptionAttributes exceptionAttributes = new DefaultExceptionAttributes();
-//
-//		Map<String, Object> responseBody = exceptionAttributes.getExceptionAttributes(exception, request,
-//				HttpStatus.INTERNAL_SERVER_ERROR);
 
 		ExceptionJSONInfo response = new ExceptionJSONInfo();
 		response.setUrl(request.getRequestURL().toString());
 		response.setErrorDescription(getMessage(exception));
 		response.setError(exception.getClass().getName());
-//		logger.error("< handleException");
 		return response;
 
-//		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	// @ExceptionHandler(Exception.class)
-	// @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	// public @ResponseBody ExceptionJSONInfo handleException(
-	// Exception exception, HttpServletRequest request) {
-	//
-	// ExceptionJSONInfo response = new ExceptionJSONInfo();
-	// response.setUrl(request.getRequestURL().toString());
-	// response.setMessage(exception.getMessage());
-	// return response;
-	// }
-//	@ExceptionHandler(SizeLimitExceededException.class)
-//	@ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
-//	public @ResponseBody ExceptionJSONInfo handleSizeLimitExceededException(HttpServletRequest request, Exception ex) {
-//		System.out.println("Ok now. Here is the SizeLimitExceededException handler." + ex.getClass().getName()
-//				+ ". message=" + ex.getMessage());
-//		ExceptionJSONInfo response = new ExceptionJSONInfo();
-//		response.setUrl(request.getRequestURL().toString());
-//		response.setErrorDescription("Size limit Violation");
-//		return response;
-//	}
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -196,17 +148,6 @@ public class BaseController {
 		}
 		return e1;
 	}
-//	protected String getSubdomain() throws Exception{
-//		String site = request.getServerName();
-//        String domain = InternetDomainName.from(request.getServerName()).topPrivateDomain().toString();
-//        String subdomain = site.replaceAll(domain, "");
-//        subdomain = subdomain.substring(0, subdomain.length() - 1);
-//        logger.info("Base controller. Subdomain = " + subdomain);
-//        if(subdomain.contains("."))
-//        	throw new Exception("Mammaaaaa! Sub with point is not allowed");
-//		TenantContext.setCurrentTenant(subdomain);
-//      return subdomain;
-//	}
 	protected BufferedImage generatePngFromSvg(File file, Integer width, Integer height) throws Exception {
 		FileInputStream fr = new FileInputStream(file);
 		TranscoderInput input_svg_image = new TranscoderInput(fr);
@@ -226,8 +167,6 @@ public class BaseController {
 		byte[] ret = png_ostream.toByteArray();
 		png_ostream.close();
 
-		// ByteArrayInputStream is = new ByteArrayInputStream(ret);
-
 		return ImageIO.read(new ByteArrayInputStream(ret));
 	}
 	
@@ -238,18 +177,13 @@ public class BaseController {
 		RDM_TIME = false;
 		RDM_SUCCESS = false;
 
-		if (RDM_TIME)
-			try {
+		if (RDM_TIME){
 				Random rand = new Random();
 				int random = rand.nextInt(100);
-				Thread.sleep(50 * random);
+				Uninterruptibles.sleepUninterruptibly(50 * random, TimeUnit.MILLISECONDS);
 				if (RDM_SUCCESS && random > 50)
 					throw new Exception("Random Rejection"); //
-			} catch (InterruptedException e) {
-				// Training Auto-generated catch block
-				e.printStackTrace();
-			}
-		// return true;
+		}
 	}
 
 }

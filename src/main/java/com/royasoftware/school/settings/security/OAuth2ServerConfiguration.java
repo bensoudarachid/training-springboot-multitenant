@@ -55,7 +55,8 @@ public class OAuth2ServerConfiguration {
 //                    .anonymous().and()
                     .authorizeRequests()
 //                    .antMatchers(HttpMethod.OPTIONS,"*").permitAll()
-//                    .antMatchers("/api/todo/img/**").permitAll()
+//                    .antMatchers("/").permitAll()
+//                    .antMatchers("/console/**").permitAll()
 //                    .antMatchers("/api/**").authenticated()//.hasAnyRole("ROLE_USER")//
 //            		.antMatchers("/**").authenticated()
                     .and()

@@ -1,7 +1,7 @@
 package com.royasoftware.school.settings.security;
 
 import java.util.Random;
-
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import com.google.common.util.concurrent.Uninterruptibles;
 
 @Component
 public class AccountAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider{
@@ -53,13 +55,14 @@ public class AccountAuthenticationProvider extends AbstractUserDetailsAuthentica
 
     @Override
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken token) throws AuthenticationException {
-//        logger.info("RetrieveUser");
+        logger.info("RetrieveUser");
 //		//Simulate delay of a real network connection to see the animation on front end 
 //		try {
 //			Thread.sleep(1000);
 //		} catch (InterruptedException e) {
 //			e.printStackTrace();
 //		}
+//    	Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
         logger.info("< retrieveUser");

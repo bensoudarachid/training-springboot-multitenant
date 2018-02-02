@@ -22,22 +22,4 @@ public class IsomorphicController {
 		return new ResponseEntity<String>("hi", HttpStatus.OK);
 	}
 
-//    @GetMapping("/{path:(?!.*.js|.*.css|.*.jpg).*$}")
-//    public String index(Model model, HttpServletRequest request) throws JsonProcessingException {
-//        ObjectMapper mapper = new ObjectMapper();
-//
-//        Map<String, Object> req = new HashMap<>();
-//        String root = request.getServletPath().equals("/index.html") ? "/" : request.getServletPath();
-//        if(request.getQueryString() != null)
-//            req.put("location", String.format("%s?%s", root, request.getQueryString()));
-//        else
-//            req.put("location", root);
-//        model.addAttribute("req", mapper.writeValueAsString(req));
-//
-//        Map<String, Object> initialState = new HashMap<>();
-////        initialState.put("items", itemRepository.findAll());
-//        model.addAttribute("initialState", mapper.writeValueAsString(initialState));
-//
-//        return "index";    
-//    }
 }

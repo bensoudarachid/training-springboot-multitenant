@@ -1,5 +1,7 @@
 package com.royasoftware.school;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -7,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.royasoftware.school.repository.MultitenantDbConfiguration;
 
 public class CleanupListener implements ServletContextListener {
@@ -30,15 +33,14 @@ public class CleanupListener implements ServletContextListener {
 	public void initiateShutdown(int returnCode) {
 		// SpringApplication.exit(appContext, () -> returnCode);
 		AnnotationConfigApplicationContext context = null;
-		try {
+//		try {
 			context = new AnnotationConfigApplicationContext(MyBootSpring.class, MultitenantDbConfiguration.class);
-			Thread.sleep(5000);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
+//			Thread.sleep(5000);
+			Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
+//		} finally {
 			if (context != null)
 				context.close();
-		}
+//		}
 
 	}
 

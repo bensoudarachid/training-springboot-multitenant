@@ -44,7 +44,8 @@ import akka.actor.ActorSystem;
 
 @EnableScheduling
 @ComponentScan(basePackages = { "com.royasoftware" })
-@PropertySource(ignoreResourceNotFound = false, value = { "classpath:application.properties","classpath:mainakkaserver.properties" })
+@PropertySource(ignoreResourceNotFound = false, value = { "classpath:application.properties",
+		"classpath:mainakkaserver.properties" })
 
 public class MyBootSpring extends SpringBootServletInitializer implements SchedulingConfigurer {
 	private static Logger logger = LoggerFactory.getLogger(MyBootSpring.class);
@@ -127,23 +128,25 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 	}
 
 	public static void main(String[] args) {
-		Thread t = new Thread(() -> {
-			AkkaSystemStarter.main(new String[0]);
-		});
-		t.start();
+		// Thread t = new Thread(() -> {
+		// AkkaSystemStarter.main(new String[0]);
+		// });
+		// t.start();
 		Properties props = System.getProperties();
 		// System property is needed for the async disruptor logger.
-		props.setProperty("log4j2.contextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
+		props.setProperty("Log4jContextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
 
 		writeDemoDataToUserStorage("demo1");
 		writeDemoDataToUserStorage("demo2");
 		writeDemoDataToUserStorage("abbaslearn");
 
 		ApplicationContext ctx = SpringApplication.run(MyBootSpring.class, args);
-		ActorSystem actorSystem = ctx.getBean(ActorSystem.class);
-		SpringExtension springExtension = ctx.getBean(SpringExtension.class);
-		actorSystem.actorOf(springExtension.props("TrainingServFrEndActor"), "trainingServFrEndActor");
-		ScriptHelper.run(ScriptHelper.REFRESH_WEB_APP);
+		// ActorSystem actorSystem = ctx.getBean(ActorSystem.class);
+		// SpringExtension springExtension = ctx.getBean(SpringExtension.class);
+		// actorSystem.actorOf(springExtension.props("TrainingServFrEndActor"),
+		// "trainingServFrEndActor");
+
+//		ScriptHelper.run(ScriptHelper.REFRESH_WEB_APP);
 
 		logger.info("Spring Boot Server started");
 
@@ -177,18 +180,19 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 		return new ScriptTemplateViewResolver("/static2/", ".html");
 	}
 
-//	@Bean
-//	public ScriptTemplateConfigurer reactConfigurer() {
-//		ScriptTemplateConfigurer configurer = new ScriptTemplateConfigurer();
-//		configurer.setEngineName("nashorn");
-//		configurer.setScripts("static2/polyfill.js", "static2/lib/js/ejs.min.js", "static2/lib/js/react.js",
-//				"static2/render.js",
-//				// "D:/RP/Tests/ReactToDoExp2/node_modules/react-dom/dist/react-dom.js",
-//				// "/META-INF/resources/webjars/react/0.13.1/JSXTransformer.js",
-//				"static/vendor.bundle.js", "static/1.bundle.js", "static2/server.js"
-//		);
-//		configurer.setRenderFunction("render");
-//		configurer.setSharedEngine(false);
-//		return configurer;
-//	}
+	// @Bean
+	// public ScriptTemplateConfigurer reactConfigurer() {
+	// ScriptTemplateConfigurer configurer = new ScriptTemplateConfigurer();
+	// configurer.setEngineName("nashorn");
+	// configurer.setScripts("static2/polyfill.js", "static2/lib/js/ejs.min.js",
+	// "static2/lib/js/react.js",
+	// "static2/render.js",
+	// // "D:/RP/Tests/ReactToDoExp2/node_modules/react-dom/dist/react-dom.js",
+	// // "/META-INF/resources/webjars/react/0.13.1/JSXTransformer.js",
+	// "static/vendor.bundle.js", "static/1.bundle.js", "static2/server.js"
+	// );
+	// configurer.setRenderFunction("render");
+	// configurer.setSharedEngine(false);
+	// return configurer;
+	// }
 }

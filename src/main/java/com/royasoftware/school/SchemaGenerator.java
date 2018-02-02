@@ -156,8 +156,7 @@ public class SchemaGenerator
         }
       }
     } else {
-      throw new ClassNotFoundException(packageName
-          + " is not a valid package");
+      throw new ClassNotFoundException(packageName+ " is not a valid package");
     }
   
     return classes;

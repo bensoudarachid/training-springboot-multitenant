@@ -46,7 +46,7 @@ public class TenantContext {
     		tenantContextThreadLocal.get().put("tenant",tenant);
     	if( !isTenantValid(tenant)){
     		tenantContextThreadLocal.get().put("tenant",null);
-    		throw new Exception("Subdomain "+tenant+" not valid");
+//    		throw new Exception("Subdomain "+tenant+" not valid");
     	}
         tenantContextThreadLocal.get().put("tenant",tenant);
     }

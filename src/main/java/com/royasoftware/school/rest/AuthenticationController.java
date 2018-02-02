@@ -193,7 +193,6 @@ public class AuthenticationController extends BaseController {
 	}
 
 	/**
-	 * 
 	 * Create a new user account
 	 * 
 	 * @param account
@@ -223,28 +222,5 @@ public class AuthenticationController extends BaseController {
 		return new ResponseEntity<String>("ok", HttpStatus.OK);
 	}
 
-	// @ExceptionHandler(DataIntegrityViolationException.class)
-	// @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	// public @ResponseBody ExceptionJSONInfo
-	// handleDataIntegrityException(HttpServletRequest request, Exception ex) {
-	// System.out.println("Ok. Here is the DataIntegrityViolationException
-	// handler."+ex.getClass().getName()+". message="+ex.getMessage());
-	// ExceptionJSONInfo response = new ExceptionJSONInfo();
-	// response.setUrl(request.getRequestURL().toString());
-	// response.setMessage("User exists already");
-	// return response;
-	// }
-	//
-	// @ExceptionHandler(RuntimeException.class)
-	// @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	// public @ResponseBody ExceptionJSONInfo
-	// handleGeneralException(HttpServletRequest request, Exception ex) {
-	// System.out.println("Ok. Here is the general exception
-	// handler."+ex.getClass().getName()+". message="+ex.getMessage());
-	// ExceptionJSONInfo response = new ExceptionJSONInfo();
-	// response.setUrl(request.getRequestURL().toString());
-	// response.setMessage(ex.getMessage());
-	// return response;
-	// }
 
 }

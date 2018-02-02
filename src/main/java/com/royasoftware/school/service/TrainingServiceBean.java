@@ -10,7 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.royasoftware.school.cluster.SpringExtension;
 import com.royasoftware.school.model.Training;
-import com.royasoftware.school.repository.TrainingDAO;
+//import com.royasoftware.school.repository.TrainingRepositoryImpl;
+//import com.royasoftware.school.repository.TrainingRepository;
 import com.royasoftware.school.repository.TrainingRepository;
 
 import akka.actor.ActorSystem;
@@ -25,10 +26,10 @@ public class TrainingServiceBean implements TrainingService {
 	/**
 	 * The Spring Data repository for Account entities.
 	 */
+//	@Autowired(required = false)
+//	private TrainingRepository trainingRepository;
 	@Autowired(required = false)
 	private TrainingRepository trainingRepository;
-	@Autowired(required = false)
-	private TrainingDAO trainingDao;
 	@Autowired
 	private SpringExtension springExtension;
 
@@ -42,7 +43,7 @@ public class TrainingServiceBean implements TrainingService {
 	 */
 	@Override
 	public Training findById(Long id) {
-		Training training = trainingDao.findById(id);
+		Training training = trainingRepository.findById(id);
 		return training;
 	}
 

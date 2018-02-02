@@ -23,15 +23,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
 		response.setErrorDescription("Size limit Violation");
 		return response;
 	}
-//	@ExceptionHandler(JDBCConnectionException.class)
-//	@ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
-//	public @ResponseBody ExceptionJSONInfo connectionTimeoutException(HttpServletRequest request, Exception ex) {
-//		System.out.println("Ok baby now. Connection timeout handler." + ex.getClass().getName()
-//				+ ". message=" + ex.getMessage());
-//		ExceptionJSONInfo response = new ExceptionJSONInfo();
-//		response.setUrl(request.getRequestURL().toString());
-//		response.setErrorDescription("Connection timeout");
-//		return response;
-//	}
     
 }

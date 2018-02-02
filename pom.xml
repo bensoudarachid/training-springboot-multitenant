@@ -89,7 +89,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>18.0</version>
+			<version>23.6-jre</version>
 		</dependency>
 
 		<!-- Dependencies for Actuator Production Monitoring and Management -->
@@ -109,6 +109,11 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		        <scope>compile</scope>
 		</dependency>
 
 		<!-- Views Dependencies -->
@@ -228,7 +233,6 @@
 			<version>${com.typesafe.akka.version}</version>
 		</dependency>
 
-
 		<!-- <dependency> <groupId>org.apache.logging.log4j</groupId> <artifactId>log4j-api</artifactId> 
 			<version>2.7</version> </dependency> <dependency> <groupId>org.apache.logging.log4j</groupId> 
 			<artifactId>log4j-core</artifactId> <version>2.7</version> </dependency> 
@@ -250,7 +254,7 @@
 			<version>2.7</version>
 		</dependency>
 
-		<!-- Async logging -->
+		<!-- Async logging lib. notice the property Log4jContextSelector on program start. Put status=debug in log4j2.xml <Configuration/> to check if Async has been enabled-->
 
 		<dependency>
 			<groupId>com.lmax</groupId>

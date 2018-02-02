@@ -1,6 +1,5 @@
 package com.royasoftware.school.rest;
 
-
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -211,14 +210,12 @@ public class TrainingController extends BaseController {
 	public ResponseEntity<Object> getTrainingsGet(@PathVariable String _param) throws Exception {
 		CustomUserDetails activeUser = TenantContext.getCurrentUser();
 		rdmTimeRdmSuccess();
-		ActorSelection trainingServFrEndActor = actorSystem.actorSelection("/user/trainingServFrEndActor");
-		Timeout timeout = new Timeout(Duration.create(5, "seconds"));
+//		ActorSelection trainingServFrEndActor = actorSystem.actorSelection("/user/trainingServFrEndActor");
+//		Timeout timeout = new Timeout(Duration.create(5, "seconds"));
+//		Future<Object> future = Patterns.ask(trainingServFrEndActor, new TrainingServFrEndActor.GetTrainings(), timeout);
+//		ArrayList<Training> trainingList = (ArrayList<Training>) Await.result(future, timeout.duration());
 
-		//todo: We should implement a proper timeout reaction  
-		Future<Object> future = Patterns.ask(trainingServFrEndActor, new TrainingServFrEndActor.GetTrainings(), timeout);
-		ArrayList<Training> trainingList = (ArrayList<Training>) Await.result(future, timeout.duration());
-//		logger.info("trainingList="+trainingList.size()); 
-
+		
 //		future = Patterns.ask(trainingServFrEndActor, new TrainingServFrEndActor.Message("Controller. Hi"), timeout);
 //		String mesgBack= (String) Await.result(future, timeout.duration());
 //		logger.info("Controller got mesg Back = "+mesgBack); 
@@ -238,7 +235,7 @@ public class TrainingController extends BaseController {
 //		Await.result(future, timeout.duration());
 
 		
-//		Collection<Training> trainingList = trainingService.findAll();
+		Collection<Training> trainingList = trainingService.findAll();
 //		logger.info("Logger ! trainingList size =" + trainingList.size());
 		return new ResponseEntity<Object>(trainingList, HttpStatus.OK);
 	}

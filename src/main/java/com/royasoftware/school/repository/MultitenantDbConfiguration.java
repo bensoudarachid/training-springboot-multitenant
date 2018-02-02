@@ -26,7 +26,6 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 import com.royasoftware.school.TenantContext;
 
-
 @Configuration
 public class MultitenantDbConfiguration {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -39,8 +38,7 @@ public class MultitenantDbConfiguration {
 	 * 
 	 * @return
 	 */
-	
-	
+
 	@Bean
 	// @ Configuration Properties(prefixx = "db.datasource")
 	@ConfigurationProperties("spring.datasource")
@@ -52,9 +50,9 @@ public class MultitenantDbConfiguration {
 		Flyway flyway;
 		Map<Object, Object> resolvedDataSources = new HashMap<>();
 
-		//!!!!IMPORTANT!!!!! Repair default db. 
+		// !!!!IMPORTANT!!!!! Repair default db.
 		flyway = new Flyway();
-		flyway.setDataSource(properties.getUrl(),properties.getUsername(),properties.getPassword());
+		flyway.setDataSource(properties.getUrl(), properties.getUsername(), properties.getPassword());
 		flyway.setLocations("db.migration");
 		flyway.repair();
 		DataSource ds = null;
@@ -63,7 +61,7 @@ public class MultitenantDbConfiguration {
 			Properties tenantProperties = new Properties();
 			DataSourceBuilder dataSourceBuilder = new DataSourceBuilder(this.getClass().getClassLoader());
 			try {
-				tenantProperties.load(propertyFile.getInputStream()); 
+				tenantProperties.load(propertyFile.getInputStream());
 				tenantId = tenantProperties.getProperty("name");
 				flyway = new Flyway();
 				if (tenantProperties.getProperty("datasource.url") != null)
@@ -71,30 +69,33 @@ public class MultitenantDbConfiguration {
 							tenantProperties.getProperty("datasource.username"),
 							tenantProperties.getProperty("datasource.password"));
 				else
-					flyway.setDataSource("jdbc:mysql://"+System.getenv("MYSQL_HOST")+":3306/" + tenantId + "?autoReconnect=true&useSSL=false",
-							"root", "1qay2wsx");
+					flyway.setDataSource("jdbc:mysql://" + System.getenv("MYSQL_HOST") + ":3306/" + tenantId
+							+ "?autoReconnect=true&useSSL=false", "root", "1qay2wsx");
 				flyway.setLocations(tenantProperties.getProperty("flyway.locations"));
-				//!!!!IMPORTANT!!!!! Repair dbs.
+				// !!!!IMPORTANT!!!!! Repair dbs.
 				try {
 					flyway.repair();
 					flyway.migrate();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					logger.info("Break migration for tenantId: " + tenantId +", e="+e.getMessage());
+					logger.info("Break migration for tenantId: " + tenantId + ", e=" + e.getMessage());
 					continue;
 				}
 
 				if (tenantProperties.getProperty("datasource.url") != null)
-					dataSourceBuilder.driverClassName(properties.getDriverClassName())
+					dataSourceBuilder
+							.driverClassName(tenantProperties.getProperty("datasource.driver") != null
+									? tenantProperties.getProperty("datasource.driver") : properties.getDriverClassName())
 							.url(resolveEnvVars(tenantProperties.getProperty("datasource.url")))
 							.username(tenantProperties.getProperty("datasource.username"))
 							.password(tenantProperties.getProperty("datasource.password"));
 				else
 					dataSourceBuilder.driverClassName(properties.getDriverClassName())
-							.url("jdbc:mysql://"+System.getenv("MYSQL_HOST")+":3306/" + tenantId + "?autoReconnect=true&useSSL=false") //autoReconnect=true&
+							.url("jdbc:mysql://" + System.getenv("MYSQL_HOST") + ":3306/" + tenantId
+									+ "?autoReconnect=true&useSSL=false") // autoReconnect=true&
 							.username("root").password("1qay2wsx");
 
-//				logger.info("------->properties.getType()="+properties.getType());
+				// logger.info("------->properties.getType()="+properties.getType());
 				if (properties.getType() != null) {
 					dataSourceBuilder.type(properties.getType());
 				}
@@ -102,7 +103,7 @@ public class MultitenantDbConfiguration {
 				setDataSourcePoolProps(ds);
 				resolvedDataSources.put(tenantId, ds);
 			} catch (IOException e) {
-				logger.info("IGNORE. tenantId: " + tenantId );
+				logger.info("IGNORE. tenantId: " + tenantId);
 				e.printStackTrace();
 			}
 		}
@@ -118,28 +119,27 @@ public class MultitenantDbConfiguration {
 		dataSource.setTargetDataSources(resolvedDataSources);
 		// Call this to finalize the initialization of the data source.
 		dataSource.afterPropertiesSet();
-		
+
 		return dataSource;
 	}
 
-	private String resolveEnvVars(String input)
-	{
-	    if (null == input)
-	    {
-	        return null;
-	    }
-	    // match ${ENV_VAR_NAME} or $ENV_VAR_NAME
-	    Pattern p = Pattern.compile("\\$\\{(\\w+)\\}|\\$(\\w+)");
-	    Matcher m = p.matcher(input); // get a matcher object
-	    StringBuffer sb = new StringBuffer();
-	    while(m.find()){
-	        String envVarName = null == m.group(1) ? m.group(2) : m.group(1);
-	        String envVarValue = System.getenv(envVarName);
-	        m.appendReplacement(sb, null == envVarValue ? "" : envVarValue);
-	    }
-	    m.appendTail(sb);
-	    return sb.toString();
+	private String resolveEnvVars(String input) {
+		if (null == input) {
+			return null;
+		}
+		// match ${ENV_VAR_NAME} or $ENV_VAR_NAME
+		Pattern p = Pattern.compile("\\$\\{(\\w+)\\}|\\$(\\w+)");
+		Matcher m = p.matcher(input); // get a matcher object
+		StringBuffer sb = new StringBuffer();
+		while (m.find()) {
+			String envVarName = null == m.group(1) ? m.group(2) : m.group(1);
+			String envVarValue = System.getenv(envVarName);
+			m.appendReplacement(sb, null == envVarValue ? "" : envVarValue);
+		}
+		m.appendTail(sb);
+		return sb.toString();
 	}
+
 	/**
 	 * Creates the default data source for the application
 	 * 
@@ -149,7 +149,8 @@ public class MultitenantDbConfiguration {
 		DataSourceBuilder dataSourceBuilder = new DataSourceBuilder(this.getClass().getClassLoader())
 				.driverClassName(properties.getDriverClassName()).url(properties.getUrl())
 				.username(properties.getUsername()).password(properties.getPassword());
-//		logger.info("------->properties.getType() default="+properties.getType());
+		// logger.info("------->properties.getType()
+		// default="+properties.getType());
 		if (properties.getType() != null) {
 			dataSourceBuilder.type(properties.getType());
 		}
@@ -159,14 +160,14 @@ public class MultitenantDbConfiguration {
 	}
 
 	private void setDataSourcePoolProps(DataSource ds) {
-//		((org.apache.tomcat.jdbc.pool.DataSource)ds).setSuspectTimeout(2000);
-		((org.apache.tomcat.jdbc.pool.DataSource)ds).setValidationInterval(20000);
-		((org.apache.tomcat.jdbc.pool.DataSource)ds).setTestOnBorrow(true);
-		((org.apache.tomcat.jdbc.pool.DataSource)ds).setTestWhileIdle(true);     
-//		((org.apache.tomcat.jdbc.pool.DataSource)ds).setTimeBetweenEvictionRunsMillis(2000);
-		((org.apache.tomcat.jdbc.pool.DataSource)ds).setValidationQuery("SELECT 1");
-//		((org.apache.tomcat.jdbc.pool.DataSource)ds).setMinIdle(2);
-//		((org.apache.tomcat.jdbc.pool.DataSource)ds).setMaxIdle(8);
+		// ((org.apache.tomcat.jdbc.pool.DataSource)ds).setSuspectTimeout(2000);
+		((org.apache.tomcat.jdbc.pool.DataSource) ds).setValidationInterval(20000);
+		((org.apache.tomcat.jdbc.pool.DataSource) ds).setTestOnBorrow(true);
+		((org.apache.tomcat.jdbc.pool.DataSource) ds).setTestWhileIdle(true);
+		// ((org.apache.tomcat.jdbc.pool.DataSource)ds).setTimeBetweenEvictionRunsMillis(2000);
+		((org.apache.tomcat.jdbc.pool.DataSource) ds).setValidationQuery("SELECT 1");
+		// ((org.apache.tomcat.jdbc.pool.DataSource)ds).setMinIdle(2);
+		// ((org.apache.tomcat.jdbc.pool.DataSource)ds).setMaxIdle(8);
 	}
-	
+
 }
