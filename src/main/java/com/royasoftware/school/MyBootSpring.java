@@ -67,23 +67,28 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 			String logoFileStr = TenantContext.getTenantStoragePath(tenant) + "profile/logo.svg";
 			File logoFile = new File(logoFileStr);
 			FileOutputStream fos = null;
-			if (!logoFile.exists()) {
-				fos = new FileOutputStream(logoFile);
-				fos.write(FileCopyUtils.copyToByteArray(cpr.getInputStream()));
-				fos.close();
+			if (logoFile.exists()) {
+				logoFile.delete();
 			}
+			// if (!logoFile.exists()) {
+			fos = new FileOutputStream(logoFile);
+			fos.write(FileCopyUtils.copyToByteArray(cpr.getInputStream()));
+			fos.close();
+			// }
 
 			fileName = "data/" + tenant + ".properties";
 			cpr = new ClassPathResource(fileName);
 
 			String dataFileStr = TenantContext.getTenantStoragePath(tenant) + "profile/data.properties";
 			File dataFile = new File(dataFileStr);
-
-			if (!dataFile.exists()) {
-				fos = new FileOutputStream(dataFile);
-				fos.write(FileCopyUtils.copyToByteArray(cpr.getInputStream()));
-				fos.close();
+			if (dataFile.exists()) {
+				dataFile.delete();
 			}
+			// if (!dataFile.exists()) {
+			fos = new FileOutputStream(dataFile);
+			fos.write(FileCopyUtils.copyToByteArray(cpr.getInputStream()));
+			fos.close();
+			// }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -146,7 +151,7 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 		// actorSystem.actorOf(springExtension.props("TrainingServFrEndActor"),
 		// "trainingServFrEndActor");
 
-//		ScriptHelper.run(ScriptHelper.REFRESH_WEB_APP);
+		// ScriptHelper.run(ScriptHelper.REFRESH_WEB_APP);
 
 		logger.info("Spring Boot Server started");
 
