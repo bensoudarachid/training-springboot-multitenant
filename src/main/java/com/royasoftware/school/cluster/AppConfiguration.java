@@ -16,9 +16,10 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
 /**
- * The application configuration.
+ * Akka app config. 
  */
-@Configuration
+
+//@Configuration
 class AppConfiguration {
 	private static Logger logger = LoggerFactory.getLogger(AppConfiguration.class);
 	@Autowired
@@ -26,7 +27,7 @@ class AppConfiguration {
 	@Autowired
 	private SpringExtension springExtension;
 
-	@Bean
+//	@Bean
 	public ActorSystem actorSystem(@Value("${akka.server.port}") String port) {
 		System.out.println("Create ClusterSystem on port: "+port); 
 		ActorSystem system = null;
