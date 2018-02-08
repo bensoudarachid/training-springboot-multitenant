@@ -53,7 +53,7 @@ public class HealthController extends BaseController {
 	private TodoService todoService;
 
 	@RequestMapping(method = RequestMethod.GET, produces = {
-			MediaType.APPLICATION_JSON_VALUE }, value = "/mama")
+			MediaType.APPLICATION_JSON_VALUE }, value = "/ishealthy")
 	public ResponseEntity<Todo> getHealth() throws Exception {
 		Todo todo = new Todo();
 		todo.setTask("Wow");
