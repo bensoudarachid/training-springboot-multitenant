@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: schoolingr
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  backend:
+    serviceName: default-http-backend
+    servicePort: 80
+  rules:
+  - host: reactlearn.schoolapi.royasoftware.com
+    http:
+      paths:
+      - backend:
+          serviceName: schoolbe
+          servicePort: 8080
+  - host: reactlearn.school.royasoftware.com
+    http:
+      paths:
+      - backend:
+          serviceName: schoolfe
+          servicePort: 8081

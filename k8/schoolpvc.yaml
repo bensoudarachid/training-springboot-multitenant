@@ -1,0 +1,11 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: schoolpvc-1
+spec:
+  volumeName: schoolpv0001
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi	

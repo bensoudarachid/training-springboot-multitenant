@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: schoolbe
+spec:
+  selector:
+    app: school
+    tier: backend
+  ports:
+  - protocol: "TCP"
+    port: 8080
+    targetPort: 8080
+    nodePort: 31080
+  type: NodePort
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: schoolbe
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: school
+        tier: backend
+        track: stable
+    spec:
+      containers:
+        - name: schoolbectn
+          image: royasoftware/trainingbackend:v1.0.0
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /mama
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 4
+            timeoutSeconds: 3
+          env:
+            - name: MYSQL_HOST
+              value: 192.168.1.99
+            - name: TRAINING_APP_STORAGE
+              value: /deployments/data/trainingappstorage
+          volumeMounts:
+            - mountPath: "/deployments/data/trainingappstorage"
+              name: schoolbepd
+      volumes:
+        - name: schoolbepd
+          persistentVolumeClaim:
+            claimName: schoolpvc-1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: schoolfe
+spec:
+  selector:
+    app: school
+    tier: frontend
+  ports:
+  - protocol: "TCP"
+    port: 8081
+    targetPort: 8081
+    nodePort: 31081
+  type: NodePort
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: schoolfe
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: school
+        tier: frontend
+        track: stable
+    spec:
+      containers:
+        - name: schoolfectn
+          image: royasoftware/trainingfrontend:v1.0.0
+          ports:
+            - containerPort: 8081
+          livenessProbe:
+            tcpSocket:
+              port: 8081
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /abbas/index.html
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 4
+            timeoutSeconds: 3
+          env:
+            - name: TRAINING_API_LOCAL_IP
+              value: schoolbe.default.svc.cluster.local

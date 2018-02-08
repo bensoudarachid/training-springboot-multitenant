@@ -35,7 +35,6 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-    	
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         response.setHeader("Access-Control-Allow-Credentials", "true");
@@ -44,7 +43,11 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
         response.setHeader("Access-Control-Allow-Headers", "x-requested-with, cache-control, authentication, authorization, Content-Type, Origin, X-Auth-Token, client-security-token");
         response.setHeader("Access-Control-Max-Age", "3600");
         
-        String remoteHost = request.getHeader("ClientHost");
+        String remoteHost = request.getHeader("host");
+        if( remoteHost == null || !remoteHost.contains(".school"))
+        	remoteHost = request.getHeader("ClientHost");
+        if( remoteHost!= null && remoteHost.indexOf(":") != -1 )
+        	remoteHost = remoteHost.substring(0,remoteHost.indexOf(":"));
 		String site = request.getServerName();
 		if( remoteHost !=null )
 			site = remoteHost.replace(".school.",".schoolapi."); 

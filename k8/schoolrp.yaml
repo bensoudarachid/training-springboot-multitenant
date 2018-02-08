@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  test: liveness
+  name: schoolberp
+spec:
+  containers:
+  - name: liveness
+    image: royasoftware/trainingbackend:v1.0.0
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 8081
+      initialDelaySeconds: 15
+      timeoutSeconds: 4

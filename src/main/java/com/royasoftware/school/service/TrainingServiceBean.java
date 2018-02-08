@@ -2,6 +2,8 @@ package com.royasoftware.school.service;
 
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ import akka.actor.ActorSystem;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 //@Scope("prototype")
 public class TrainingServiceBean implements TrainingService {
-
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	/**
 	 * The Spring Data repository for Account entities.
 	 */
@@ -57,7 +59,7 @@ public class TrainingServiceBean implements TrainingService {
 
 	@Override
 	public Collection<Training> findAll() {
-		
+//		logger.info("service findAll size"+trainingRepository.findAll().size());
 		
 		// use the Spring Extension to create props for a named actor bean
 //		ActorRef counter = system.actorOf(springExtension.props("MyCountingActor")); //, "counter"

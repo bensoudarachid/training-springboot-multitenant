@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: schoolbe
+spec:
+  selector:
+    app: school
+    tier: backend
+  ports:
+  - protocol: "TCP"
+    port: 8080
+    targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: schoolbe
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: school
+        tier: backend
+        track: stable
+    spec:
+      containers:
+        - name: schoolbectn
+          image: royasoftware/trainingbackend:v1.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MYSQL_HOST
+              value: 192.168.1.99
+            - name: TRAINING_APP_STORAGE
+              value: /deployments/data/trainingappstorage
+          volumeMounts:
+            - mountPath: "/deployments/data/trainingappstorage"
+              name: schoolbepd
+      volumes:
+        - name: schoolbepd
+          persistentVolumeClaim:
+            claimName: schoolpvc-1
