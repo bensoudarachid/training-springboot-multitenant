@@ -3,6 +3,7 @@ package com.royasoftware.school;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
+import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -23,6 +24,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.util.FileCopyUtils;
@@ -43,7 +45,7 @@ import akka.actor.ActorSystem;
 @EnableAspectJAutoProxy
 
 @EnableScheduling
-@ComponentScan(basePackages = { "com.royasoftware" })
+//@ComponentScan(basePackages = { "com.royasoftware" })
 @PropertySource(ignoreResourceNotFound = false, value = { "classpath:application.properties",
 		"classpath:mainakkaserver.properties" })
 

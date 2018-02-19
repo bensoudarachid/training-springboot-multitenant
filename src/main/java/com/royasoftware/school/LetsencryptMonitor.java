@@ -615,7 +615,6 @@ public class LetsencryptMonitor {
 			// letsencryptMonitor.getCertificateValidationDate();
 			letsencryptMonitor.renewCertificate();
 			// logger.info("x509.getNotAfter()="+letsencryptMonitor.getCertificateValidationDate());
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

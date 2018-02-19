@@ -16,7 +16,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +42,8 @@ public class Training implements Serializable{
     private Long id;
 
     @NotNull
+    @Required
+	@Size(min=1, max=30)
     private String title;
 
     @NotNull
@@ -47,6 +51,8 @@ public class Training implements Serializable{
 
     @NotNull
     @Column(columnDefinition="varchar(511)")
+    @Required
+	@Size(min=1, max=200)
     private String shortDescription;
 
     @NotNull
@@ -56,7 +62,7 @@ public class Training implements Serializable{
     @NotNull
     private Integer duration;
 
-	@Version
+    @Version
     @Column(name = "VERSION")
     private Integer version;
 

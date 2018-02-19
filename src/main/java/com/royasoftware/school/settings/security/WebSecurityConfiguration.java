@@ -52,7 +52,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-//		web.ignoring().antMatchers("/api/trainings/**");
+//		web.ignoring().antMatchers("/user/**");
 //		web.ignoring().antMatchers("/api/training/img/**");
 //		web.ignoring().antMatchers("/oauth/logout");
 		web.ignoring().antMatchers("/register");

@@ -54,19 +54,19 @@ public class TenantContext {
         return (String)tenantContextThreadLocal.get().get("tenant");
     }
     public static String getCurrentTenantStoragePath() {
-    	return new StringBuffer(userUploadStorage).append(tenantContextThreadLocal.get().get("tenant")).append("/").toString();
+    	return new StringBuilder(userUploadStorage).append(tenantContextThreadLocal.get().get("tenant")).append(File.separator).toString();
     }
     public static String getCurrentTenantStoragePath(String subfolder) {
-    	return new StringBuffer(userUploadStorage).append(tenantContextThreadLocal.get().get("tenant")).append("/").append(subfolder).append("/").toString();
+    	return new StringBuilder(userUploadStorage).append(tenantContextThreadLocal.get().get("tenant")).append(File.separator).append(subfolder).append(File.separator).toString();
     }
     public static String getCurrentUserStoragePath(String name) {
     	CustomUserDetails user = getCurrentUser();
     	if( user == null )
     		return null;
-    	return new StringBuffer(userUploadStorage).append(tenantContextThreadLocal.get().get("tenant")).append("/user/").append(user.getId()).append("/").append(name).append("/").toString();
+    	return new StringBuffer(userUploadStorage).append(tenantContextThreadLocal.get().get("tenant")).append(File.separator).append("user").append(File.separator).append(user.getId()).append(File.separator).append(name).append(File.separator).toString();
     }
     public static String getTenantStoragePath(String tenant) {
-    	return new StringBuffer(userUploadStorage).append(tenant).append("/").toString();
+    	return new StringBuffer(userUploadStorage).append(tenant).append(File.separator).toString();
     }
     public static void setCurrentUser(CustomUserDetails user) {
         tenantContextThreadLocal.get().put("activeuser",user);

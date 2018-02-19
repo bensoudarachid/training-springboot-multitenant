@@ -33,7 +33,7 @@ spec:
             - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /ishealthy
+              path: /api/ishealthy
               port: 8080
             initialDelaySeconds: 20
             periodSeconds: 4
@@ -92,9 +92,9 @@ spec:
             timeoutSeconds: 3
           readinessProbe:
             httpGet:
-              path: /abbas/index.html
+              path: /api/ishealthy
               port: 8081
-            initialDelaySeconds: 15
+            initialDelaySeconds: 5
             periodSeconds: 4
             timeoutSeconds: 3
           env:

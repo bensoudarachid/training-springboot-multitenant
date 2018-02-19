@@ -78,69 +78,41 @@ public class AuthenticationController extends BaseController {
 	 * 
 	 */
 
-	@RequestMapping(value = "/registerold", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public Account register(@RequestParam("username") String username, @RequestParam("password") String password,
-			@RequestParam("email") String email) throws Exception {
-
-		System.out.println("register ");
-		// Check if account is unique
-		// if(errors.hasErrors()){
-		// throw new InvalidRequestException("Username already exists", errors);
-		// }
-		// try{
-
-		// account.setRegisterId(new Integer(rand));
-		// account.setRegisterDate(new Date());
-//		try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
+//	@RequestMapping(value = "/registerold", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+//	@ResponseBody
+//	public Account register(@RequestParam("username") String username, @RequestParam("password") String password,
+//			@RequestParam("email") String email) throws Exception {
+//
+//		System.out.println("register ");
+//		if (!new EmailValidator().validate(email))
+//			throw new Exception("Email is not valid");
+//		if (password.length() < 8) {
+//			throw new Exception("Password should be greater than 8 characters");
 //		}
-		if (!new EmailValidator().validate(email))
-			throw new Exception("Email is not valid");
-		if (password.length() < 8) {
-			throw new Exception("Password should be greater than 8 characters");
-		}
-
-		Account existingAccount = accountService.findByUsername(username);
-		if (existingAccount != null)
-			throw new Exception("This Account (User name) exists already");
-		Account account = new Account();
-		account.setUsername(username);
-		account.setPassword(password);
-		Account createdAccount = accountService.createNewAccount(account);
-
-		createdAccount.setPassword("");
-		// return new ResponseEntity<Account>(createdAccount,
-		// HttpStatus.CREATED);
-		return createdAccount;
-	}
+//
+//		Account existingAccount = accountService.findByUsername(username);
+//		if (existingAccount != null)
+//			throw new Exception("This Account (User name) exists already");
+//		Account account = new Account();
+//		account.setUsername(username);
+//		account.setPassword(password);
+//		Account createdAccount = accountService.createNewAccount(account);
+//
+//		createdAccount.setPassword("");
+//		// return new ResponseEntity<Account>(createdAccount,
+//		// HttpStatus.CREATED);
+//		return createdAccount;
+//	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody // ResponseEntity<Map<String, Object>>  works too
 	public Map<String, Object> registernew(@RequestParam("username") String username,
 			@RequestParam("password") String password, @RequestParam("email") String email) throws Exception {
 
-		// System.out.println("errors = "+errors);
-		// Check if account is unique
-		// if(errors.hasErrors()){
-		// throw new InvalidRequestException("Username already exists", errors);
-		// }
-		// try{
 		HashMap<String, Object> errorMap = new HashMap();
 		System.out.println("register hna ");
 
-		// account.setRegisterId(new Integer(rand));
-		// account.setRegisterDate(new Date());
 		HashMap<String, Object> registerResponse = new HashMap();
-//		try {
-//			Thread.sleep(5000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		if (username == null || username.length() == 0) {
 			errorMap.put("username", "required");
 		}else if(username.length() > 25){
@@ -149,17 +121,11 @@ public class AuthenticationController extends BaseController {
 		if (password == null || password.length() == 0) {
 			errorMap.put("password", "required");
 		} else if (password.length() < 8) {
-			// throw new Exception("Password should be greater than 8
-			// characters");
 			errorMap.put("password", "should be greater than 8 characters");
-			// registerResponse.put("error", "Password should be greater than 8
-			// characters");
-			// return registerResponse;
 		}
 		if (email == null || email.length() == 0) {
 			errorMap.put("email", "required");
 		} else if (!new EmailValidator().validate(email)) {
-			// throw new Exception("Email is not valid");
 			errorMap.put("email", "not valid");
 		}
 		if (!errorMap.containsKey("username")) {
@@ -178,18 +144,7 @@ public class AuthenticationController extends BaseController {
 		}
 		else
 			registerResponse.put("error", errorMap);
-//		return new ResponseEntity<Map<String, Object>>(registerResponse, HttpStatus.OK);
 		return registerResponse;
-		// }catch(Exception e){
-		// System.out.println("Ok. Here is the exc handler.
-		// "+e.getClass().getName()+". message="+e.getMessage());
-		//// ClientErrorInformation error = new
-		// ClientErrorInformation(e.toString());
-		//// Map<String,Object> errorMap = new HashMap<String,Object>();
-		//// errorMap.put(e.toString(), error);
-		// return new ResponseEntity(e.getMessage(),
-		// HttpStatus.INTERNAL_SERVER_ERROR);
-		// }
 	}
 
 	/**

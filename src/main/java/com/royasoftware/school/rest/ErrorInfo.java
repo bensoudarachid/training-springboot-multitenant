@@ -1,11 +1,14 @@
 package com.royasoftware.school.rest;
 
-public class ExceptionJSONInfo {
+import java.util.Map;
+
+public class ErrorInfo {
 	private String url;
 	private String error;
 	private String errorDescription;
+	private Map<String,String> validation;
 
-	public ExceptionJSONInfo() {
+	public ErrorInfo() {
 	}
 
 	public String getUrl() {
@@ -31,4 +34,13 @@ public class ExceptionJSONInfo {
 	public void setErrorDescription(String message) {
 		this.errorDescription = message;
 	}
+	
+	public Map<String,String> getValidation() {
+		return validation;
+	}
+
+	public void setValidation(Map validation) {
+		this.validation = validation;
+	}
+
 }

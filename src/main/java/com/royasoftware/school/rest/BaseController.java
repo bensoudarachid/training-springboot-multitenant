@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Random;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
@@ -21,14 +22,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 //import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.context.request.WebRequest;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import com.royasoftware.school.exception.ValidationException;
 
 /**
  * Base of all controllers
@@ -40,13 +44,12 @@ public class BaseController {
 	private HttpServletRequest request;
 
 	@ExceptionHandler(NoResultException.class)
-	public @ResponseBody ExceptionJSONInfo handleNoResultException(NoResultException noResultException,
+	public @ResponseBody ErrorInfo handleNoResultException(NoResultException noResultException,
 			HttpServletRequest request) {
 
 		logger.info("handleNoResultException");
 
-
-		ExceptionJSONInfo response = new ExceptionJSONInfo();
+		ErrorInfo response = new ErrorInfo();
 		response.setUrl(request.getRequestURL().toString());
 		response.setErrorDescription(getMessage(noResultException));
 		response.setError(noResultException.getClass().getName());
@@ -55,26 +58,55 @@ public class BaseController {
 		return response;
 	}
 
-	@ExceptionHandler(Exception.class)
-	public @ResponseBody ExceptionJSONInfo handleException(Exception exception, HttpServletRequest request) {
+//	@ExceptionHandler(Exception.class)
+//	public @ResponseBody ErrorInfo handleException(Exception exception, HttpServletRequest request) {
+//
+//		logger.error("Exception handler. ", getMessage(exception));
+//		exception.printStackTrace();
+//
+//		ErrorInfo response = new ErrorInfo();
+//		response.setUrl(request.getRequestURL().toString());
+//		response.setErrorDescription(getMessage(exception));
+//		response.setError(exception.getClass().getName());
+//		return response;
+//	}
 
-		logger.error("Exception handler. ", getMessage(exception));
-		exception.printStackTrace();
-
-		ExceptionJSONInfo response = new ExceptionJSONInfo();
+	
+	@ExceptionHandler({ Exception.class })
+	public final ResponseEntity<ErrorInfo> handleException(Exception ex, HttpServletRequest request) {
+		Throwable e = ex;
+		ErrorInfo response = new ErrorInfo();
 		response.setUrl(request.getRequestURL().toString());
-		response.setErrorDescription(getMessage(exception));
-		response.setError(exception.getClass().getName());
-		return response;
+		response.setErrorDescription(e.getMessage());
+		response.setError(e.getClass().getName());
 
+		if (e instanceof CompletionException)
+			e = ex.getCause();
+//		if (e instanceof ValidationException)
+//			response.setValidation( ((ValidationException)e).getValidationErrorMap());
+//			return new ResponseEntity<>(response, HttpStatus.UNPROCESSABLE_ENTITY);
+//		else
+		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
+	
+	@ExceptionHandler({ ValidationException.class })
+	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+	public final @ResponseBody ErrorInfo handleException(HttpServletRequest request, Exception ex) {
+		Throwable e = ex;
+		ErrorInfo response = new ErrorInfo();
+		response.setUrl(request.getRequestURL().toString());
+		response.setErrorDescription(e.getMessage());
+		response.setError(e.getClass().getName());
+		response.setValidation( ((ValidationException)e).getValidationErrorMap());
+		return response;
+	}
+	  
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public @ResponseBody ExceptionJSONInfo handleDataIntegrityException(HttpServletRequest request, Exception ex) {
+	public @ResponseBody ErrorInfo handleDataIntegrityException(HttpServletRequest request, Exception ex) {
 		System.out.println("DataIntegrityViolationException handler. Here is the DataIntegrityViolationException handler." + ex.getClass().getName()
 				+ ". message=" + getMessage(ex));
-		ExceptionJSONInfo response = new ExceptionJSONInfo();
+		ErrorInfo response = new ErrorInfo();
 		response.setUrl(request.getRequestURL().toString());
 		response.setErrorDescription("Data Integrity Violation");
 		return response;
@@ -82,12 +114,12 @@ public class BaseController {
 	
 	@ExceptionHandler(AccessDeniedException.class)
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
-	public @ResponseBody ExceptionJSONInfo handleAccessDeniedException(HttpServletRequest request, Exception ex) {
+	public @ResponseBody ErrorInfo handleAccessDeniedException(HttpServletRequest request, Exception ex) {
 		System.out.println("AccessDeniedException handler. Here is the general exception handler." + ex.getClass().getName() + ". message="
 				+ getMessage(ex));
 		logger.info("AccessDeniedException. request.getRequestURL()="+request.getRequestURL()); 
 		ex.printStackTrace();
-		ExceptionJSONInfo response = new ExceptionJSONInfo();
+		ErrorInfo response = new ErrorInfo();
 		response.setUrl(request.getRequestURL().toString());
 		response.setErrorDescription(getMessage(ex));
 		response.setError(ex.getClass().getName());
@@ -96,11 +128,11 @@ public class BaseController {
 
 	@ExceptionHandler(RuntimeException.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public @ResponseBody ExceptionJSONInfo handleGeneralException(HttpServletRequest request, Exception ex) {
+	public @ResponseBody ErrorInfo handleGeneralException(HttpServletRequest request, Exception ex) {
 		System.out.println("RuntimeException handler. Here is the general exception handler." + ex.getClass().getName() + ". message="
 				+ getMessage(ex));
 		ex.printStackTrace();
-		ExceptionJSONInfo response = new ExceptionJSONInfo();
+		ErrorInfo response = new ErrorInfo();
 		response.setUrl(request.getRequestURL().toString());
 		response.setErrorDescription(getMessage(ex));
 		response.setError(ex.getClass().getName());

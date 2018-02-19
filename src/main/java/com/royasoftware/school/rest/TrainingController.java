@@ -20,13 +20,22 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
@@ -49,6 +58,7 @@ import org.w3c.dom.Document;
 
 import com.royasoftware.school.TenantContext;
 import com.royasoftware.school.cluster.SpringExtension;
+import com.royasoftware.school.exception.ValidationException;
 import com.royasoftware.school.model.Training;
 import com.royasoftware.school.service.TrainingServFrEndActor;
 import com.royasoftware.school.service.TrainingService;
@@ -66,8 +76,8 @@ import scala.concurrent.duration.Duration;
 @RestController
 @RequestMapping("/api/**")
 public class TrainingController extends BaseController {
-	@Autowired
-	private ActorSystem actorSystem;
+//	@Autowired
+//	private ActorSystem actorSystem;
 	@Autowired
 	private SpringExtension springExtension;
 
@@ -116,6 +126,14 @@ public class TrainingController extends BaseController {
 	public ResponseEntity<Training> updateTrainingObject(@RequestPart("trainingParam") Training trainingParam,
 			@RequestPart(value = "uploadfile", required = false) MultipartFile file) throws Exception {
 		rdmTimeRdmSuccess();
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		Optional<Set<ConstraintViolation<Training>>> violations = Optional.of(validator.validate(trainingParam));
+		if( violations.isPresent()&&!violations.get().isEmpty() ){
+	        Map<String, String> validErrorMap = violations.get().stream().collect(
+	                Collectors.toMap(v->v.getPropertyPath().toString(), ConstraintViolation::getMessage ) );
+			throw new ValidationException(trainingParam,validErrorMap);
+		}
 		Training training = trainingService.updateTraining(trainingParam);
 		if (file != null)
 			fileUpload(training.getId(), file);
@@ -174,9 +192,9 @@ public class TrainingController extends BaseController {
 		File uploadFile = new File(uploadPath + trainingId + "." + extension);
 
 		if( !uploadFilePath.mkdirs() )
-			logger.info("Could not create directories "+uploadPath);
+			logger.info("Directory already there : "+uploadPath);
 		else{
-			logger.info("Could not create directories "+uploadFilePath.getAbsolutePath());
+			logger.info("Good. Created directories : "+uploadFilePath.getAbsolutePath());
 		}
 		// Delete all files beginning with thw id number
 		File uploadDirectory = new File(uploadPath);

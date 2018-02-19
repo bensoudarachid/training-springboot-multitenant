@@ -189,7 +189,7 @@ public class ProfileController extends BaseController {
 
     	Properties prop = new Properties();
     	InputStream input = null;
-    	String filename = TenantContext.getCurrentTenantStoragePath("profile")+"data.properties";
+    	String filename = TenantContext.getCurrentTenantStoragePath("profile")+File.separator+"data.properties";
 		input = new FileInputStream(filename);
 		if(input==null){
 			logger.error("Sorry, unable to find " + filename);

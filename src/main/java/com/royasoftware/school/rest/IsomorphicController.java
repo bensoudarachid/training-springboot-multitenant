@@ -18,7 +18,6 @@ public class IsomorphicController {
 	public ResponseEntity<String> render(Model model) {
 		logger.info("isom render"); 
 		model.addAttribute("title", "Layout example");
-//		model.addAttribute("comments", this.commentRepository.findAll());
 		return new ResponseEntity<String>("hi", HttpStatus.OK);
 	}
 

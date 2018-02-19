@@ -15,10 +15,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
 	@ExceptionHandler(MultipartException.class)
 	@ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
-	public @ResponseBody ExceptionJSONInfo handleSizeLimitExceededException(HttpServletRequest request, Exception ex) {
+	public @ResponseBody ErrorInfo handleSizeLimitExceededException(HttpServletRequest request, Exception ex) {
 		System.out.println("Ok now. Here is the SizeLimitExceededException handler." + ex.getClass().getName()
 				+ ". message=" + ex.getMessage());
-		ExceptionJSONInfo response = new ExceptionJSONInfo();
+		ErrorInfo response = new ErrorInfo();
 		response.setUrl(request.getRequestURL().toString());
 		response.setErrorDescription("Size limit Violation");
 		return response;
