@@ -49,7 +49,9 @@ public abstract class ScriptHelper {
 	static public final int RUN_WEB_APP = 24;
 	static public final int REFRESH_WEB_APP = 25;
 	
-
+	static public final int RUN_TEMP = 99;
+	static public final int RUN_TEMP2 = 100;
+	
 	// static public final int IMEXFRAME_START = 15;
 	// static public final int ANIMALINFOFRAME_START = 16;
 	// static public final int BARCODEFRAME_START = 19;
@@ -212,6 +214,14 @@ public abstract class ScriptHelper {
 			case REFRESH_WEB_APP:
 				process = Runtime.getRuntime().exec(
 						"C:\\Programme\\AutoIt3\\AutoIt3.exe C:\\MyAutoItMacros\\chrome\\refresh.au3");
+				break;
+			case RUN_TEMP:
+				process = Runtime.getRuntime().exec(
+						"C:\\Programme\\AutoIt3\\AutoIt3.exe C:\\MyAutoItMacros\\temp.au3");
+				break;
+			case RUN_TEMP2:
+				process = Runtime.getRuntime().exec(
+						"C:\\Programme\\AutoIt3\\AutoIt3.exe C:\\MyAutoItMacros\\temp2.au3");
 				break;
 
 			default:

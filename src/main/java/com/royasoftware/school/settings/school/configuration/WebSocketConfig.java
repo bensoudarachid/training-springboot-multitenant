@@ -9,8 +9,8 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 import com.royasoftware.school.rest.CounterWebSocketHandler;
 
-@Configuration
-@EnableWebSocket
+//@Configuration
+//@EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
     @Autowired
@@ -18,6 +18,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(counterHandler, "/counter").setAllowedOrigins("*");
+//        registry.addHandler(counterHandler, "/counter").setAllowedOrigins("*");
+        registry.addHandler(counterHandler, "/api/guestbook").setAllowedOrigins("*").withSockJS();
 	}
 }

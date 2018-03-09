@@ -45,6 +45,8 @@
 		<Logger name="com.memorynotfound" level="debug" />
 		<Logger name="org.hibernate" level="error" />
 		<Logger name="org.springframework" level="error" />
+		<Logger name="org.apache.coyote.http11" level="error" />
+		
 		<Root level="info" >
 			<AppenderRef ref="RollingFile" />
 			<AppenderRef ref="FastConsole" />

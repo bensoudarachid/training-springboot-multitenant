@@ -3,7 +3,6 @@ package com.royasoftware.school;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
-import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -13,18 +12,29 @@ import javax.servlet.ServletException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.util.FileCopyUtils;
@@ -33,23 +43,19 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.script.ScriptTemplateViewResolver;
 
-import com.royasoftware.school.cluster.AkkaSystemStarter;
-import com.royasoftware.school.cluster.SpringExtension;
 import com.royasoftware.school.script.ScriptHelper;
-
-import akka.actor.ActorSystem;
 
 @EnableWebMvc
 @SpringBootApplication
 // SpringBootApplication replaces: @Configuration @ComponentScan
 @EnableAspectJAutoProxy
-
+@EnableRabbit
 @EnableScheduling
-//@ComponentScan(basePackages = { "com.royasoftware" })
+// @ComponentScan(basePackages = { "com.royasoftware" })
 @PropertySource(ignoreResourceNotFound = false, value = { "classpath:application.properties",
 		"classpath:mainakkaserver.properties" })
 
-public class MyBootSpring extends SpringBootServletInitializer implements SchedulingConfigurer {
+public class MyBootSpring extends SpringBootServletInitializer implements SchedulingConfigurer { // ,RabbitListenerConfigurer
 	private static Logger logger = LoggerFactory.getLogger(MyBootSpring.class);
 
 	@Override
@@ -153,7 +159,7 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 		// actorSystem.actorOf(springExtension.props("TrainingServFrEndActor"),
 		// "trainingServFrEndActor");
 
-		// ScriptHelper.run(ScriptHelper.REFRESH_WEB_APP);
+		ScriptHelper.run(ScriptHelper.RUN_TEMP2);
 
 		logger.info("Spring Boot Server started");
 
@@ -179,7 +185,6 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 			this.logger.debug("No ContextLoaderListener registered, as " + "createRootApplicationContext() did not "
 					+ "return an application context");
 		}
-
 	}
 
 	@Bean
@@ -187,19 +192,4 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 		return new ScriptTemplateViewResolver("/static2/", ".html");
 	}
 
-	// @Bean
-	// public ScriptTemplateConfigurer reactConfigurer() {
-	// ScriptTemplateConfigurer configurer = new ScriptTemplateConfigurer();
-	// configurer.setEngineName("nashorn");
-	// configurer.setScripts("static2/polyfill.js", "static2/lib/js/ejs.min.js",
-	// "static2/lib/js/react.js",
-	// "static2/render.js",
-	// // "D:/RP/Tests/ReactToDoExp2/node_modules/react-dom/dist/react-dom.js",
-	// // "/META-INF/resources/webjars/react/0.13.1/JSXTransformer.js",
-	// "static/vendor.bundle.js", "static/1.bundle.js", "static2/server.js"
-	// );
-	// configurer.setRenderFunction("render");
-	// configurer.setSharedEngine(false);
-	// return configurer;
-	// }
 }

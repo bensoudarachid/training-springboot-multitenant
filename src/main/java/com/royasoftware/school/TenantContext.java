@@ -87,4 +87,7 @@ public class TenantContext {
     private static boolean isTenantValid(String tenant){
     	return validTenantSet.contains(tenant);
     }
+    public static Set<String> getValidTenants(){
+    	return validTenantSet;
+    }
 }

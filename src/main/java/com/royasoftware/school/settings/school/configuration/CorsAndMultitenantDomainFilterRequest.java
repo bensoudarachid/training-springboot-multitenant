@@ -3,7 +3,9 @@ package com.royasoftware.school.settings.school.configuration;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -29,6 +31,7 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
 	private final DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
     private final Logger log = LoggerFactory.getLogger(CorsAndMultitenantDomainFilterRequest.class);
     final Calendar calendar = Calendar.getInstance();
+    private final List<String> allowedOrigins = Arrays.asList("localhost:8080","127.0.0.1:8080","http://abbaslearn.school.royasoftware.com:8081");
     
     public CorsAndMultitenantDomainFilterRequest() {
     }
@@ -39,10 +42,15 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE, HEAD");
-        response.setHeader("Access-Control-Allow-Origin", "*");
+//        response.setHeader("Access-Control-Allow-Origin", "*");
+        String origin = request.getHeader("Origin");
+//        if( origin!= null && origin.contains("school.royasoftware.com"))
+//        	logger.info("origin="+origin); 
+//        logger.info("return : "+(origin!= null&&origin.contains("school.royasoftware.com") ? origin : "*"));
+        response.setHeader("Access-Control-Allow-Origin", allowedOrigins.contains(origin) ? origin : "*");
         response.setHeader("Access-Control-Allow-Headers", "x-requested-with, cache-control, authentication, authorization, Content-Type, Origin, X-Auth-Token, client-security-token");
         response.setHeader("Access-Control-Max-Age", "3600");
-        
+
         String remoteHost = request.getHeader("host");
         if( remoteHost == null || !remoteHost.contains(".school"))
         	remoteHost = request.getHeader("ClientHost");
