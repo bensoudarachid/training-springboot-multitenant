@@ -32,5 +32,4 @@ public interface TrainingRepository extends JpaRepository<Training, Long>, Train
 //	@Query("SELECT tr FROM Training tr WHERE tr.id = :trainingid")
 //	Training findById(@Param("trainingid") Long id);
 
-
 }

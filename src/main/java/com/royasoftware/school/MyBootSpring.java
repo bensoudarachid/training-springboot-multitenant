@@ -159,7 +159,7 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 		// actorSystem.actorOf(springExtension.props("TrainingServFrEndActor"),
 		// "trainingServFrEndActor");
 
-		ScriptHelper.run(ScriptHelper.RUN_TEMP2);
+//		ScriptHelper.run(ScriptHelper.RUN_TEMP2);
 
 		logger.info("Spring Boot Server started");
 

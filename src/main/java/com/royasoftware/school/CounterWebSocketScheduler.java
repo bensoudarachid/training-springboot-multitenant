@@ -40,7 +40,7 @@ public class CounterWebSocketScheduler {
 	@Value("${jsa.rabbitmq.routingkey}")
 	private String routingKey;
 
-//	@Scheduled(fixedRate = 5000)
+	@Scheduled(fixedRate = 5000)
 	public void publishUpdates() {
 		// logger.info("Here i am now "+TenantContext.getValidTenants());
 		// template.convertAndSend("/topic/entries", new MessageDTO("YES" ));
