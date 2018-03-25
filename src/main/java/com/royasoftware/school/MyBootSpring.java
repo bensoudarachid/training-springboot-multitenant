@@ -27,6 +27,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -51,6 +52,7 @@ import com.royasoftware.school.script.ScriptHelper;
 @EnableAspectJAutoProxy
 @EnableRabbit
 @EnableScheduling
+@EnableCaching
 // @ComponentScan(basePackages = { "com.royasoftware" })
 @PropertySource(ignoreResourceNotFound = false, value = { "classpath:application.properties",
 		"classpath:mainakkaserver.properties" })

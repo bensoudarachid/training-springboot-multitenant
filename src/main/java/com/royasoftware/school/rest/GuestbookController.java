@@ -50,7 +50,7 @@ public class GuestbookController {
 	// @MessageMapping("/api/guestbook")
 	// @SendTo("/topic/entries")
 	@MessageMapping("/exchange/${jsa.rabbitmq.exchange}")
-	@SendTo("/queue/${jsa.rabbitmq.queue}")
+	@SendTo("/queue/${jsa.rabbitmq.sendqueue}")
 
 	public MessageDTO guestbook(String message) {
 		logger.info("Received message: " + message);

@@ -3,8 +3,6 @@ package com.royasoftware.school.model;
 import java.io.Serializable;
 import java.util.List;
 
-import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,10 +17,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @lombok.Getter
@@ -33,6 +33,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @NamedQuery(query = "SELECT tr FROM Training tr WHERE tr.id = :trainingid", name = "query_find_training_by_id")
+//@Cacheable
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Training implements Serializable{
 	@Transient
 	static private Logger logger = LoggerFactory.getLogger(Training.class);

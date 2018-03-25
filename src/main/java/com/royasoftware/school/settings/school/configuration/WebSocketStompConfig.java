@@ -30,7 +30,8 @@ public class WebSocketStompConfig extends AbstractWebSocketMessageBrokerConfigur
 		// config.enableSimpleBroker("/topic");
 		config.enableStompBrokerRelay("/topic", "/queue")
 			.setRelayHost("192.168.99.100")
-			.setRelayPort(5672) //5672
+//			.setRelayPort(5672)
+			.setRelayPort(31672)
 			.setClientLogin("guest")
 			.setClientPasscode("guest");
 		// use the /app prefix for others

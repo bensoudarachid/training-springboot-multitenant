@@ -11,6 +11,7 @@ import com.royasoftware.school.model.Training;
 public interface TrainingService {
 
     Training findById(Long trainingId);
+//    Training findById(String trainingId);
     
     Training saveTraining(Training training);
 

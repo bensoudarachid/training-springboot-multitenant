@@ -3,17 +3,18 @@ package com.royasoftware.school.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.royasoftware.school.rest.GuestbookController.MessageDTO;
  
-//@Component
+@Component
 public class RabbitConsumer {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private ObjectMapper objectMapper= new ObjectMapper();
 	
-	@RabbitListener(queues="jsa.sendqueue")
+///	@RabbitListener(queues="jsa.sendqueue")
 //    public void receivedMessage(String message) {
 //    public void receivedMessage(MessageDTO message) {
 //    public void receivedMessage(byte[] message) {
@@ -35,7 +36,7 @@ public class RabbitConsumer {
 //    }
     public void receivedMessage(MessageDTO messageDTO) {
 		try {
-			logger.info("messageDTO="+messageDTO.content);
+			logger.info("Rabbit Consumer messageDTO="+messageDTO.content);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

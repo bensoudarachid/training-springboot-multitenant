@@ -47,7 +47,7 @@ public class CounterWebSocketScheduler {
 		// template.convertAndSend("/"+queue, new MessageDTO("YES"));
 //		TenantContext.getValidTenants()
 		activeTenantList.stream().forEach(tenant -> {
-			logger.info("Here i am now "+tenant);
+//			logger.info("Here i am now "+tenant);
 			amqpTemplate.convertAndSend("amq.topic", routingKey + "." + tenant, new MessageDTO(tenant));
 		});
 
@@ -65,7 +65,7 @@ public class CounterWebSocketScheduler {
 			if( tenant.contains("."))
 				return;
 			activeTenantList.add(tenant);
-			logger.info("messageDTO=" + tenant);
+			logger.info("Scheduler listener messageDTO=" + tenant);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

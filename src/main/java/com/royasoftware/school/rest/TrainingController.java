@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
@@ -42,6 +43,7 @@ import org.apache.batik.util.XMLResourceDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +58,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.royasoftware.school.TenantContext;
 import com.royasoftware.school.cluster.SpringExtension;
 import com.royasoftware.school.exception.ValidationException;
@@ -88,6 +91,7 @@ public class TrainingController extends BaseController {
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/savetraining")
 	public ResponseEntity<Training> saveTrainingObject(@RequestBody Training trainingParam) throws Exception {
+//		logger.info("saveTrainingObject"); 
 		CustomUserDetails user = TenantContext.getCurrentUser();
 		rdmTimeRdmSuccess();
 		Training training = new Training();
@@ -125,6 +129,7 @@ public class TrainingController extends BaseController {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/updatetraining")
 	public ResponseEntity<Training> updateTrainingObject(@RequestPart("trainingParam") Training trainingParam,
 			@RequestPart(value = "uploadfile", required = false) MultipartFile file) throws Exception {
+//		logger.info("updateTraining "+trainingParam); 
 		rdmTimeRdmSuccess();
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();
@@ -145,6 +150,7 @@ public class TrainingController extends BaseController {
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/save")
 	public ResponseEntity<Training> saveTraining(@RequestPart("title") String title) throws Exception {
+//		logger.info("saveTraining"); 
 		CustomUserDetails user = TenantContext.getCurrentUser();
 		logger.info("Calling Post rest controller save training ");
 		rdmTimeRdmSuccess();
@@ -259,10 +265,10 @@ public class TrainingController extends BaseController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = {
-			MediaType.APPLICATION_JSON_VALUE }, value = "/training/item/{_param}")
-	public ResponseEntity<Training> getTraining(@PathVariable Long _param) throws Exception {
+			MediaType.APPLICATION_JSON_VALUE }, value = "/training/item/{trainingId}")
+	public ResponseEntity<Training> getTraining(@PathVariable Long trainingId) throws Exception {
 		rdmTimeRdmSuccess();
-		Training training = trainingService.findById(_param);
+		Training training = trainingService.findById(trainingId);
 		return new ResponseEntity<Training>(training, HttpStatus.OK);
 	}
 
