@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import com.royasoftware.school.model.Training;
 import com.royasoftware.school.rest.GuestbookController.MessageDTO;
 
-@Component
+//@Component
 public class CounterWebSocketScheduler {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	private AtomicInteger counter = new AtomicInteger(0);
@@ -28,7 +28,7 @@ public class CounterWebSocketScheduler {
 	// @Autowired
 	// private SimpMessagingTemplate template;
 
-	@Autowired
+//	@Autowired
 	private AmqpTemplate amqpTemplate;
 
 //	@Value("${jsa.rabbitmq.exchange}")
@@ -37,7 +37,7 @@ public class CounterWebSocketScheduler {
 //	@Value("${jsa.rabbitmq.queue}")
 //	private String queue;
 
-	@Value("${jsa.rabbitmq.routingkey}")
+//	@Value("${jsa.rabbitmq.routingkey}")
 	private String routingKey;
 
 //	@Scheduled(fixedRate = 5000)
@@ -55,7 +55,7 @@ public class CounterWebSocketScheduler {
 		// MessageDTO("YES" ));
 	}
 
-	@RabbitListener(queues = "jsa.sendqueue")
+//	@RabbitListener(queues = "jsa.sendqueue")
 	public void receivedMessage(MessageDTO messageDTO) {
 		try {
 			String tenant = messageDTO.content;
