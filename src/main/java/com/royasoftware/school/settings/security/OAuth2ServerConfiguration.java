@@ -99,7 +99,14 @@ public class OAuth2ServerConfiguration {
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
             // @formatter:off
-        	
+            endpoints.tokenStore(tokenStore)
+		            .authenticationManager(authenticationManager)
+		            //ErrorFix: Next line fixed the "UserDetailsService is required"-error while token refreshing using refresh_token  
+		            .userDetailsService(userDetailsService)
+		            .accessTokenConverter(jwtAccessTokenConverter)
+		            .tokenEnhancer(new CustomTokenEnhancer());
+		
+		            
             endpoints.tokenStore(tokenStore)
                     .authenticationManager(authenticationManager)
                     .accessTokenConverter(jwtAccessTokenConverter)
