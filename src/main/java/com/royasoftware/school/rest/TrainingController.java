@@ -226,12 +226,14 @@ public class TrainingController extends BaseController {
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
 	public ResponseEntity<Object> getTrainingsPost(@PathVariable String _param) throws Exception {
+		logger.info("Logger ! trainingList size =");
 		return getTrainingsGet(_param);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
 	public ResponseEntity<Object> getTrainingsGet(@PathVariable String _param) throws Exception {
+		logger.info("Logger ! trainingList size =");
 		CustomUserDetails activeUser = TenantContext.getCurrentUser();
 		rdmTimeRdmSuccess();
 //		ActorSelection trainingServFrEndActor = actorSystem.actorSelection("/user/trainingServFrEndActor");
@@ -260,7 +262,7 @@ public class TrainingController extends BaseController {
 
 		
 		Collection<Training> trainingList = trainingService.findAll();
-//		logger.info("Logger ! trainingList size =" + trainingList.size());
+		logger.info("Logger ! trainingList size =" + trainingList.size());
 		return new ResponseEntity<Object>(trainingList, HttpStatus.OK);
 	}
 

@@ -95,13 +95,17 @@ public class OAuth2ServerConfiguration {
         @Autowired
         @Qualifier("authenticationManagerBean")
         private AuthenticationManager authenticationManager;
-        
+
+        @Autowired
+        private CustomUserDetailsService userDetailsService;        
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
             // @formatter:off
         	
             endpoints.tokenStore(tokenStore)
                     .authenticationManager(authenticationManager)
+                    //ErrorFix: Next line fixed the "UserDetailsService is required"-error while token refreshing using refresh_token  
+                    .userDetailsService(userDetailsService)
                     .accessTokenConverter(jwtAccessTokenConverter)
                     .tokenEnhancer(new CustomTokenEnhancer());
             // @formatter:on

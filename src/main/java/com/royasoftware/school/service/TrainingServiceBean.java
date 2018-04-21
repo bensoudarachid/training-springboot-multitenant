@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -78,7 +79,7 @@ public class TrainingServiceBean implements TrainingService {
 	@Cacheable(value = "trainings")
 	public Collection<Training> findAll() {
 		logger.info("service findAll trainings");
-		Uninterruptibles.sleepUninterruptibly(3000, TimeUnit.MILLISECONDS);
+		Uninterruptibles.sleepUninterruptibly(4000, TimeUnit.MILLISECONDS);
 		
 		// use the Spring Extension to create props for a named actor bean
 //		ActorRef counter = system.actorOf(springExtension.props("MyCountingActor")); //, "counter"
@@ -117,8 +118,14 @@ public class TrainingServiceBean implements TrainingService {
 		return trainingRepository.save(training);
 	}
 
-	@CacheEvict(value = "training", allEntries=true)
-	@DeleteMapping("/{id}")
+//	@CacheEvict(value = "training", allEntries=true)
+//	@DeleteMapping("/{id}")
+//	@CacheEvict(value = "trainings", allEntries=true)
+	
+	@Caching(evict = {
+			@CacheEvict(value = "trainings", allEntries=true),
+		    @CacheEvict(value = "training", key = "#trainingParam.id")
+		})
 	public void deleteTraining(Training trainingParam){
 		trainingRepository.delete(trainingParam);
 	}

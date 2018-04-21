@@ -25,7 +25,7 @@ public class CustomCacheResolver implements CacheResolver {
     	logger.info("resolve the right cache "+TenantContext.getCurrentTenant()); 
         Collection<Cache> caches = getCaches(cacheManager, context);
         Object cache = caches.iterator().next().getNativeCache();
-        logger.info("found cache 1 ="+cache ); 
+//        logger.info("found cache ="+cache ); 
         return caches;
     }
 
