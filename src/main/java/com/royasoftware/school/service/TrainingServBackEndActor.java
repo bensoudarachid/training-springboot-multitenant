@@ -19,12 +19,12 @@ import com.royasoftware.school.service.TrainingServFrEndActor.Trainings;
 //import sample.cluster.factorial.FactorialResult;
 
 
-@Component("TrainingServBackEndActor")
-@Scope("prototype")
+//@Component("TrainingServBackEndActor")
+//@Scope("prototype")
 public class TrainingServBackEndActor extends AkkaAppActor {
 	static Logger logger = LogManager.getLogger(TrainingServBackEndActor.class.getName());
 
-	@Autowired(required = false)
+//	@Autowired(required = false)
 	private TrainingService trainingService;
 
 	public TrainingServBackEndActor() {
