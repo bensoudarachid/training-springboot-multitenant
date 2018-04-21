@@ -48,7 +48,8 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
 //        	logger.info("origin="+origin); 
 //        logger.info("return : "+(origin!= null&&origin.contains("school.royasoftware.com") ? origin : "*"));
         response.setHeader("Access-Control-Allow-Origin", allowedOrigins.contains(origin) ? origin : "*");
-        response.setHeader("Access-Control-Allow-Headers", "x-requested-with, cache-control, authentication, authorization, Content-Type, Origin, X-Auth-Token, client-security-token");
+//        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Headers", "ClientHost, x-requested-with, cache-control, authentication, authorization, Content-Type, Origin, X-Auth-Token, client-security-token");
         response.setHeader("Access-Control-Max-Age", "3600");
 
         String remoteHost = request.getHeader("host");

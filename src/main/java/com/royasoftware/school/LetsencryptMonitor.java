@@ -531,12 +531,8 @@ public class LetsencryptMonitor {
 	 */
 	public void createSchoolCertificate() {
 
-		String[] domainArray = new String[] {"royasoftware.com",
-				"reactlearning.school.royasoftware.com", "abibislearning.school.royasoftware.com",
-				"it.school.royasoftware.com", "it.schoolapi.royasoftware.com", "hanya.school.royasoftware.com", "name1.school.royasoftware.com",
-				"name2.school.royasoftware.com", "name3.school.royasoftware.com", "name4.school.royasoftware.com",
-				"name5.school.royasoftware.com", "name6.school.royasoftware.com", "name7.school.royasoftware.com",
-				"name8.school.royasoftware.com" };
+		String[] domainArray = new String[] {"demo1.school.royasoftware.com", "demo2.school.royasoftware.com",
+				"demo3.school.royasoftware.com" };
 		// String[] domainArray = new String[]{"royasoftware.com"};
 
 		logger.info("Create School Certificate. Starting up...");

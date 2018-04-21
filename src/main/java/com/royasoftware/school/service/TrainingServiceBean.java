@@ -59,29 +59,7 @@ public class TrainingServiceBean implements TrainingService {
 
 	@Override
 	public Collection<Training> findAll() {
-//		logger.info("service findAll size"+trainingRepository.findAll().size());
-		
-		// use the Spring Extension to create props for a named actor bean
-//		ActorRef counter = system.actorOf(springExtension.props("MyCountingActor")); //, "counter"
-
-		// tell it to count three times
-//		counter.tell(new Count(), null);
-//		counter.tell(new Count(), null);
-//		counter.tell(new Count(), null);
-
-		// print the result
-//		FiniteDuration duration = FiniteDuration.create(3, TimeUnit.SECONDS);
-//		Future<Object> result = ask(counter, new Get(), Timeout.durationToTimeout(duration));
-//		try {
-//			System.out.println("Got back " + Await.result(result, duration));
-//		} catch (Exception e) {
-//			System.err.println("Failed getting result: " + e.getMessage());
-//		} 
-//		finally {
-//			system.terminate();
-//
-//		}
-		
+		logger.info("find all trainings");
 		return trainingRepository.findAll();
 	}
 
