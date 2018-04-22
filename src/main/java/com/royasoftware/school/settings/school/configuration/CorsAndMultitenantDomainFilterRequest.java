@@ -31,7 +31,7 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
 	private final DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
     private final Logger log = LoggerFactory.getLogger(CorsAndMultitenantDomainFilterRequest.class);
     final Calendar calendar = Calendar.getInstance();
-    private final List<String> allowedOrigins = Arrays.asList("localhost:8080","127.0.0.1:8080","http://abbaslearn.school.royasoftware.com:8081");
+    private final List<String> allowedOrigins = Arrays.asList("localhost:4200","localhost:8080","127.0.0.1:8080","abbaslearn.school.royasoftware.com:8081");
     
     public CorsAndMultitenantDomainFilterRequest() {
     }
@@ -48,7 +48,6 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
 //        	logger.info("origin="+origin); 
 //        logger.info("return : "+(origin!= null&&origin.contains("school.royasoftware.com") ? origin : "*"));
         response.setHeader("Access-Control-Allow-Origin", allowedOrigins.contains(origin) ? origin : "*");
-//        response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Headers", "ClientHost, x-requested-with, cache-control, authentication, authorization, Content-Type, Origin, X-Auth-Token, client-security-token");
         response.setHeader("Access-Control-Max-Age", "3600");
 

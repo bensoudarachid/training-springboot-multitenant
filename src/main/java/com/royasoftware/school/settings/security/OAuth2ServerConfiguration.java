@@ -93,6 +93,9 @@ public class OAuth2ServerConfiguration {
 //        private TokenStore tokenStore = new JwtTokenStore(jwtAccessTokenConverter);
 
         @Autowired
+        private CustomUserDetailsService userDetailsService;        
+
+        @Autowired
         @Qualifier("authenticationManagerBean")
         private AuthenticationManager authenticationManager;
         
