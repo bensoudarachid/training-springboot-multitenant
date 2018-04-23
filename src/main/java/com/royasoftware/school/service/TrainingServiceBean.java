@@ -59,7 +59,7 @@ public class TrainingServiceBean implements TrainingService {
 
 	@Override
 	public Collection<Training> findAll() {
-		logger.info("find all trainings");
+//		logger.info("find all trainings");
 		return trainingRepository.findAll();
 	}
 
