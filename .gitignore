@@ -182,7 +182,7 @@ Makefile.in
 
 #Executables
 *.exe
-
+*.bat
 #Executables
 *.log
 

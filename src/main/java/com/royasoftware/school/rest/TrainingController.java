@@ -88,6 +88,7 @@ public class TrainingController extends BaseController {
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/savetraining")
 	public ResponseEntity<Training> saveTrainingObject(@RequestBody Training trainingParam) throws Exception {
+		logger.info("Calling Post rest controller saveTrainingObject ");
 		CustomUserDetails user = TenantContext.getCurrentUser();
 		rdmTimeRdmSuccess();
 		Training training = new Training();
@@ -125,6 +126,7 @@ public class TrainingController extends BaseController {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/updatetraining")
 	public ResponseEntity<Training> updateTrainingObject(@RequestPart("trainingParam") Training trainingParam,
 			@RequestPart(value = "uploadfile", required = false) MultipartFile file) throws Exception {
+		logger.info("here we go updatetraining "+trainingParam);
 		rdmTimeRdmSuccess();
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();
@@ -132,6 +134,7 @@ public class TrainingController extends BaseController {
 		if( violations.isPresent()&&!violations.get().isEmpty() ){
 	        Map<String, String> validErrorMap = violations.get().stream().collect(
 	                Collectors.toMap(v->v.getPropertyPath().toString(), ConstraintViolation::getMessage ) );
+			logger.info("validErrorMap="+validErrorMap);
 			throw new ValidationException(trainingParam,validErrorMap);
 		}
 		Training training = trainingService.updateTraining(trainingParam);
@@ -226,6 +229,8 @@ public class TrainingController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
 	public ResponseEntity<Object> getTrainingsGet(@PathVariable String _param) throws Exception {
+		logger.info("--- trainingList controller get list ");
+		
 		CustomUserDetails activeUser = TenantContext.getCurrentUser();
 		rdmTimeRdmSuccess();
 //		ActorSelection trainingServFrEndActor = actorSystem.actorSelection("/user/trainingServFrEndActor");
@@ -254,7 +259,7 @@ public class TrainingController extends BaseController {
 
 		
 		Collection<Training> trainingList = trainingService.findAll();
-//		logger.info("Logger ! trainingList size =" + trainingList.size());
+		logger.info("--- trainingList size =" + trainingList.size());
 		return new ResponseEntity<Object>(trainingList, HttpStatus.OK);
 	}
 
@@ -263,6 +268,8 @@ public class TrainingController extends BaseController {
 	public ResponseEntity<Training> getTraining(@PathVariable Long _param) throws Exception {
 		rdmTimeRdmSuccess();
 		Training training = trainingService.findById(_param);
+		logger.info("training title ="+training.getTitle()); 
+		logger.info("training duration ="+training.getDuration()); 
 		return new ResponseEntity<Training>(training, HttpStatus.OK);
 	}
 

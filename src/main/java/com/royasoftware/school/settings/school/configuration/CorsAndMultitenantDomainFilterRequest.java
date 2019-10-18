@@ -62,12 +62,15 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
 		String domain = null;
 		try {
 			String[] parts = site.split("\\.");
+//			logger.info("parts="+parts);
 			if( parts==null||parts.length!=4||!parts[3].equals("com")||!parts[2].equals("royasoftware")||!parts[1].equals("schoolapi") ){
+				logger.info("parts is null");
 				TenantContext.setCurrentTenant(null);
 //				throw new Exception("Malformed URL");
-			}else
+			}else{
+//				logger.info("parts[0]="+parts[0]);
 				TenantContext.setCurrentTenant(parts[0]);
-
+			}
 	        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
 	            response.setStatus(HttpServletResponse.SC_OK);             
 	        } else {

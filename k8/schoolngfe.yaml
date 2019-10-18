@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: schoolngfe
+spec:
+  selector:
+    app: school
+    tier: frontend
+  ports:
+    - protocol: "TCP"
+      nodePort: 31122
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: schoolngfe
+spec:
+  replicas: 1
+  minReadySeconds: 5
+  selector:
+    matchLabels:
+      app: school
+  strategy:
+    # indicate which strategy we want for rolling update
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: school
+        tier: frontend
+        track: stable
+    spec:
+      containers:
+        - name: schoolngfectn
+          image: royasoftware/trainingngfrontend:v1.0.0
+          ports:
+            - containerPort: 80

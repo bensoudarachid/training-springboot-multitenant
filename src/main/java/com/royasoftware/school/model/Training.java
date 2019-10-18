@@ -27,58 +27,67 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @lombok.Getter
 @lombok.Setter
-@lombok.EqualsAndHashCode(of = {"id"})
+@lombok.EqualsAndHashCode(of = { "id" })
 @lombok.ToString
 @lombok.NoArgsConstructor
 
 @Entity
 @NamedQuery(query = "SELECT tr FROM Training tr WHERE tr.id = :trainingid", name = "query_find_training_by_id")
-public class Training implements Serializable{
+public class Training implements Serializable {
 	@Transient
 	static private Logger logger = LoggerFactory.getLogger(Training.class);
-	
-    @Id
-    @GeneratedValue
-    private Long id;
 
-    @NotNull
-    @Required
-	@Size(min=1, max=30)
-    private String title;
+	@Id
+	@GeneratedValue
+	private Long id;
 
-    @NotNull
-    private String secondaryTitle;
+	@NotNull
+	@Required
+	@Size(min = 1, max = 30)
+	private String title;
 
-    @NotNull
-    @Column(columnDefinition="varchar(511)")
-    @Required
-	@Size(min=1, max=200)
-    private String shortDescription;
+	@NotNull
+	private String secondaryTitle;
 
-    @NotNull
-    @Column(columnDefinition="TEXT")
-    private String longDescription;
+	@NotNull
+	@Column(columnDefinition = "varchar(511)")
+	@Required
+	@Size(min = 1, max = 200)
+	private String shortDescription;
 
-    @NotNull
-    private Integer duration;
+	@NotNull
+	@Column(columnDefinition = "TEXT")
+	private String longDescription;
 
-    @Version
-    @Column(name = "VERSION")
-    private Integer version;
+	@NotNull
+	private Integer duration;
 
-    public Long getId() {
-//        logger.info("id="+id);     	
-        return id;
-    }
+	@Version
+	@Column(name = "VERSION")
+	private Integer version;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		// logger.info("id="+id);
+		return id;
+	}
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy="training",cascade = CascadeType.ALL,orphanRemoval=true)
-//    @JsonBackReference
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Integer getDuration() {
+		// logger.info("id="+id);
+		if( duration == null) return 0;
+		return duration;
+	}
+
+	public void setDuration(Integer duration) {
+		this.duration = duration;
+	}
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "training", cascade = CascadeType.ALL, orphanRemoval = true)
+	// @JsonBackReference
 	@JsonManagedReference
-    private List<Event> events;
+	private List<Event> events;
 
-	
 }

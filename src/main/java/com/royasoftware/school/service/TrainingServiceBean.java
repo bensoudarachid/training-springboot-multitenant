@@ -65,11 +65,13 @@ public class TrainingServiceBean implements TrainingService {
 
 	@Override
 	public Training saveTraining(Training training) {
+		logger.info("repo save Training ="+training);
 		return trainingRepository.save(training);
 	}
 
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public Training updateTraining(Training training){
+		logger.info("repo updateTraining ="+training);
 		return trainingRepository.save(training);
 	}
 

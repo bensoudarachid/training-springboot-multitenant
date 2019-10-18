@@ -40,7 +40,7 @@ spec:
             timeoutSeconds: 3
           env:
             - name: MYSQL_HOST
-              value: 192.168.1.99
+              value: 192.168.2.101
             - name: TRAINING_APP_STORAGE
               value: /deployments/data/trainingappstorage
           volumeMounts:
