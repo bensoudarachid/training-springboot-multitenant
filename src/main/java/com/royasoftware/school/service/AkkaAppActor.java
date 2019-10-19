@@ -52,6 +52,7 @@ public class AkkaAppActor extends AbstractActor {
 	}
 	@Override
 	public Receive createReceive() {
+		
 		return null;
 	}
 	public static class Message implements AkkaAppMsg{

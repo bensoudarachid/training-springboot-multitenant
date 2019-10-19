@@ -34,6 +34,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @NamedQuery(query = "SELECT tr FROM Training tr WHERE tr.id = :trainingid", name = "query_find_training_by_id")
 public class Training implements Serializable {
+
 	@Transient
 	static private Logger logger = LoggerFactory.getLogger(Training.class);
 
@@ -66,6 +67,11 @@ public class Training implements Serializable {
 	@Column(name = "VERSION")
 	private Integer version;
 
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "training", cascade = CascadeType.ALL, orphanRemoval = true)
+	// @JsonBackReference
+	@JsonManagedReference
+	private List<Event> events;
+
 	public Long getId() {
 		// logger.info("id="+id);
 		return id;
@@ -85,9 +91,52 @@ public class Training implements Serializable {
 		this.duration = duration;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "training", cascade = CascadeType.ALL, orphanRemoval = true)
-	// @JsonBackReference
-	@JsonManagedReference
-	private List<Event> events;
+	public String getTitle() {
+		return title;
+	}
 
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getSecondaryTitle() {
+		return secondaryTitle;
+	}
+
+	public void setSecondaryTitle(String secondaryTitle) {
+		this.secondaryTitle = secondaryTitle;
+	}
+
+	public String getShortDescription() {
+		return shortDescription;
+	}
+
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
+	}
+
+	public String getLongDescription() {
+		return longDescription;
+	}
+
+	public void setLongDescription(String longDescription) {
+		this.longDescription = longDescription;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	public List<Event> getEvents() {
+		return events;
+	}
+
+	public void setEvents(List<Event> events) {
+		this.events = events;
+	}
+	
 }

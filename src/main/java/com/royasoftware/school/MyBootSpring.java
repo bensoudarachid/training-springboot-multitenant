@@ -141,6 +141,15 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 	}
 
 	public static void main(String[] args) {
+		
+//	    String fontConfig = System.getProperty("java.home")
+//	            + File.separator + "lib"
+//	            + File.separator + "fontconfig.Prodimage.properties";
+//	    if (new File(fontConfig).exists()) {
+//	    	logger.info("yes. we found it");
+//	        System.setProperty("sun.awt.fontconfig", fontConfig);
+//	    }else 
+//	    	logger.info("Nope. we did not find it");
 		// Thread t = new Thread(() -> {
 		// AkkaSystemStarter.main(new String[0]);
 		// });

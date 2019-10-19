@@ -26,5 +26,37 @@ public class TenantProfile {
 	@Version
     @Column(name = "VERSION")
     private Integer version;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getLogopath() {
+		return logopath;
+	}
+
+	public void setLogopath(String logopath) {
+		this.logopath = logopath;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 	
 }

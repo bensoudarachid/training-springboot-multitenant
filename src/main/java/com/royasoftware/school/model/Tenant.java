@@ -31,5 +31,23 @@ public class Tenant {
 	static private Logger logger = LoggerFactory.getLogger(Tenant.class);
     private String name1;
     private String name2;
+	public static Logger getLogger() {
+		return logger;
+	}
+	public static void setLogger(Logger logger) {
+		Tenant.logger = logger;
+	}
+	public String getName1() {
+		return name1;
+	}
+	public void setName1(String name1) {
+		this.name1 = name1;
+	}
+	public String getName2() {
+		return name2;
+	}
+	public void setName2(String name2) {
+		this.name2 = name2;
+	}
 	
 }

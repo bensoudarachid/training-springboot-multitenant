@@ -140,7 +140,7 @@ public class Account {
 	public Date getRegistrationDate() {
 		return registrationDate;
 	}
-
+	
 	public void setRegistrationDate(Date registrationDate) {
 		this.registrationDate = registrationDate;
 	}
