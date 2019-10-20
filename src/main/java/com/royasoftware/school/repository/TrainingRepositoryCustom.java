@@ -17,5 +17,5 @@ import com.royasoftware.school.model.Training;
  * behaviors may be defined in this interface.
  */
 public interface TrainingRepositoryCustom {
-	public Training findById(Long id); 
+//	public Training findById(Long id); 
 }

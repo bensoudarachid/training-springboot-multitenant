@@ -82,7 +82,7 @@ public class AccountServiceBean implements AccountService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public Account createNewAccount(Account account) {
-
+    	System.out.println("new BCryptPasswordEncoder().encode");
         // Add the simple user role
         Role role = roleService.findByCode("ROLE_USER");
         Set<Role> roles = new HashSet<>();

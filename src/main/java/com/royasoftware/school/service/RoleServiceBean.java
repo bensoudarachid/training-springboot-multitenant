@@ -3,6 +3,8 @@ package com.royasoftware.school.service;
 import com.royasoftware.school.model.Role;
 import com.royasoftware.school.repository.RoleRepository;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -29,8 +31,8 @@ public class RoleServiceBean implements RoleService{
      */
     @Override
     public Role findById(Long id) {
-        Role role = roleRepository.findOne(id);
-        return role;
+        Optional<Role> role = roleRepository.findById(id);
+        return role.get();
     }
 
     /**

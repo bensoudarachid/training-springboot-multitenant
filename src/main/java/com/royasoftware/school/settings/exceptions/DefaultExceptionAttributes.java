@@ -1,6 +1,6 @@
 package com.royasoftware.school.settings.exceptions;
 
-import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
+import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.RequestAttributes;
 

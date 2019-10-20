@@ -1,6 +1,7 @@
 package com.royasoftware.school.service;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +46,8 @@ public class TrainingServiceBean implements TrainingService {
 	 */
 	@Override
 	public Training findById(Long id) {
-		Training training = trainingRepository.findById(id);
-		return training;
+		Optional<Training> training = trainingRepository.findById(id);
+		return training.get();
 	}
 
 	/**

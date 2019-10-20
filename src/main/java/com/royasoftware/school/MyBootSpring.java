@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +27,11 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -200,5 +202,4 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 	public ViewResolver viewResolver() {
 		return new ScriptTemplateViewResolver("/static2/", ".html");
 	}
-
 }

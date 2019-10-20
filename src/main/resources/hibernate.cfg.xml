@@ -2,27 +2,27 @@
 <!DOCTYPE hibernate-configuration SYSTEM "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
-    <session-factory>
-        <!-- DataSource & Connection info. -->
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/sql3210912</property>
-        <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password">1qay2wsx</property>
-        <property name="hibernate.connection.pool_size">1</property>
-        <property name="hibernate.physical_naming_strategy">com.royasoftware.PhysicalNamingStrategyImpl</property>
-<!--
-		<property name="hibernate.ejb.namingstrategy">org.hibernate.cfg.ImprovedNamingStrategy</property>
-		<property name="hibernate.ejb.naming_strategy">net.sf.hibernate.cfg.ImprovedNamingStrategy</property>
--->		
-          
-        <!-- All our Hibernate mapping XML files. -->
-        <mapping package="com.royasoftware.model" />
-        <mapping class="com.royasoftware.model.Account" />
-        <mapping class="com.royasoftware.model.Role" />
-        <mapping class="com.royasoftware.model.Todo" />
-        <mapping class="com.royasoftware.model.TenantProfile" />
-        <mapping class="com.royasoftware.model.Event" />
-        <mapping class="com.royasoftware.model.Training" />
-    </session-factory>
+	<session-factory>
+		<!-- DataSource & Connection info. -->
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+		<!-- <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property> -->
+		<property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/sql3210912?serverTimezone=UTC</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password">1qay2wsx</property>
+		<property name="hibernate.connection.pool_size">1</property>
+		<property name="hibernate.physical_naming_strategy">com.royasoftware.school.PhysicalNamingStrategyImpl</property>
+		<!-- <property name="hibernate.ejb.namingstrategy">org.hibernate.cfg.ImprovedNamingStrategy</property> 
+			<property name="hibernate.ejb.naming_strategy">net.sf.hibernate.cfg.ImprovedNamingStrategy</property> -->
+
+		<!-- All our Hibernate mapping XML files. -->
+		<mapping package="com.royasoftware.school.model" />
+		<mapping class="com.royasoftware.school.model.Account" />
+		<mapping class="com.royasoftware.school.model.Role" />
+		<mapping class="com.royasoftware.school.model.Todo" />
+		<mapping class="com.royasoftware.school.model.TenantProfile" />
+		<mapping class="com.royasoftware.school.model.Event" />
+		<mapping class="com.royasoftware.school.model.Training" />
+	</session-factory>
 </hibernate-configuration>

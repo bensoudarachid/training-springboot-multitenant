@@ -14,7 +14,7 @@ import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
@@ -59,7 +59,8 @@ public class MultitenantDbConfiguration {
 		String tenantId = null;
 		for (Resource propertyFile : resources) {
 			Properties tenantProperties = new Properties();
-			DataSourceBuilder dataSourceBuilder = new DataSourceBuilder(this.getClass().getClassLoader());
+//			DataSourceBuilder dataSourceBuilder = new DataSourceBuilder(this.getClass().getClassLoader());
+			DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
 			try {
 				tenantProperties.load(propertyFile.getInputStream());
 				tenantId = tenantProperties.getProperty("name");
@@ -146,9 +147,10 @@ public class MultitenantDbConfiguration {
 	 * @return
 	 */
 	private DataSource defaultDataSource() {
-		DataSourceBuilder dataSourceBuilder = new DataSourceBuilder(this.getClass().getClassLoader())
-				.driverClassName(properties.getDriverClassName()).url(properties.getUrl())
-				.username(properties.getUsername()).password(properties.getPassword());
+//		DataSourceBuilder dataSourceBuilder = new DataSourceBuilder(this.getClass().getClassLoader())
+		DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();				
+		dataSourceBuilder.driverClassName(properties.getDriverClassName()).url(properties.getUrl())
+		.username(properties.getUsername()).password(properties.getPassword());
 		// logger.info("------->properties.getType()
 		// default="+properties.getType());
 		if (properties.getType() != null) {
@@ -160,14 +162,10 @@ public class MultitenantDbConfiguration {
 	}
 
 	private void setDataSourcePoolProps(DataSource ds) {
-		// ((org.apache.tomcat.jdbc.pool.DataSource)ds).setSuspectTimeout(2000);
 		((org.apache.tomcat.jdbc.pool.DataSource) ds).setValidationInterval(20000);
 		((org.apache.tomcat.jdbc.pool.DataSource) ds).setTestOnBorrow(true);
 		((org.apache.tomcat.jdbc.pool.DataSource) ds).setTestWhileIdle(true);
-		// ((org.apache.tomcat.jdbc.pool.DataSource)ds).setTimeBetweenEvictionRunsMillis(2000);
 		((org.apache.tomcat.jdbc.pool.DataSource) ds).setValidationQuery("SELECT 1");
-		// ((org.apache.tomcat.jdbc.pool.DataSource)ds).setMinIdle(2);
-		// ((org.apache.tomcat.jdbc.pool.DataSource)ds).setMaxIdle(8);
 	}
 
 }

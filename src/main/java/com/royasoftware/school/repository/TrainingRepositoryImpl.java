@@ -30,10 +30,10 @@ public class TrainingRepositoryImpl implements TrainingRepositoryCustom{
 	 */
 
 //	Query("SELECT tr FROM Training tr WHERE tr.id = :trainingid")
-	public Training findById(Long id) { //@Param("trainingid") 
-		TypedQuery<Training> query = em.createQuery("SELECT tr FROM Training tr WHERE tr.id = :trainingid", Training.class);
-		query.setParameter("trainingid", id);
-		return query.getSingleResult();
-	}
+//	public Training findById(Long id) { //@Param("trainingid") 
+//		TypedQuery<Training> query = em.createQuery("SELECT tr FROM Training tr WHERE tr.id = :trainingid", Training.class);
+//		query.setParameter("trainingid", id);
+//		return query.getSingleResult();
+//	}
 
 }

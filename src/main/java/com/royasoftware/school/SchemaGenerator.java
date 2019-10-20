@@ -5,6 +5,7 @@ import java.io.File;
 import java.net.URL;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -17,6 +18,7 @@ import org.hibernate.internal.SessionImpl;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.hbm2ddl.SchemaUpdate;
+import org.hibernate.tool.schema.TargetType;
 
 /**
  * @author john.thompson
@@ -76,19 +78,23 @@ public class SchemaGenerator
 
     	 MetadataImplementor metadata = (MetadataImplementor) new MetadataSources(serviceRegistry).buildMetadata();
 //         SchemaExport schemaExport = new SchemaExport(metadata);
-         SchemaUpdate schemaExport = new SchemaUpdate(metadata);
+    	 
+//         SchemaUpdate schemaExport = new SchemaUpdate(metadata);
+         new SchemaUpdate()
+        		 .setDelimiter(";").setOutputFile("V__upd.sql")
+			.execute( EnumSet.of( TargetType.SCRIPT ), metadata, serviceRegistry );
          
 //        SchemaExport export = new SchemaExport(
 //                (MetadataImplementor) meta.buildMetadata()
 //        );
         
 
-        schemaExport.setDelimiter(";");
-        schemaExport.setOutputFile("V__upd.sql");
+//        schemaExport.setDelimiter(";");
+//        schemaExport.setOutputFile("V__upd.sql");
         
 //        schemaExport.setFormat(true);
 //        schemaExport.execute(true, false, false, false);
-        schemaExport.execute(true, false);
+//        schemaExport.execute(true, false);
 //        schemaExport.create(true, true);
         
         ( (StandardServiceRegistryImpl) serviceRegistry ).destroy();
@@ -116,7 +122,7 @@ public class SchemaGenerator
    */
   public static void main(String[] args) throws Exception
   {
-    SchemaGenerator gen = new SchemaGenerator("com.royasoftware.model");
+    SchemaGenerator gen = new SchemaGenerator("com.royasoftware.school.model");
     gen.generate();
 //    gen.generate(Dialect.ORACLE);
 //    gen.generate(Dialect.HSQL);

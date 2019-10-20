@@ -110,10 +110,10 @@ public class OAuth2ServerConfiguration {
 		            .tokenEnhancer(new CustomTokenEnhancer());
 		
 		            
-            endpoints.tokenStore(tokenStore)
-                    .authenticationManager(authenticationManager)
-                    .accessTokenConverter(jwtAccessTokenConverter)
-                    .tokenEnhancer(new CustomTokenEnhancer());
+//            endpoints.tokenStore(tokenStore)
+//                    .authenticationManager(authenticationManager)
+//                    .accessTokenConverter(jwtAccessTokenConverter)
+//                    .tokenEnhancer(new CustomTokenEnhancer());
             // @formatter:on
         }
 

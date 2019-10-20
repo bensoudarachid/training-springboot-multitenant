@@ -53,7 +53,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User not authorized.");
         }
 
-
         Collection<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
         for (Role role : account.getRoles()) {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getCode()));

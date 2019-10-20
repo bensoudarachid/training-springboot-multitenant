@@ -46,6 +46,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,7 +60,9 @@ import org.w3c.dom.Document;
 import com.royasoftware.school.TenantContext;
 import com.royasoftware.school.cluster.SpringExtension;
 import com.royasoftware.school.exception.ValidationException;
+import com.royasoftware.school.model.Account;
 import com.royasoftware.school.model.Training;
+import com.royasoftware.school.service.AccountService;
 import com.royasoftware.school.service.TrainingServFrEndActor;
 import com.royasoftware.school.service.TrainingService;
 import com.royasoftware.school.service.TrainingServFrEndActor.Trainings;
@@ -83,6 +86,10 @@ public class TrainingController extends BaseController {
 
 	@Autowired
 	private TrainingService trainingService;
+
+	@Autowired
+	private AccountService accountService;
+
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@RequestMapping(method = RequestMethod.POST, produces = {
@@ -95,7 +102,6 @@ public class TrainingController extends BaseController {
 		training.setTitle(trainingParam.getTitle());
 		training.setShortDescription(trainingParam.getShortDescription());
 		training.setLongDescription(trainingParam.getLongDescription());
-		training = trainingService.saveTraining(training);
 		return new ResponseEntity<Training>(training, HttpStatus.OK);
 	}
 
@@ -230,6 +236,10 @@ public class TrainingController extends BaseController {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
 	public ResponseEntity<Object> getTrainingsGet(@PathVariable String _param) throws Exception {
 		logger.info("--- trainingList controller get list ");
+		Account acc = accountService.findByUsername("admin");
+		logger.info("--------------acc ="+acc.getId());
+		logger.info("--------------acc ="+acc.getUsername());
+		logger.info("--------------acc ="+acc.getPassword());
 		
 		CustomUserDetails activeUser = TenantContext.getCurrentUser();
 		rdmTimeRdmSuccess();
@@ -260,6 +270,9 @@ public class TrainingController extends BaseController {
 		
 		Collection<Training> trainingList = trainingService.findAll();
 		logger.info("--- trainingList size =" + trainingList.size());
+		logger.info("newBCryptPasswordEncoder().encode(jefaistout)="+new BCryptPasswordEncoder().encode("jefaistout"));
+		logger.info("newBCryptPasswordEncoder().encode(123456)="+new BCryptPasswordEncoder().encode("123456"));
+		
 		return new ResponseEntity<Object>(trainingList, HttpStatus.OK);
 	}
 
