@@ -58,7 +58,7 @@ import com.royasoftware.school.script.ScriptHelper;
 		"classpath:mainakkaserver.properties" })
 
 public class MyBootSpring extends SpringBootServletInitializer implements SchedulingConfigurer { // ,RabbitListenerConfigurer
-	private static Logger logger = LoggerFactory.getLogger(MyBootSpring.class);
+//	private static Logger logger = LoggerFactory.getLogger(MyBootSpring.class);
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
@@ -172,7 +172,7 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 
 		ScriptHelper.run(ScriptHelper.RUN_TEMP2);
 
-		logger.info("Spring Boot Server started");
+//		logger.info("Spring Boot Server started");
 
 	}
 
@@ -191,10 +191,10 @@ public class MyBootSpring extends SpringBootServletInitializer implements Schedu
 		WebApplicationContext rootAppContext = createRootApplicationContext(servletContext);
 		if (rootAppContext != null) {
 			servletContext.addListener(new CleanupListener());
-			logger.info("you could add your servlet listeners here!");
+//			logger.info("you could add your servlet listeners here!");
 		} else {
-			this.logger.debug("No ContextLoaderListener registered, as " + "createRootApplicationContext() did not "
-					+ "return an application context");
+//			this.logger.debug("No ContextLoaderListener registered, as " + "createRootApplicationContext() did not "
+//					+ "return an application context");
 		}
 	}
 

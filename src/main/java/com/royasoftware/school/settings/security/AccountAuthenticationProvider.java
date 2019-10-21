@@ -38,7 +38,7 @@ public class AccountAuthenticationProvider extends AbstractUserDetailsAuthentica
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken token) throws AuthenticationException {
-        System.out.println("> additionalAuthenticationChecks");
+    	logger.info("> additionalAuthenticationChecks");
 
         if (token.getCredentials() == null || userDetails.getPassword() == null) {
             throw new BadCredentialsException("Credentials may not be null.");
@@ -49,13 +49,12 @@ public class AccountAuthenticationProvider extends AbstractUserDetailsAuthentica
         if (!passwordEncoder.matches((String) token.getCredentials(), userDetails.getPassword())) {
             throw new BadCredentialsException("Invalid credentials.");
         }
-
+     
         logger.info("< additionalAuthenticationChecks");
     }
 
     @Override
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken token) throws AuthenticationException {
-        System.out.println("RetrieveUser");
 //		//Simulate delay of a real network connection to see the animation on front end 
 		try {
 			Thread.sleep(800);

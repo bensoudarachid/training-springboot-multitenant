@@ -235,12 +235,7 @@ public class TrainingController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
 	public ResponseEntity<Object> getTrainingsGet(@PathVariable String _param) throws Exception {
-		logger.info("--- trainingList controller get list ");
 		Account acc = accountService.findByUsername("admin");
-		logger.info("--------------acc ="+acc.getId());
-		logger.info("--------------acc ="+acc.getUsername());
-		logger.info("--------------acc ="+acc.getPassword());
-		
 		CustomUserDetails activeUser = TenantContext.getCurrentUser();
 		rdmTimeRdmSuccess();
 //		ActorSelection trainingServFrEndActor = actorSystem.actorSelection("/user/trainingServFrEndActor");
@@ -269,10 +264,6 @@ public class TrainingController extends BaseController {
 
 		
 		Collection<Training> trainingList = trainingService.findAll();
-		logger.info("--- trainingList size =" + trainingList.size());
-		logger.info("newBCryptPasswordEncoder().encode(jefaistout)="+new BCryptPasswordEncoder().encode("jefaistout"));
-		logger.info("newBCryptPasswordEncoder().encode(123456)="+new BCryptPasswordEncoder().encode("123456"));
-		
 		return new ResponseEntity<Object>(trainingList, HttpStatus.OK);
 	}
 
@@ -281,8 +272,6 @@ public class TrainingController extends BaseController {
 	public ResponseEntity<Training> getTraining(@PathVariable Long _param) throws Exception {
 		rdmTimeRdmSuccess();
 		Training training = trainingService.findById(_param);
-		logger.info("training title ="+training.getTitle()); 
-		logger.info("training duration ="+training.getDuration()); 
 		return new ResponseEntity<Training>(training, HttpStatus.OK);
 	}
 
