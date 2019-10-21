@@ -19,8 +19,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -36,8 +38,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class Training implements Serializable {
 
 	@Transient
-	static private Logger logger = LoggerFactory.getLogger(Training.class);
-
+//	static private Logger logger = LoggerFactory.getLogger(Training.class);
+	private static final Logger logger = LogManager.getLogger(Training.class);
 	@Id
 	@GeneratedValue
 	private Long id;

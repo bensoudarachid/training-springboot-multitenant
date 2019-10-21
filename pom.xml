@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.0.RELEASE</version>
+		<version>2.0.3.RELEASE</version>
 
 		<!-- <version>1.5.1.RELEASE</version> <version>2.2.0.RELEASE</version> -->
 	</parent>
@@ -34,11 +34,7 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
         </exclusion>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-    </exclusions>
+	</exclusions>
 </dependency>			
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -47,12 +43,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -109,12 +99,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<!-- <dependency> <groupId>org.hsqldb</groupId> <artifactId>hsqldb</artifactId> 
 			</dependency> -->
@@ -314,6 +298,7 @@
 			<artifactId>log4j-core</artifactId> <version>2.7</version> </dependency> 
 			<dependency> <groupId>org.apache.logging.log4j</groupId> <artifactId>log4j-jcl</artifactId> 
 			<version>2.7</version> </dependency> -->
+<!-- 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -344,6 +329,7 @@
 			<artifactId>log4j-jcl</artifactId>
 			<version>2.7</version>
 		</dependency>
+ -->		
 		<!-- Async logging lib. notice the property Log4jContextSelector on program 
 			start. Put status=debug in log4j2.xml <Configuration/> to check if Async 
 			has been enabled 
@@ -355,16 +341,17 @@
 		</dependency>
 			
 			-->
+<!--  -->			
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>com.lmax</groupId>
-			<artifactId>disruptor</artifactId>
-			<version>3.3.0</version>
-		</dependency>
+ 	<dependency>
+		<groupId>com.lmax</groupId>
+		<artifactId>disruptor</artifactId>
+		<version>3.4.2</version>
+	</dependency>
 
 
 		<!-- <dependency> <groupId>org.apache.logging.log4j</groupId> <artifactId>log4j-slf4j-impl</artifactId> 

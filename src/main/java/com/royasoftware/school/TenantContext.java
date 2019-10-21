@@ -7,12 +7,15 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+//import org.apache.logging.log4j.LogManager;
+//import org.apache.logging.log4j.Logger;
 
 import com.royasoftware.school.settings.security.CustomUserDetails;
 
 public class TenantContext {
-	
-	private static Logger logger = LoggerFactory.getLogger("com.royasoftware.school.TenantContext");
+
+	private static Logger logger = LoggerFactory.getLogger(TenantContext.class);
+//	private static final Logger logger = LogManager.getLogger(TenantContext.class);
 	public static String userUploadStorage=System.getenv("TRAINING_APP_STORAGE");
 	static{
 		if( !userUploadStorage.endsWith(File.separator) )
