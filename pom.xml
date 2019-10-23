@@ -168,6 +168,24 @@
 		    <scope>compile</scope>
 		</dependency>
 		-->
+		<!-- https://mvnrepository.com/artifact/org.xmlbeam/xmlprojector -->
+		<dependency>
+		    <groupId>org.xmlbeam</groupId>
+		    <artifactId>xmlprojector</artifactId>
+		    <version>1.4.16</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.ldap/spring-ldap-core -->
+		<dependency>
+		    <groupId>org.springframework.ldap</groupId>
+		    <artifactId>spring-ldap-core</artifactId>
+		    <version>2.3.2.RELEASE</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-ldap -->
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-ldap</artifactId>
+		    <version>5.2.0.RELEASE</version>
+		</dependency>
 
 		<!-- Views Dependencies -->
 		<!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>jstl</artifactId> 
