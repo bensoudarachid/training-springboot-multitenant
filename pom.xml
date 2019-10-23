@@ -115,7 +115,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.16.10</version>
+			<version>1.18.8</version>
 			<scope>provided</scope> <!--this prevents this libto be included in build file -->
 		</dependency>
 
@@ -147,17 +147,27 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
 		    <groupId>mysql</groupId>
 		    <artifactId>mysql-connector-java</artifactId>
 		    <version>8.0.18</version>
 		</dependency>
-		<dependency>
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java 
+-->		
+	    <dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>compile</scope>
 		</dependency>
+<!--  -->		
+		<!-- https://mvnrepository.com/artifact/com.h2database/h2 
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		    <version>1.4.200</version>
+		    <scope>compile</scope>
+		</dependency>
+		-->
 
 		<!-- Views Dependencies -->
 		<!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>jstl</artifactId> 

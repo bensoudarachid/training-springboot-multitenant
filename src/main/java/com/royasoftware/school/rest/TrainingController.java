@@ -63,9 +63,9 @@ import com.royasoftware.school.exception.ValidationException;
 import com.royasoftware.school.model.Account;
 import com.royasoftware.school.model.Training;
 import com.royasoftware.school.service.AccountService;
-import com.royasoftware.school.service.TrainingServFrEndActor;
+//import com.royasoftware.school.service.TrainingServFrEndActor;
 import com.royasoftware.school.service.TrainingService;
-import com.royasoftware.school.service.TrainingServFrEndActor.Trainings;
+//import com.royasoftware.school.service.TrainingServFrEndActor.Trainings;
 import com.royasoftware.school.settings.security.CustomUserDetails;
 
 import akka.actor.ActorSelection;

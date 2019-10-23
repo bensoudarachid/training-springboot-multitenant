@@ -9,6 +9,7 @@ import com.royasoftware.school.model.Account;
  */
 public interface AccountService {
 
+	
     Collection<Account> findAll();
 
     Account findByUserid(Long userid);

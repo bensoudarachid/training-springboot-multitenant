@@ -1,5 +1,7 @@
 # Base Alpine Linux based image with OpenJDK JRE only
-FROM openjdk:8-jre-alpine
+#FROM openjdk:8-jre-alpine
+FROM openjdk:14-jdk-alpine
+
 # This part is needed for apache batik to render images from SVGs. Its part of oracle JDK but not of openjdk:8-jre-alpine
 RUN apk add --no-cache ttf-dejavu
 #FROM openjdk:11-jre-slim

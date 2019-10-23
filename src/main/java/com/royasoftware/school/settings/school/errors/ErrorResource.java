@@ -9,6 +9,7 @@ import java.util.List;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ErrorResource {
+	
     private String code;
     private String message;
     private List<FieldErrorResource> fieldErrors;

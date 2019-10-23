@@ -22,7 +22,6 @@ import java.util.Set;
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class AccountServiceBean implements AccountService {
-
     /**
      * The Logger for this class.
      */

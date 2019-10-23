@@ -7,7 +7,6 @@ import org.springframework.validation.Errors;
  * all the validations errors
  */
 public class InvalidRequestException extends RuntimeException {
-
     private Errors errors;
 
     /**

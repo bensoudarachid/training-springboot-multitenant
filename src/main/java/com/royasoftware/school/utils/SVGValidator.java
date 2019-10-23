@@ -43,6 +43,7 @@ import org.xml.sax.SAXParseException;
  * @author laaglu
  */
 public class SVGValidator {
+	
 	private static Validator validator;
 	private static Logger logger = LoggerFactory.getLogger(SVGValidator.class);
 	/**

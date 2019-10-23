@@ -16,6 +16,7 @@ public class TenantContext {
 
 //	private static Logger logger = LoggerFactory.getLogger(TenantContext.class);
 //	private static final Logger logger = LogManager.getLogger(TenantContext.class);
+	
 	public static String userUploadStorage=System.getenv("TRAINING_APP_STORAGE");
 	static{
 		if( !userUploadStorage.endsWith(File.separator) )
