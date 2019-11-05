@@ -272,7 +272,7 @@ public class TrainingController extends BaseController {
 	public ResponseEntity<Training> getTraining(@PathVariable Long _param) throws Exception {
 		rdmTimeRdmSuccess();
 		Training training = trainingService.findById(_param);
-//		training.setTitle("Test "+training.getTitle());
+		training.setTitle("Test "+training.getTitle());
 		return new ResponseEntity<Training>(training, HttpStatus.OK);
 	}
 
