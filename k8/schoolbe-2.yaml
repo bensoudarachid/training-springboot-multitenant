@@ -46,6 +46,12 @@ spec:
               value: 192.168.2.101
             - name: TRAINING_APP_STORAGE
               value: /deployments/data/trainingappstorage
+          livenessProbe:
+            httpGet:
+              port: service-port
+              path: /actuator/health
+            initialDelaySeconds: 30
+            timeoutSeconds: 10			  
           volumeMounts:
             - mountPath: "/deployments/data/trainingappstorage"
               name: schoolbepd

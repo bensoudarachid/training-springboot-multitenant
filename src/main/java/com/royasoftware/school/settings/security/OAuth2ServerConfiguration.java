@@ -58,7 +58,7 @@ public class OAuth2ServerConfiguration {
 //                    .antMatchers("/").permitAll()
 //                    .antMatchers("/user/**").permitAll()
 //                    .antMatchers("/api/**").authenticated()//.hasAnyRole("ROLE_USER")//
-//            		.antMatchers("/**").authenticated()
+//            		.antMatchers("/actuator/**").authenticated()
                     .and()
                     .formLogin()
                     .loginPage("/login")
