@@ -28,13 +28,14 @@ spec:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
-      maxUnavailable: 1
+      maxUnavailable: 0
   template:
     metadata:
       labels:
         app: school
         tier: backend
         track: stable
+        date: time2150
     spec:
       containers:
         - name: schoolbectn
@@ -48,10 +49,16 @@ spec:
               value: /deployments/data/trainingappstorage
           livenessProbe:
             httpGet:
-              port: service-port
+              port: 8080
               path: /actuator/health
-            initialDelaySeconds: 30
-            timeoutSeconds: 10			  
+            initialDelaySeconds: 90
+            timeoutSeconds: 40
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health
+            initialDelaySeconds: 20
+            timeoutSeconds: 5			
           volumeMounts:
             - mountPath: "/deployments/data/trainingappstorage"
               name: schoolbepd
