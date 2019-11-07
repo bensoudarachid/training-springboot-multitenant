@@ -35,7 +35,7 @@ spec:
         app: school
         tier: backend
         track: stable
-        date: time2158
+        timestamp: timestamp_ph
     spec:
       containers:
         - name: schoolbectn
