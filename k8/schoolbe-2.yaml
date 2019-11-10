@@ -40,6 +40,10 @@ spec:
       containers:
         - name: schoolbectn
           image: royasoftware/trainingbackend:v1.0.0
+          command:
+            - "java"
+            - "-jar"
+            - "/training.jar"
           ports:
             - containerPort: 8080
           env:

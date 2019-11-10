@@ -11,8 +11,5 @@ COPY target/training-*.jar /training.jar
 
 # specify default command
 #CMD ["/usr/bin/java", "-jar", "/training.jar"]
-ENTRYPOINT ["java", "-jar", "/training.jar"]
+#ENTRYPOINT ["java", "-jar", "/training.jar"]
 
-#WORKDIR /usr/src/myapp
-#RUN javac Main.java
-#CMD ["java", "Main"]
