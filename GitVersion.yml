@@ -6,9 +6,9 @@ patch-version-bump-message: '\+semver:\s?(fix|patch)'
 commit-message-incrementing: Enabled
 branches:
   master:
-    mode: ContinuousDelivery
+    mode: ContinuousDeployment
   develop:
-    mode: ContinuousDelivery
+    mode: ContinuousDeployment
 ignore:
   sha: []
 merge-message-formats: {}
