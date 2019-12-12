@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: schoolbe
+spec:
+  replicas: {{ .Values.replicaCount }}
+  minReadySeconds: 5
+  selector:
+    matchLabels:
+      app: school
+  strategy:
+    # indicate which strategy we want for rolling update
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: school
+        tier: backend
+        track: stable
+        timestamp: timestamptimestamp_ph
+    spec:
+      containers:
+        - name: schoolbectn
+          image: "{{ .Values.image.repository }}:{{ .Values.image.version }}"
+          command:
+            - "java"
+            - "-jar"
+            - "/training.jar"
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MYSQL_HOST
+              value: {{.Values.environment.MYSQL_HOST}}
+            - name: TRAINING_APP_STORAGE
+              value: /deployments/data/trainingappstorage
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health
+            initialDelaySeconds: 90
+            timeoutSeconds: 40
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health
+            initialDelaySeconds: 20
+            timeoutSeconds: 5			
+          volumeMounts:
+            - mountPath: "/deployments/data/trainingappstorage"
+              name: schoolbepd
+      volumes:
+        - name: schoolbepd
+          hostPath:
+            path: /d/RP/Tests/TrainingAppStorage

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: schoolbe
+spec:
+  selector:
+    app: school
+    tier: backend
+  ports:
+    - protocol: "TCP"
+      nodePort: 31133
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
