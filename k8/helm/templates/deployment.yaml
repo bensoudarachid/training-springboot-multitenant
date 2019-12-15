@@ -47,7 +47,7 @@ spec:
               port: 8080
               path: /actuator/health
             initialDelaySeconds: 20
-            timeoutSeconds: 5			
+            timeoutSeconds: 5
           volumeMounts:
             - mountPath: "/deployments/data/trainingappstorage"
               name: schoolbepd
