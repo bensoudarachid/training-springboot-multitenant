@@ -70,8 +70,8 @@ import com.royasoftware.school.settings.security.CustomUserDetails;
 @RestController
 @RequestMapping("/api/**")
 public class TrainingController extends BaseController {
-//	@Autowired
-//	private ActorSystem actorSystem;
+	// @Autowired
+	// private ActorSystem actorSystem;
 	@Autowired
 	private SpringExtension springExtension;
 
@@ -83,21 +83,27 @@ public class TrainingController extends BaseController {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@RequestMapping(method = RequestMethod.GET, value = "/version/{_versionNr}")
-    public ResponseEntity<String> getVersion(@PathVariable String _versionNr) throws Exception{
-		logger.info("version="+_versionNr);
+	// @RequestMapping(method = RequestMethod.GET, value =
+	// "/version/{_versionNr}")
+	// public ResponseEntity<String> getVersion(@PathVariable String _versionNr)
+	// throws Exception{
+	@RequestMapping(method = RequestMethod.GET, value = "/version")
+	public ResponseEntity<String> getVersion(@RequestParam("vernr") String _versionNr) throws Exception {
+
+		logger.info("version=" + _versionNr);
 		Runtime rt = Runtime.getRuntime();
-		String[] commands = {"gitversion"};
+		String[] commands = { "gitversion" };
 		Process proc = rt.exec(commands);
 		Properties prop = new Properties();
 		prop.load(proc.getInputStream());
-		String vers=prop.getProperty("\"SemVer\"")+"_"+prop.getProperty("\"CommitsSinceVersionSource\"");
-		vers=vers.replace(",","").replace("\"","");
-		if( vers.equals(_versionNr) )
-			return new ResponseEntity<String>(vers , HttpStatus.OK);
+		String vers = prop.getProperty("\"SemVer\"") + "_" + prop.getProperty("\"CommitsSinceVersionSource\"");
+		vers = vers.replace(",", "").replace("\"", "");
+		logger.info("vers=" + vers);
+		if (vers.equals(_versionNr))
+			return new ResponseEntity<String>(vers, HttpStatus.OK);
 		else
 			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
-    }
+	}
 
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/savetraining")
@@ -126,7 +132,7 @@ public class TrainingController extends BaseController {
 			}
 		});
 		File file = null;
-		for (int i = 0; files!=null&&i < files.length; i++) {
+		for (int i = 0; files != null && i < files.length; i++) {
 			files[i].delete();
 		}
 		trainingService.deleteTraining(trainingParam);
@@ -139,27 +145,26 @@ public class TrainingController extends BaseController {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/updatetraining")
 	public ResponseEntity<Training> updateTrainingObject(@RequestPart("trainingParam") Training trainingParam,
 			@RequestPart(value = "uploadfile", required = false) MultipartFile file) throws Exception {
-		logger.info("here we go updatetraining "+trainingParam);
+		logger.info("here we go updatetraining " + trainingParam);
 		rdmTimeRdmSuccess();
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();
 		Optional<Set<ConstraintViolation<Training>>> violations = Optional.of(validator.validate(trainingParam));
-		if( violations.isPresent()&&!violations.get().isEmpty() ){
-	        Map<String, String> validErrorMap = violations.get().stream().collect(
-	                Collectors.toMap(v->v.getPropertyPath().toString(), ConstraintViolation::getMessage ) );
-			logger.info("validErrorMap="+validErrorMap);
-			throw new ValidationException(trainingParam,validErrorMap);
+		if (violations.isPresent() && !violations.get().isEmpty()) {
+			Map<String, String> validErrorMap = violations.get().stream()
+					.collect(Collectors.toMap(v -> v.getPropertyPath().toString(), ConstraintViolation::getMessage));
+			logger.info("validErrorMap=" + validErrorMap);
+			throw new ValidationException(trainingParam, validErrorMap);
 		}
 		Training training = trainingService.updateTraining(trainingParam);
 		if (file != null)
 			fileUpload(training.getId(), file);
-		
+
 		return new ResponseEntity<Training>(training, HttpStatus.OK);
 	}
 
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-	@RequestMapping(method = RequestMethod.POST, produces = {
-			MediaType.APPLICATION_JSON_VALUE }, value = "/training/save")
+	@RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE }, value = "/training/save")
 	public ResponseEntity<Training> saveTraining(@RequestPart("title") String title) throws Exception {
 		CustomUserDetails user = TenantContext.getCurrentUser();
 		logger.info("Calling Post rest controller save training ");
@@ -172,12 +177,11 @@ public class TrainingController extends BaseController {
 		training = trainingService.saveTraining(training);
 		return new ResponseEntity<Training>(training, HttpStatus.OK);
 	}
-	
+
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/{trainingId}/fileupload")
-	public ResponseEntity<Object> fileUpload(@PathVariable Long trainingId,
-			@RequestParam("uploadfile") MultipartFile file)
+	public ResponseEntity<Object> fileUpload(@PathVariable Long trainingId, @RequestParam("uploadfile") MultipartFile file)
 			throws Exception {
 		CustomUserDetails activeUser = TenantContext.getCurrentUser();
 		InputStream is = new BufferedInputStream(new ByteArrayInputStream(file.getBytes()));
@@ -207,10 +211,10 @@ public class TrainingController extends BaseController {
 		File uploadFilePath = new File(uploadPath);
 		File uploadFile = new File(uploadPath + trainingId + "." + extension);
 
-		if( !uploadFilePath.mkdirs() )
-			logger.info("Directory already there : "+uploadPath);
-		else{
-			logger.info("Good. Created directories : "+uploadFilePath.getAbsolutePath());
+		if (!uploadFilePath.mkdirs())
+			logger.info("Directory already there : " + uploadPath);
+		else {
+			logger.info("Good. Created directories : " + uploadFilePath.getAbsolutePath());
 		}
 		// Delete all files beginning with thw id number
 		File uploadDirectory = new File(uploadPath);
@@ -233,43 +237,49 @@ public class TrainingController extends BaseController {
 		return ResponseEntity.status(HttpStatus.OK).body(null);
 	}
 
-	@RequestMapping(method = RequestMethod.POST, produces = {
-			MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
+	@RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
 	public ResponseEntity<Object> getTrainingsPost(@PathVariable String _param) throws Exception {
 		return getTrainingsGet(_param);
 	}
 
-	@RequestMapping(method = RequestMethod.GET, produces = {
-			MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
+	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
 	public ResponseEntity<Object> getTrainingsGet(@PathVariable String _param) throws Exception {
 		Account acc = accountService.findByUsername("admin");
 		CustomUserDetails activeUser = TenantContext.getCurrentUser();
 		rdmTimeRdmSuccess();
-//		ActorSelection trainingServFrEndActor = actorSystem.actorSelection("/user/trainingServFrEndActor");
-//		Timeout timeout = new Timeout(Duration.create(5, "seconds"));
-//		Future<Object> future = Patterns.ask(trainingServFrEndActor, new TrainingServFrEndActor.GetTrainings(), timeout);
-//		ArrayList<Training> trainingList = (ArrayList<Training>) Await.result(future, timeout.duration());
+		// ActorSelection trainingServFrEndActor =
+		// actorSystem.actorSelection("/user/trainingServFrEndActor");
+		// Timeout timeout = new Timeout(Duration.create(5, "seconds"));
+		// Future<Object> future = Patterns.ask(trainingServFrEndActor, new
+		// TrainingServFrEndActor.GetTrainings(), timeout);
+		// ArrayList<Training> trainingList = (ArrayList<Training>)
+		// Await.result(future, timeout.duration());
 
-		
-//		future = Patterns.ask(trainingServFrEndActor, new TrainingServFrEndActor.Message("Controller. Hi"), timeout);
-//		String mesgBack= (String) Await.result(future, timeout.duration());
-//		logger.info("Controller got mesg Back = "+mesgBack); 
+		// future = Patterns.ask(trainingServFrEndActor, new
+		// TrainingServFrEndActor.Message("Controller. Hi"), timeout);
+		// String mesgBack= (String) Await.result(future, timeout.duration());
+		// logger.info("Controller got mesg Back = "+mesgBack);
 
-//		future = Patterns.ask(trainingServFrEndActor, new TrainingServFrEndActor.Message("Controller. Hi"), timeout);
-//		Trainings trainings2= (Trainings) Await.result(future, timeout.duration());
-//		Vector<Training> trainingList2 = trainings.getTrainings();
-//		logger.info("mesgBack="+trainingList2.firstElement()); 
+		// future = Patterns.ask(trainingServFrEndActor, new
+		// TrainingServFrEndActor.Message("Controller. Hi"), timeout);
+		// Trainings trainings2= (Trainings) Await.result(future,
+		// timeout.duration());
+		// Vector<Training> trainingList2 = trainings.getTrainings();
+		// logger.info("mesgBack="+trainingList2.firstElement());
 
-//		future = Patterns.ask(trainingServFrEndActor, new TrainingServFrEndActor.Message("Controller. Hi"), timeout);
-//		Training training= (Training) Await.result(future, timeout.duration());
-//		logger.info("mesgBack="+training); 
-		
-//		ActorSelection workerRouter = MyBootSpring.ACTOR_SYSTEM.actorSelection("/user/workerRouter");
-//		Timeout timeout = new Timeout(Duration.create(5, "seconds"));
-//		Future<Object> future = Patterns.ask(workerRouter, new StatsMessages.SayHi(), timeout);
-//		Await.result(future, timeout.duration());
+		// future = Patterns.ask(trainingServFrEndActor, new
+		// TrainingServFrEndActor.Message("Controller. Hi"), timeout);
+		// Training training= (Training) Await.result(future,
+		// timeout.duration());
+		// logger.info("mesgBack="+training);
 
-		
+		// ActorSelection workerRouter =
+		// MyBootSpring.ACTOR_SYSTEM.actorSelection("/user/workerRouter");
+		// Timeout timeout = new Timeout(Duration.create(5, "seconds"));
+		// Future<Object> future = Patterns.ask(workerRouter, new
+		// StatsMessages.SayHi(), timeout);
+		// Await.result(future, timeout.duration());
+
 		Collection<Training> trainingList = trainingService.findAll();
 		return new ResponseEntity<Object>(trainingList, HttpStatus.OK);
 	}
@@ -279,12 +289,11 @@ public class TrainingController extends BaseController {
 	public ResponseEntity<Training> getTraining(@PathVariable Long _param) throws Exception {
 		rdmTimeRdmSuccess();
 		Training training = trainingService.findById(_param);
-//		training.setTitle("Test "+training.getTitle());
+		// training.setTitle("Test "+training.getTitle());
 		return new ResponseEntity<Training>(training, HttpStatus.OK);
 	}
 
-	@RequestMapping(method = RequestMethod.GET, produces = {
-			MediaType.IMAGE_PNG_VALUE }, value = "/training/img/{_param}")
+	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.IMAGE_PNG_VALUE }, value = "/training/img/{_param}")
 	public ResponseEntity<Object> getTrainingImage(@PathVariable Long _param, @RequestParam("width") Integer width,
 			@RequestParam("height") Integer height) throws Exception {
 		width = width > 200 ? 200 : width;
@@ -324,7 +333,7 @@ public class TrainingController extends BaseController {
 				g.setColor(Color.decode("#f4faff"));
 				g.fillRect(0, 0, width, height);
 
-				Point2D center = new Point2D.Float(width/2, width/2);
+				Point2D center = new Point2D.Float(width / 2, width / 2);
 				float[] dist = { 0.0f, 0.5f };
 				Color[] colors = { Color.decode("#ffffff"), Color.decode("#d7e7f4") };
 				RadialGradientPaint p = new RadialGradientPaint(center, width, dist, colors);
