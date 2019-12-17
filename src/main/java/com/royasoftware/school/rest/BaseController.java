@@ -22,12 +22,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 //import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.context.request.WebRequest;
 
@@ -42,7 +47,7 @@ public class BaseController {
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private HttpServletRequest request;
-
+    
 	@ExceptionHandler(NoResultException.class)
 	public @ResponseBody ErrorInfo handleNoResultException(NoResultException noResultException,
 			HttpServletRequest request) {

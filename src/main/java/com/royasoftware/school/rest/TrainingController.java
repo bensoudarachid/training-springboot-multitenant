@@ -9,6 +9,7 @@ import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -17,15 +18,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
-import java.util.Vector;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
@@ -46,7 +46,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,14 +67,6 @@ import com.royasoftware.school.service.TrainingService;
 //import com.royasoftware.school.service.TrainingServFrEndActor.Trainings;
 import com.royasoftware.school.settings.security.CustomUserDetails;
 
-import akka.actor.ActorSelection;
-import akka.actor.ActorSystem;
-import akka.pattern.Patterns;
-import akka.util.Timeout;
-import scala.concurrent.Await;
-import scala.concurrent.Future;
-import scala.concurrent.duration.Duration;
-
 @RestController
 @RequestMapping("/api/**")
 public class TrainingController extends BaseController {
@@ -91,6 +82,22 @@ public class TrainingController extends BaseController {
 	private AccountService accountService;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@RequestMapping(method = RequestMethod.GET, value = "/version/{_versionNr}")
+    public ResponseEntity<String> getVersion(@PathVariable String _versionNr) throws Exception{
+		logger.info("version="+_versionNr);
+		Runtime rt = Runtime.getRuntime();
+		String[] commands = {"gitversion"};
+		Process proc = rt.exec(commands);
+		Properties prop = new Properties();
+		prop.load(proc.getInputStream());
+		String vers=prop.getProperty("\"SemVer\"")+"_"+prop.getProperty("\"CommitsSinceVersionSource\"");
+		vers=vers.replace(",","").replace("\"","");
+		if( vers.equals(_versionNr) )
+			return new ResponseEntity<String>(vers , HttpStatus.OK);
+		else
+			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
+    }
 
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/savetraining")
