@@ -104,7 +104,7 @@ public class TrainingController extends BaseController {
 //		String vers = prop.getProperty("SemVer") + "_" + prop.getProperty("\"CommitsSinceVersionSource\"");
 		vers = vers.replace(",", "").replace("\"", "");
 		logger.info("vers 1 =" + vers);
-		vers = prop.getProperty("SemVer") + "_" + prop.getProperty("CommitsSinceVersionSource");
+		vers = prop.getProperty("GitVersion_SemVer") + "_" + prop.getProperty("GitVersion_CommitsSinceVersionSource");
 //		String vers = prop.getProperty("SemVer") + "_" + prop.getProperty("\"CommitsSinceVersionSource\"");
 		vers = vers.replace(",", "").replace("\"", "");
 		logger.info("vers 2 =" + vers);
