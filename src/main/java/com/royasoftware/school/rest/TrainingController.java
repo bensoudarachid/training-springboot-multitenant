@@ -103,7 +103,11 @@ public class TrainingController extends BaseController {
 		String vers = prop.getProperty("\"SemVer\"") + "_" + prop.getProperty("\"CommitsSinceVersionSource\"");
 //		String vers = prop.getProperty("SemVer") + "_" + prop.getProperty("\"CommitsSinceVersionSource\"");
 		vers = vers.replace(",", "").replace("\"", "");
-		logger.info("vers=" + vers);
+		logger.info("vers 1 =" + vers);
+		vers = prop.getProperty("SemVer") + "_" + prop.getProperty("CommitsSinceVersionSource");
+//		String vers = prop.getProperty("SemVer") + "_" + prop.getProperty("\"CommitsSinceVersionSource\"");
+		vers = vers.replace(",", "").replace("\"", "");
+		logger.info("vers 2 =" + vers);
 		if (vers.equals(_versionNr))
 			return new ResponseEntity<String>(vers, HttpStatus.OK);
 		else
