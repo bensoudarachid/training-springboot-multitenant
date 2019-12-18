@@ -67,7 +67,6 @@ import com.royasoftware.school.service.AccountService;
 import com.royasoftware.school.service.TrainingService;
 //import com.royasoftware.school.service.TrainingServFrEndActor.Trainings;
 import com.royasoftware.school.settings.security.CustomUserDetails;
-import com.royasoftware.school.utils.SmartEncodingInputStream;
 
 @RestController
 @RequestMapping("/api/**")
