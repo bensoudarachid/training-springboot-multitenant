@@ -8,6 +8,7 @@ RUN apk add --no-cache ttf-dejavu
 #EXPOSE 8080
 # copy application WAR (with libraries inside)
 COPY target/training-*.jar /training.jar
+COPY ./gitversion.properties /gitversion.properties
 
 # specify default command
 #CMD ["/usr/bin/java", "-jar", "/training.jar"]
