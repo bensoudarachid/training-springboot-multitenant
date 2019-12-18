@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -66,6 +67,7 @@ import com.royasoftware.school.service.AccountService;
 import com.royasoftware.school.service.TrainingService;
 //import com.royasoftware.school.service.TrainingServFrEndActor.Trainings;
 import com.royasoftware.school.settings.security.CustomUserDetails;
+import com.royasoftware.school.utils.SmartEncodingInputStream;
 
 @RestController
 @RequestMapping("/api/**")
@@ -92,11 +94,15 @@ public class TrainingController extends BaseController {
 
 		logger.info("version=" + _versionNr);
 		Runtime rt = Runtime.getRuntime();
-		String[] commands = { "gitversion" };
-		Process proc = rt.exec(commands);
+//		String[] commands = { "gitversion" };
+//		Process proc = rt.exec(commands);
 		Properties prop = new Properties();
-		prop.load(proc.getInputStream());
+//		BufferedReader fr = new BufferedReader(new SmartEncodingInputStream(new FileInputStream("gitversion.properties")).getReader());
+		FileInputStream fr = new FileInputStream("gitversion.properties");
+		prop.load(fr);
+		logger.info("prop="+prop);
 		String vers = prop.getProperty("\"SemVer\"") + "_" + prop.getProperty("\"CommitsSinceVersionSource\"");
+//		String vers = prop.getProperty("SemVer") + "_" + prop.getProperty("\"CommitsSinceVersionSource\"");
 		vers = vers.replace(",", "").replace("\"", "");
 		logger.info("vers=" + vers);
 		if (vers.equals(_versionNr))
