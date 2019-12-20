@@ -1,0 +1,105 @@
+node {
+   env.WORKSPACE = pwd()
+   sh '''#!/bin/bash
+      '''
+   def dockerThere=false
+   stage('SCM') { // for display purposes
+        String str1 = "123";
+        String str2 = new String("123");
+        if(str1 == str2){
+          println("equal");
+        }else{
+          println("Not equal");
+        }
+        echo "Sir 3allah ${env.WORKSPACE}"
+//          rm -rf ./training-springboot
+//          cd training-springboot
+//          git clone 'https://github.com/bensoudarachid/training-springboot.git' .
+//        git url: 'https://github.com/bensoudarachid/training-springboot.git'
+        git url: 'https://github.com/bensoudarachid/training-springboot.git', branch: 'master'
+        sh '''#!/bin/bash
+          echo str1 = '''+str1+''' is abibis 
+//          rm ./*
+          gitversion /output buildserver
+        '''
+        // Get some code from a GitHub repository
+        // git 'https://github.com/bensoudarachid/training-springboot.git'
+//        Map params = version();
+//        String gitVer = getGitVersion();
+//        sh '''export GITVERSION='''+gitVer
+        
+        sh '''#!/bin/bash
+        '''
+   }
+   stage('Prepare') {
+//      dir("${env.WORKSPACE}/training-springboot"){
+//        GITVERSION = sh(returnStdout: true, script: 'echo 0.0.1')
+//        sh "cd training-springboot"
+        env.GITVERSION = getGitVersion()
+        echo "env.GITVERSION ${env.GITVERSION}"
+//        cd training-springboot
+//        if [[ "$(docker images -q royasoftware/trainingbackend:1.2.2_7 > /dev/null)" == "" ]]; then          
+        sh "docker images -q royasoftware/trainingbackend:$GITVERSION > result";
+        dockerThere=(readFile('result').trim()!="")
+        echo "Is docker image there? "+dockerThere
+//      }
+   }
+   stage('Compile') {
+     if(  dockerThere ) return;
+//     dir("${env.WORKSPACE}/training-springboot"){
+        sh '''
+          pwd
+          echo LS
+          ls
+          echo JENKINS_HOME = $JENKINS_HOME
+          echo git version por favor = $GITVERSION
+          helm template ./k8/helm --set image.version=$GITVERSION
+          mvn -Dmaven.test.failure.ignore=true clean package
+          helm template ./k8/helm --set image.version=$GITVERSION
+        '''
+//     }
+   }
+
+   stage('Docker') {
+     if(  dockerThere ) return;
+//     dir("${env.WORKSPACE}/training-springboot"){
+        sh '''
+          docker build -t royasoftware/trainingbackend:$GITVERSION .
+        '''
+//     }
+   }
+//sed ""s/timestamp_ph/$(date +%s)/"" ./k8/schoolbe-2.yaml > ./be.yaml   
+//   stage('Deploy') {
+//      if(  dockerThere ) return;
+//        sh '''
+//          helm template ./k8/helm --set image.version=$GITVERSION | kubectl apply -f -
+//        '''
+//   }
+   
+//   stage('Clean') {
+//     if(  dockerThere ) return;
+//        sh '''
+//          sleep 20
+//          docker system prune -a -f
+//        '''
+//   }
+
+}
+
+@NonCPS
+def getGitVersion() {
+  System.out.println("####################################### LETS GO");
+//  System.out.println("env var in version ${env.WORKSPACE}");
+//  System.out.println("env var in version ${workspace}");
+  //String path= pwd();
+  Properties prop = new Properties();
+//  ClassLoader loader = Thread.currentThread().getContextClassLoader();           
+//			InputStream stream = loader.getResourceAsStream("D:\\RP\\Tests\\SpringBoot_Training\\testjmsadpater.properties");
+	prop.load(new FileInputStream("${env.WORKSPACE}/gitversion.properties") );
+	String semVer = prop.getProperty("GitVersion_SemVer");
+	String commitsSinceVersionSource = prop.getProperty("GitVersion_CommitsSinceVersionSource");
+    String gitver = semVer+"_"+commitsSinceVersionSource;
+//    sh '''export GITVERSION='''+gitver
+    return gitver;
+}
+
