@@ -52,18 +52,19 @@ public class CorsAndMultitenantDomainFilterRequest implements Filter {
         response.setHeader("Access-Control-Max-Age", "3600");
 
         String remoteHost = request.getHeader("host");
-        if( remoteHost == null || !remoteHost.contains(".school"))
+        if( remoteHost == null || !remoteHost.contains(".sc"))
         	remoteHost = request.getHeader("ClientHost");
         if( remoteHost!= null && remoteHost.indexOf(":") != -1 )
         	remoteHost = remoteHost.substring(0,remoteHost.indexOf(":"));
 		String site = request.getServerName();
-		if( remoteHost !=null )
-			site = remoteHost.replace(".school.",".schoolapi."); 
+//		if( remoteHost !=null )
+//			site = remoteHost.replace(".school.",".schoolapi."); 
 		String domain = null;
 		try {
 			String[] parts = site.split("\\.");
 //			logger.info("parts="+parts);
-			if( parts==null||parts.length!=4||!parts[3].equals("com")||!parts[2].equals("royasoftware")||!parts[1].equals("schoolapi") ){
+//			if( parts==null||parts.length!=4||!parts[3].equals("com")||!parts[2].equals("royasoftware")||!parts[1].equals("schoolapi") ){
+			if( parts==null||parts.length!=4||!parts[3].equals("com")||!parts[2].equals("royasoftware")||!parts[1].equals("sc") ){
 //				logger.info("parts is null");
 				TenantContext.setCurrentTenant(null);
 //				throw new Exception("Malformed URL");

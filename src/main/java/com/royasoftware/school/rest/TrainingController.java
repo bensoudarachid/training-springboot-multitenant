@@ -305,6 +305,7 @@ public class TrainingController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.IMAGE_PNG_VALUE }, value = "/training/img/{_param}")
 	public ResponseEntity<Object> getTrainingImage(@PathVariable Long _param, @RequestParam("width") Integer width,
 			@RequestParam("height") Integer height) throws Exception {
+//		logger.info("getTrainingImage id : "+_param);
 		width = width > 200 ? 200 : width;
 		height = height > 200 ? 200 : height;
 
