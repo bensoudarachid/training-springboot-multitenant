@@ -21,8 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
@@ -43,10 +45,13 @@ import org.apache.batik.util.XMLResourceDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -88,31 +93,6 @@ public class TrainingController extends BaseController {
 	// "/version/{_versionNr}")
 	// public ResponseEntity<String> getVersion(@PathVariable String _versionNr)
 	// throws Exception{
-	@RequestMapping(method = RequestMethod.GET, value = "/version")
-	public ResponseEntity<String> getVersion(@RequestParam("vernr") String _versionNr) throws Exception {
-
-		logger.info("version=" + _versionNr);
-		Runtime rt = Runtime.getRuntime();
-//		String[] commands = { "gitversion" };
-//		Process proc = rt.exec(commands);
-		Properties prop = new Properties();
-//		BufferedReader fr = new BufferedReader(new SmartEncodingInputStream(new FileInputStream("gitversion.properties")).getReader());
-		FileInputStream fr = new FileInputStream("gitversion.properties");
-		prop.load(fr);
-		logger.info("prop="+prop);
-		String vers = prop.getProperty("\"SemVer\"") + "_" + prop.getProperty("\"CommitsSinceVersionSource\"");
-//		String vers = prop.getProperty("SemVer") + "_" + prop.getProperty("\"CommitsSinceVersionSource\"");
-		vers = vers.replace(",", "").replace("\"", "");
-		logger.info("vers 1 =" + vers);
-		vers = prop.getProperty("GitVersion_SemVer") + "_" + prop.getProperty("GitVersion_CommitsSinceVersionSource");
-//		String vers = prop.getProperty("SemVer") + "_" + prop.getProperty("\"CommitsSinceVersionSource\"");
-		vers = vers.replace(",", "").replace("\"", "");
-		logger.info("vers 2 =" + vers);
-		if (vers.equals(_versionNr))
-			return new ResponseEntity<String>(vers, HttpStatus.OK);
-		else
-			return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
-	}
 
 	@RequestMapping(method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, value = "/training/savetraining")
@@ -146,7 +126,7 @@ public class TrainingController extends BaseController {
 		}
 		trainingService.deleteTraining(trainingParam);
 
-		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+		return getResponseEntity(true, HttpStatus.OK);
 	}
 
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -169,7 +149,7 @@ public class TrainingController extends BaseController {
 		if (file != null)
 			fileUpload(training.getId(), file);
 
-		return new ResponseEntity<Training>(training, HttpStatus.OK);
+		return getResponseEntity(training, HttpStatus.OK);
 	}
 
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -247,12 +227,12 @@ public class TrainingController extends BaseController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
-	public ResponseEntity<Object> getTrainingsPost(@PathVariable String _param) throws Exception {
+	public ResponseEntity<Collection<Training>> getTrainingsPost(@PathVariable String _param) throws Exception {
 		return getTrainingsGet(_param);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }, value = "/trainings/{_param}")
-	public ResponseEntity<Object> getTrainingsGet(@PathVariable String _param) throws Exception {
+	public ResponseEntity<Collection<Training>> getTrainingsGet(@PathVariable String _param) throws Exception {
 		Account acc = accountService.findByUsername("admin");
 		CustomUserDetails activeUser = TenantContext.getCurrentUser();
 		rdmTimeRdmSuccess();
@@ -290,7 +270,14 @@ public class TrainingController extends BaseController {
 		// Await.result(future, timeout.duration());
 
 		Collection<Training> trainingList = trainingService.findAll();
-		return new ResponseEntity<Object>(trainingList, HttpStatus.OK);
+
+//		HttpHeaders responseHeaders = new HttpHeaders();
+//	    responseHeaders.set("beversion", "1.2.3.45");
+//		ResponseEntity<Collection<Training>> re = new ResponseEntity<Collection<Training>>(trainingList,responseHeaders,HttpStatus.OK);
+
+//		ResponseEntity<Collection<Training>> re = getResponseEntity(trainingList,HttpStatus.OK);
+				
+		return getResponseEntity(trainingList,HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = {
@@ -299,7 +286,7 @@ public class TrainingController extends BaseController {
 		rdmTimeRdmSuccess();
 		Training training = trainingService.findById(_param);
 		// training.setTitle("Test "+training.getTitle());
-		return new ResponseEntity<Training>(training, HttpStatus.OK);
+		return getResponseEntity(training, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.IMAGE_PNG_VALUE }, value = "/training/img/{_param}")
@@ -347,7 +334,6 @@ public class TrainingController extends BaseController {
 				float[] dist = { 0.0f, 0.5f };
 				Color[] colors = { Color.decode("#ffffff"), Color.decode("#d7e7f4") };
 				RadialGradientPaint p = new RadialGradientPaint(center, width, dist, colors);
-
 				g.setPaint(p);
 				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 				g.fillOval(0, 0, width, height);
@@ -366,6 +352,7 @@ public class TrainingController extends BaseController {
 		} else {
 			ret = null;
 		}
+		
 		return new ResponseEntity<Object>(ret, HttpStatus.OK);
 	}
 

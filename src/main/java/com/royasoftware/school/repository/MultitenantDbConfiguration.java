@@ -162,6 +162,15 @@ public class MultitenantDbConfiguration {
 	}
 
 	private void setDataSourcePoolProps(DataSource ds) {
+		((org.apache.tomcat.jdbc.pool.DataSource) ds).setMaxActive(20);
+		((org.apache.tomcat.jdbc.pool.DataSource) ds).setMaxIdle(20);
+		((org.apache.tomcat.jdbc.pool.DataSource) ds).setTimeBetweenEvictionRunsMillis(20000);
+		((org.apache.tomcat.jdbc.pool.DataSource) ds).setMinEvictableIdleTimeMillis(43000);
+//Those next 2 help remove abandonned connections. Useful when using spring-devtools 		
+		((org.apache.tomcat.jdbc.pool.DataSource) ds).setRemoveAbandoned(true);
+		((org.apache.tomcat.jdbc.pool.DataSource) ds).setRemoveAbandonedTimeout(50);//seconds
+
+		
 		((org.apache.tomcat.jdbc.pool.DataSource) ds).setValidationInterval(20000);
 		((org.apache.tomcat.jdbc.pool.DataSource) ds).setTestOnBorrow(true);
 		((org.apache.tomcat.jdbc.pool.DataSource) ds).setTestWhileIdle(true);

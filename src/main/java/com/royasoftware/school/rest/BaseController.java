@@ -5,6 +5,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
@@ -21,9 +24,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,11 +48,61 @@ import com.royasoftware.school.exception.ValidationException;
  * Base of all controllers
  */
 public class BaseController {
-	
+	protected static String API_VERSION = null;
+	static {
+		Logger logger = LoggerFactory.getLogger(BaseController.class);
+		try {
+			FileInputStream fr = new FileInputStream("gitversion.properties");
+			Properties prop = new Properties();
+			prop.load(fr);
+			logger.info("prop=" + prop);
+			if (prop.getProperty("\"SemVer\"") != null) {
+				API_VERSION  = prop.getProperty("\"SemVer\"") + "_" + prop.getProperty("\"CommitsSinceVersionSource\"");
+				// String vers = prop.getProperty("SemVer") + "_" +
+				// prop.getProperty("\"CommitsSinceVersionSource\"");
+				API_VERSION = API_VERSION.replace(",", "").replace("\"", "");
+				logger.info("vers 1 =" + API_VERSION);
+			} else {
+				API_VERSION = prop.getProperty("GitVersion_SemVer") + "_" + prop.getProperty("GitVersion_CommitsSinceVersionSource");
+				// String vers = prop.getProperty("SemVer") + "_" +
+				// prop.getProperty("\"CommitsSinceVersionSource\"");
+				API_VERSION = API_VERSION.replace(",", "").replace("\"", "");
+				logger.info("vers 2 =" + API_VERSION);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private HttpServletRequest request;
     
+	
+	protected <T> ResponseEntity<T> getResponseEntity( HttpStatus status){
+		ResponseEntity<T> re = new ResponseEntity<T>(getVersionHeader() ,HttpStatus.OK);
+		logger.info("re.getHeaders()="+re.getHeaders());
+		return re;
+	}
+
+	protected <T> ResponseEntity<T> getResponseEntity(@Nullable T body,  HttpStatus status){
+		ResponseEntity<T> re = new ResponseEntity<T>(body,getVersionHeader() ,HttpStatus.OK);
+//		logger.info("re.getHeaders()="+re.getHeaders());
+		return re;
+	}
+	
+	private HttpHeaders getVersionHeader() {
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-control-expose-headers", "beversion"); //need this to be able to access the header in Angular interceptor  
+	    responseHeaders.set("beversion", API_VERSION);
+	    return responseHeaders;
+	}
+
+	
+	
 	@ExceptionHandler(NoResultException.class)
 	public @ResponseBody ErrorInfo handleNoResultException(NoResultException noResultException,
 			HttpServletRequest request) {

@@ -14,17 +14,17 @@ import java.io.IOException;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class Auth2FilterRequest implements Filter {
+public class GeneralFilterRequest implements Filter {
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-//		logger.info("Calling auth2 filter");
 
 	    try {
 	        HttpServletRequest request = (HttpServletRequest) req;
 	        HttpServletResponse response = (HttpServletResponse) res;
-
+//	        response.setHeader( "version", "1.2.3_45");
+//	        logger.info("response.setHeader( version )="+response.getHeader("version"));
             chain.doFilter(req, res);
 	    } catch (Exception exception) {
 	    } finally {
