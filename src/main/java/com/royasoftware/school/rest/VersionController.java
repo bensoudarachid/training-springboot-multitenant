@@ -81,7 +81,6 @@ public class VersionController extends BaseController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/version")
 	public ResponseEntity<String> getVersion(@RequestParam("vernr") String _versionNr) throws Exception {
-
 //		logger.info("version nr 5 =" + _versionNr);
 //		Runtime rt = Runtime.getRuntime();
 		// String[] commands = { "gitversion" };
