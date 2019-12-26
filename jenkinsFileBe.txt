@@ -18,8 +18,9 @@ node {
 //        git url: 'https://github.com/bensoudarachid/training-springboot.git'
         git url: 'https://github.com/bensoudarachid/training-springboot.git', branch: 'master'
         sh '''#!/bin/bash
+          kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --serviceaccount=default:default
           echo str1 = '''+str1+''' is abibis 
-//          rm ./*
+//        rm ./*
           gitversion /output buildserver
         '''
         // Get some code from a GitHub repository
