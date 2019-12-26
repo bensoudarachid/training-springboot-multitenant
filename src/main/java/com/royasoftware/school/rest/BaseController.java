@@ -84,7 +84,7 @@ public class BaseController {
 	
 	protected <T> ResponseEntity<T> getResponseEntity( HttpStatus status){
 		ResponseEntity<T> re = new ResponseEntity<T>(getVersionHeader() ,HttpStatus.OK);
-		logger.info("re.getHeaders()="+re.getHeaders());
+//		logger.info("re.getHeaders()="+re.getHeaders());
 		return re;
 	}
 
