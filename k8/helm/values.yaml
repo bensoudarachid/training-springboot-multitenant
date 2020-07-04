@@ -35,7 +35,7 @@ service:
   port: 80
   
 environment:
-  MYSQL_HOST: 192.168.2.101
+  MYSQL_HOST: 192.168.2.103
 
 ingress:
   enabled: false
