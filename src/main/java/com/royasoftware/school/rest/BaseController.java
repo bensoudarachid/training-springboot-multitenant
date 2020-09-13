@@ -90,7 +90,7 @@ public class BaseController {
 
 	protected <T> ResponseEntity<T> getResponseEntity(@Nullable T body,  HttpStatus status){
 		ResponseEntity<T> re = new ResponseEntity<T>(body,getVersionHeader() ,HttpStatus.OK);
-//		logger.info("re.getHeaders()="+re.getHeaders());
+		logger.info("re.getHeaders()="+re.getHeaders());
 		return re;
 	}
 	
